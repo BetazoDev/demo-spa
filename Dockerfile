@@ -1,4 +1,4 @@
-FROM node:20-slim
+FROM node:20-slim AS runner
 WORKDIR /app
 
 # Install system dependencies
@@ -9,18 +9,15 @@ COPY package.json package-lock.json* ./
 COPY apps/web/package.json ./apps/web/
 COPY apps/api/package.json ./apps/api/
 
-# Install dependencies for the whole monorepo
+# Install dependencies
 RUN npm install
 
 # Copy source
 COPY . .
 
-# Build both
+# Build
 RUN npm run build --workspaces
 
-# Expose port (Dokploy will route this)
 EXPOSE 3000
 
-# The command will be overridden by Dokploy's "Command" field for each app
-# Default to something safe
 CMD ["npm", "run", "start"]
