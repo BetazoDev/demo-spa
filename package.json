@@ -8,6 +8,7 @@
     "scripts": {
         "dev": "concurrently \"npm run dev -w @spademo/api\" \"npm run dev -w @spademo/web\"",
         "build": "npm run build --workspaces",
+        "start": "echo 'Run from specific workspace via Dokploy command'",
         "install:all": "npm install"
     },
     "devDependencies": {
