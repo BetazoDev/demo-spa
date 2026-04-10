@@ -9,10 +9,12 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "firebase": "^12.10.0",
+    "@spademo/api": "*",
+    "framer-motion": "^12.4.7",
+    "lucide-react": "^0.475.0",
     "next": "14.2.15",
-    "react": "18.3.1",
-    "react-dom": "18.3.1"
+    "react": "^18",
+    "react-dom": "^18"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

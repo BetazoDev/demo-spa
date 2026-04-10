@@ -1,37 +1,40 @@
-# Build stage
-FROM node:20-alpine AS builder
+# Use Debian slim for glibc compatibility (required by lightningcss-linux-x64-gnu)
+FROM node:20-slim AS builder
 WORKDIR /app
 
-# Copy root files for workspaces
-COPY package.json ./
+# Copy lockfile and package.json to install dependencies first (better caching)
+COPY package.json package-lock.json .npmrc ./
 COPY apps/web/package.json ./apps/web/
 COPY apps/api/package.json ./apps/api/
 
-# Install root dependencies without lockfile to resolve linux bindings
-RUN npm install --no-package-lock
+# Install dependencies (on Linux, this will pull the correct native bindings)
+RUN npm install
 
-# Copy source
+# Copy the rest of the source
 COPY . .
 
-# Build web app
+# Build the web application
 WORKDIR /app/apps/web
-# Next.js may need environment variables from root (if dokploy generated it at root)
-RUN cp ../../.env .env || true
+# Set Next.js build-time vars
+ARG NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+
 RUN npm run build
 
-# Production stage
-FROM node:20-alpine AS runner
+# Production image
+FROM node:20-slim AS runner
 WORKDIR /app
 
 ENV NODE_ENV production
 ENV PORT 3000
 
-# Next.js standalone folder includes a bundled node_modules, so we just copy it
+# Copy the standalone output and necessary static files
+# Note: Next.js standalone mode bundles everything into .next/standalone
 COPY --from=builder /app/apps/web/.next/standalone ./
 COPY --from=builder /app/apps/web/.next/static ./apps/web/.next/static
 COPY --from=builder /app/apps/web/public ./apps/web/public
 
 EXPOSE 3000
 
-# The server.js is generated inside apps/web folder
+# The server.js is located at the top level of the standalone output for the target app
 CMD ["node", "apps/web/server.js"]

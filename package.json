@@ -12,7 +12,8 @@
         "dev": "concurrently \"npm run dev -w @spademo/api\" \"npm run dev -w @spademo/web\"",
         "build": "npm run build --workspaces",
         "start": "echo 'Run from specific workspace via Dokploy command'",
-        "install:all": "npm install"
+        "install:all": "npm install",
+        "seed": "npm run seed -w @spademo/api"
     },
     "devDependencies": {
         "concurrently": "^9.2.1"
