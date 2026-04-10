@@ -70,7 +70,16 @@ async function seed() {
             `, [s.id, TENANT_ID, s.name, s.email, s.role, s.photo_url, s.bio, s.active, s.color_identifier, s.services_offered]);
         }
 
-        console.log('✅ Seed successful! Spa Demo is ready with 6 services and 2 staff members.');
+        // 4. Insert Admin User
+        console.log('Inserting admin user...');
+        await query(`
+            INSERT INTO users (id, tenant_id, email, password, role)
+            VALUES ($1, $2, $3, $4, $5)
+            ON CONFLICT (email) DO UPDATE SET
+                password = EXCLUDED.password
+        `, ['user-1', TENANT_ID, 'admin@demo.com', 'admin123', 'admin']);
+
+        console.log('✅ Seed successful! Spa Demo is ready with 6 services, 2 staff members, and 1 admin user (admin@demo.com / admin123).');
     } catch (error) {
         console.error('❌ Error during seeding:', error);
         process.exit(1);

@@ -3,12 +3,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { api } from '@/lib/api';
 import { useTenant } from '@/lib/tenant-context';
-import {
-    updatePassword,
-    EmailAuthProvider,
-    reauthenticateWithCredential,
-} from 'firebase/auth';
-import { auth } from '@/lib/firebase';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Card } from '@/components/ui/Card';
@@ -44,8 +38,16 @@ export default function ProfilePage() {
     const [pwMsg, setPwMsg] = useState('');
     const [pwError, setPwError] = useState('');
 
-    // Current user info
-    const user = auth.currentUser;
+    // Mock user info
+    const [user, setUser] = useState<{ email: string } | null>(null);
+
+    useEffect(() => {
+        // Read from cookies/localStorage
+        const mockToken = document.cookie.split('; ').find(row => row.startsWith('mock_auth_token='));
+        if (mockToken) {
+            setUser({ email: 'admin@demo.com' }); // Mock email
+        }
+    }, []);
 
     useEffect(() => {
         if (!tenantId) return;
@@ -139,26 +141,16 @@ export default function ProfilePage() {
             setPwError('Las contraseñas no coinciden.');
             return;
         }
-        if (!user || !user.email) {
-            setPwError('No hay sesión activa.');
-            return;
-        }
         setPwSaving(true);
         try {
-            const credential = EmailAuthProvider.credential(user.email, currentPassword);
-            await reauthenticateWithCredential(user, credential);
-            await updatePassword(user, newPassword);
-            setPwMsg('¡Contraseña actualizada con éxito!');
+            // Mock password change
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            setPwMsg('¡Contraseña actualizada con éxito! (Simulado)');
             setCurrentPassword('');
             setNewPassword('');
             setConfirmPassword('');
         } catch (e: unknown) {
-            const firebaseError = e as { code?: string; message?: string };
-            if (firebaseError.code === 'auth/wrong-password' || firebaseError.code === 'auth/invalid-credential') {
-                setPwError('La contraseña actual es incorrecta.');
-            } else {
-                setPwError(firebaseError.message || 'Error al cambiar la contraseña.');
-            }
+            setPwError('Error al cambiar la contraseña.');
         } finally {
             setPwSaving(false);
             setTimeout(() => setPwMsg(''), 3000);

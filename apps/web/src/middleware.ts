@@ -30,9 +30,7 @@ export default function middleware(req: NextRequest) {
         'demo.diabolicalservices.tech',
         'nailflow.com',
         'www.nailflow.com',
-        'admin.nailflow.com',
-        'nail-demo-35d0a.web.app',
-        'nail-demo-35d0a.firebaseapp.com'
+        'admin.nailflow.com'
     ];
 
     // If it's a main domain or they are accessing /admin

@@ -1,12 +1,9 @@
 import { Tenant, Staff, Service, Appointment, BookingData, TimeSlot } from './types';
-import { auth } from './firebase';
 
-let API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api-nailflow.diabolicalservices.tech/api';
+let API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://demo-spa-back.diabolicalservices.tech';
 
-// HACK: Fix Dokploy misconfiguration. If the API URL points to the frontend (demo),
-// force it to the real backend (api) to prevent infinite loops and 404s.
-if (API_URL.includes('demo.diabolicalservices.tech') || (!API_URL.includes('api-') && !API_URL.includes('api.'))) {
-    API_URL = 'https://api-nailflow.diabolicalservices.tech/api';
+if (!API_URL.endsWith('/api') && !API_URL.includes('/api/')) {
+    API_URL = API_URL.endsWith('/') ? `${API_URL}api` : `${API_URL}/api`;
 }
 
 if (API_URL.endsWith('/')) {
@@ -18,25 +15,17 @@ const fetchApi = async (path: string, options: RequestInit = {}, domain?: string
     const cleanPath = path.startsWith('/') ? path : `/${path}`;
     
     // Avoid double /api in the final URL if path already includes it
-    const finalUrl = cleanPath.startsWith('/api') 
-        ? `${API_URL.replace(/\/api$/, '')}${cleanPath}`
-        : `${API_URL}${cleanPath}`;
+    const finalUrl = `${API_URL.replace(/\/api$/, '')}${cleanPath.startsWith('/api') ? cleanPath : `/api${cleanPath}`}`;
     
     // Add tenant domain header for resolution
     const headers = new Headers(options.headers || {});
 
     if (typeof window !== 'undefined') {
-        headers.set('x-tenant-domain', window.location.hostname);
-        
-        // Add auth token if user is signed in
-        if (auth.currentUser) {
-            try {
-                const token = await auth.currentUser.getIdToken();
-                headers.set('Authorization', `Bearer ${token}`);
-            } catch (e) {
-                console.warn('Failed to get auth token', e);
-            }
+        const token = document.cookie.split('; ').find(row => row.startsWith('mock_auth_token='))?.split('=')[1];
+        if (token) {
+            headers.set('Authorization', `Bearer ${token}`);
         }
+        headers.set('x-tenant-domain', window.location.hostname);
     } else if (domain) {
         headers.set('x-tenant-domain', domain);
     }
@@ -60,6 +49,14 @@ const fetchApi = async (path: string, options: RequestInit = {}, domain?: string
 };
 
 export const api = {
+    // Auth
+    login: async (email: string, password: string): Promise<any> => {
+        return fetchApi('/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password }),
+        });
+    },
     // Tenant
     getTenantByDomain: async (domain: string): Promise<Tenant | null> => {
         try {

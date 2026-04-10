@@ -1,10 +1,8 @@
 'use client';
 
 import { usePathname, useRouter } from 'next/navigation';
-import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { onAuthStateChanged, signOut } from 'firebase/auth';
-import { auth } from '@/lib/firebase';
+import Link from 'next/link';
 import { api } from '@/lib/api';
 import { TenantContext } from '@/lib/tenant-context';
 import { PALETTES, TYPOGRAPHY } from '@/lib/constants';
@@ -44,15 +42,20 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     const [salonName, setSalonName] = useState<string>('Spa Demo');
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, async (user) => {
-            if (!user) {
-                router.replace('/login');
-            } else {
-                setIsAuth(true);
-                const role = localStorage.getItem('mock_role') as 'owner' | 'staff' || 'owner';
-                setUserRole(role);
-
-                const t = await api.getTenantByOwner(user.uid);
+        // Mock Auth check
+        const mockToken = document.cookie.split('; ').find(row => row.startsWith('mock_auth_token='));
+        if (!mockToken) {
+            router.replace('/login');
+        } else {
+            setIsAuth(true);
+            const role = localStorage.getItem('mock_role') as 'owner' | 'staff' || 'owner';
+            setUserRole(role);
+            
+            // For demo purposes, we'll use a hardcoded tenant or try to fetch by domain
+            const hostname = typeof window !== 'undefined' ? window.location.hostname : 'demo.diabolicalservices.tech';
+            const cleanDomain = hostname.split(':')[0];
+            
+            api.getTenantByDomain(cleanDomain).then(t => {
                 if (t) {
                     setTenantId(t.id);
                     setDomain(t.domain);
@@ -62,17 +65,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 } else {
                     setTenantId('demo-tenant');
                     setDomain('demo.diabolicalservices.tech');
-                    api.getTenantById('demo-tenant').then(dt => {
-                        if (dt) {
-                            setLogoUrl(dt.branding?.logo_url || null);
-                            setPhotoUrl(dt.branding?.photo_url || null);
-                            setSalonName(dt.name || 'Spa Demo');
-                        }
-                    });
                 }
-            }
-        });
-        return () => unsubscribe();
+            });
+        }
     }, [router]);
 
     useEffect(() => {
@@ -109,7 +104,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     }, []);
 
     const handleLogout = async () => {
-        await signOut(auth);
         document.cookie = 'mock_auth_token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
         localStorage.removeItem('mock_role');
         router.push('/login');

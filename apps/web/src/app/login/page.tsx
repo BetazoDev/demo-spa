@@ -3,8 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
-import { auth } from '@/lib/firebase';
+import { api } from '@/lib/api';
 
 export default function LoginPage() {
     const router = useRouter();
@@ -13,10 +12,11 @@ export default function LoginPage() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
-    const handleLoginSuccess = (user: any) => {
+    const handleLoginSuccess = (data: any) => {
         // Set cookie so admin layout guard works (static export, no SSR)
-        document.cookie = `mock_auth_token=uid_${user.uid}; path=/`;
+        document.cookie = `mock_auth_token=${data.token}; path=/`;
         localStorage.setItem('mock_role', 'owner');
+        localStorage.setItem('tenant_id', data.tenantId);
         router.push('/admin');
         router.refresh();
     };
@@ -31,39 +31,17 @@ export default function LoginPage() {
                 throw new Error('Por favor, ingresa tu correo y contraseña');
             }
 
-            const userCredential = await signInWithEmailAndPassword(auth, email, password);
-            handleLoginSuccess(userCredential.user);
+            const data = await api.login(email, password);
+            handleLoginSuccess(data);
         } catch (err: any) {
-            const code = err?.code;
-            if (code === 'auth/user-not-found' || code === 'auth/invalid-credential') {
-                setError('Correo o contraseña incorrectos');
-            } else if (code === 'auth/wrong-password') {
-                setError('Contraseña incorrecta');
-            } else if (code === 'auth/too-many-requests') {
-                setError('Demasiados intentos. Intenta más tarde.');
-            } else {
-                setError(err.message || 'Error al iniciar sesión');
-            }
+            setError(err.message || 'Error al iniciar sesión');
         } finally {
             setLoading(false);
         }
     };
 
     const handleGoogleLogin = async () => {
-        setLoading(true);
-        setError('');
-        const provider = new GoogleAuthProvider();
-
-        try {
-            const result = await signInWithPopup(auth, provider);
-            handleLoginSuccess(result.user);
-        } catch (err: any) {
-            if (err?.code !== 'auth/popup-closed-by-user') {
-                setError('Error al iniciar sesión con Google: ' + (err.message || 'Reintenta'));
-            }
-        } finally {
-            setLoading(false);
-        }
+        setError('El inicio de sesión con Google no está disponible sin Firebase. Por favor usa tu correo y contraseña.');
     };
 
     return (

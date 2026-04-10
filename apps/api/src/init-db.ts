@@ -72,6 +72,15 @@ export async function initDb() {
       PRIMARY KEY (tenant_id, client_phone)
     );
 
+    CREATE TABLE IF NOT EXISTS users (
+      id TEXT PRIMARY KEY,
+      tenant_id TEXT REFERENCES tenants(id),
+      email TEXT UNIQUE NOT NULL,
+      password TEXT NOT NULL,
+      role TEXT DEFAULT 'admin',
+      created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    );
+
     CREATE TABLE IF NOT EXISTS slot_locks (
       tenant_id TEXT,
       staff_id TEXT,

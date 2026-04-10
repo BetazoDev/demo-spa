@@ -2,8 +2,6 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '@/lib/firebase';
 import Link from 'next/link';
 
 export default function SignupPage() {
@@ -26,10 +24,11 @@ export default function SignupPage() {
                 throw new Error('La contraseña debe tener al menos 6 caracteres');
             }
 
-            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-
+            // Mock signup
+            const mockUid = 'demo_' + Date.now();
+            
             // Set session
-            document.cookie = `mock_auth_token=uid_${userCredential.user.uid}; path=/`;
+            document.cookie = `mock_auth_token=uid_${mockUid}; path=/`;
             localStorage.setItem('mock_role', 'owner');
 
             router.push('/admin');

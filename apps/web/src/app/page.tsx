@@ -15,10 +15,17 @@ export default async function RootPage() {
   const tenant = await api.getTenant(domain);
 
   if (!tenant) {
-    notFound();
+    return (
+      <div className="p-20 text-center">
+        <h1 className="text-2xl font-bold">Tenant no encontrado</h1>
+        <p>Dominio intentado: {domain}</p>
+        <p>API URL: {process.env.NEXT_PUBLIC_API_URL || 'https://demo-spa-back.diabolicalservices.tech'}</p>
+        <a href="/login" className="text-pink underline mt-4 block">Ir al Login</a>
+      </div>
+    );
   }
 
-  const allStaff = await api.getStaff();
+  const allStaff = await api.getStaff().catch(() => []);
   const owner = allStaff.find(s => s.role === 'owner') || allStaff[0];
 
   return (
