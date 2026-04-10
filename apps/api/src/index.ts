@@ -253,30 +253,60 @@ apiRouter.post('/auth/login', async (req, res) => {
 // Health check
 apiRouter.get('/health', (req, res) => res.send('OK'));
 
+// Panic Button: Force Seed via URL
+import { seed } from './seed-pg';
+apiRouter.get('/admin/seed', async (req, res) => {
+    try {
+        await seed();
+        res.json({ success: true, message: 'Database seeded successfully via HTTP' });
+    } catch (e: any) {
+        res.status(500).json({ error: 'Seed failed', details: e.message });
+    }
+});
+
 
 // Endpoint: Admin Cleanup (wipe services, staff, appointments for tenant)
 // Protected by secret key - only for demo reset
-apiRouter.post('/admin/cleanup', async (req, res) => {
+apiRouter.post('/admin/seed-emergency', async (req, res) => {
     const { secret } = req.body;
     const CLEANUP_SECRET = process.env.CLEANUP_SECRET || 'spademo-reset-2026';
     if (secret !== CLEANUP_SECRET) {
         return res.status(403).json({ error: 'Forbidden' });
     }
+    
     try {
         // @ts-ignore
         const tenantId = req.tenant.id;
+        console.log('🌱 Emergency Seed started for:', tenantId);
+        
+        // 1. Clear existing (demo only)
         await query('DELETE FROM appointments WHERE tenant_id = $1', [tenantId]);
         await query('DELETE FROM staff WHERE tenant_id = $1', [tenantId]);
         await query('DELETE FROM services WHERE tenant_id = $1', [tenantId]);
-        // Reset branding to clean spa state
-        await query(
-            `UPDATE tenants SET branding = $1 WHERE id = $2`,
-            [JSON.stringify({ primary_color: '#6BAE8E', secondary_color: '#8DB87A', palette_id: 'soft-aesthetic', typography: 'serif' }), tenantId]
-        );
-        res.json({ success: true, message: 'All tenant data wiped successfully.' });
-    } catch (e) {
-        console.error('Cleanup failed:', e);
-        res.status(500).json({ error: 'Cleanup failed' });
+        await query('DELETE FROM users WHERE tenant_id = $1', [tenantId]);
+
+        // 2. Insert Services
+        const services = [
+            { id: 'svc-1', name: 'Masaje Relajante', duration_minutes: 60, estimated_price: 650, required_advance: 200, category: 'Masajes', description: 'Masaje de cuerpo completo con aceites aromáticos.' },
+            { id: 'svc-2', name: 'Masaje Tejido Profundo', duration_minutes: 75, estimated_price: 800, required_advance: 250, category: 'Masajes', description: 'Libera tensión crónica.' },
+            { id: 'svc-3', name: 'Facial Hidratante', duration_minutes: 60, estimated_price: 700, required_advance: 200, category: 'Faciales', description: 'Limpieza profunda.' },
+        ];
+        for (const s of services) {
+            await query('INSERT INTO services (id, tenant_id, name, description, duration_minutes, estimated_price, required_advance, category) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) ON CONFLICT (id) DO NOTHING', 
+            [s.id, tenantId, s.name, s.description, s.duration_minutes, s.estimated_price, s.required_advance, s.category]);
+        }
+
+        // 3. Insert Admin User
+        await query(`
+            INSERT INTO users (id, tenant_id, email, password, role)
+            VALUES ($1, $2, $3, $4, $5)
+            ON CONFLICT (email) DO UPDATE SET password = EXCLUDED.password
+        `, ['user-1', tenantId, 'admin@demo.com', 'admin123', 'admin']);
+
+        res.json({ success: true, message: 'Database seeded successfully via Emergency Endpoint.' });
+    } catch (e: any) {
+        console.error('Emergency seed failed:', e);
+        res.status(500).json({ error: 'Seed failed', details: e.message });
     }
 });
 
