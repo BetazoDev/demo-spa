@@ -6,16 +6,97 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const tenant_1 = require("./tenant");
+const firebase_1 = require("./lib/firebase");
 const mercadopago_1 = require("mercadopago");
 const db_1 = require("./lib/db");
 const luxon_1 = require("luxon");
 const init_db_1 = require("./init-db");
 const crypto_1 = __importDefault(require("crypto"));
+const node_cron_1 = __importDefault(require("node-cron"));
 // Initialize MP Client 
 const mpClient = new mercadopago_1.MercadoPagoConfig({ accessToken: process.env.MP_ACCESS_TOKEN || 'TEST-TOKEN-MOCK' });
 const app = (0, express_1.default)();
 const port = process.env.PORT || 3000;
-app.use((0, cors_1.default)());
+app.use((0, cors_1.default)({
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'x-tenant-domain', 'x-tenant-id']
+}));
+// Image Proxy Handler (Security: API key never exposed to browser)
+async function imageProxyHandler(req, res) {
+    const { slug } = req.params;
+    // @ts-ignore
+    const filename = req.params.filename || req.params[1] || req.params[0];
+    if (!slug || !filename) {
+        return res.status(400).json({ error: 'Slug and filename are required' });
+    }
+    const CDN_TOKEN = process.env.CDN_UPLOAD_TOKEN
+        || 'dmm_7tpONlAMTNtIMLjpr4gMSNqw9LGbgX6X';
+    const CDN_TOKEN_REF = process.env.CDN_API_KEY_REFERENCES
+        || 'dmm_XKnnaMPrgRWaRHQ21deaQ3Krz2B6iBW';
+    // Clean up filename (remove leading slash if matched by *)
+    const cleanFilename = filename.startsWith('/') ? filename.substring(1) : filename;
+    // Determine which token to use based on folder
+    // System folders use the main token, everything else (like clientas, bookings, or root) uses the reference token
+    const isSystemFolder = cleanFilename.includes('services/') ||
+        cleanFilename.includes('team/') ||
+        cleanFilename.includes('staff/') ||
+        cleanFilename.includes('branding/') ||
+        cleanFilename.includes('profile/');
+    const primaryToken = isSystemFolder ? CDN_TOKEN : CDN_TOKEN_REF;
+    const secondaryToken = isSystemFolder ? CDN_TOKEN_REF : CDN_TOKEN;
+    console.log(`[Proxy DEBUG] Request URL: ${req.url}`);
+    console.log(`[Proxy DEBUG] slug: ${slug}, cleanFilename: ${cleanFilename}, isSystemFolder: ${isSystemFolder}`);
+    // Attempt with the most likely token first
+    let cdnUrl = `https://cdn.diabolicalservices.tech/${slug}/${cleanFilename}?api_key=${primaryToken}`;
+    console.log(`[Proxy DEBUG] Attempting Primary Fetch: ${cdnUrl.replace(/api_key=([^&]+)/, 'api_key=HIDDEN')}`);
+    try {
+        let cdnRes = await fetch(cdnUrl);
+        console.log(`[Proxy DEBUG] Primary Response Status: ${cdnRes.status}`);
+        // If failed, try with the other token as fallback
+        if (!cdnRes.ok && (cdnRes.status === 404 || cdnRes.status === 401 || cdnRes.status === 403)) {
+            console.log(`[Proxy DEBUG] Primary failed, trying Secondary Token...`);
+            cdnUrl = `https://cdn.diabolicalservices.tech/${slug}/${cleanFilename}?api_key=${secondaryToken}`;
+            console.log(`[Proxy DEBUG] Attempting Secondary Fetch: ${cdnUrl.replace(/api_key=([^&]+)/, 'api_key=HIDDEN')}`);
+            cdnRes = await fetch(cdnUrl);
+            console.log(`[Proxy DEBUG] Secondary Response Status: ${cdnRes.status}`);
+        }
+        if (!cdnRes.ok) {
+            console.warn(`[Proxy] CDN Error ${cdnRes.status} for ${slug}/${cleanFilename}`);
+            return res.status(cdnRes.status).json({
+                error: 'Image not found on CDN',
+                status: cdnRes.status,
+                path: `${slug}/${cleanFilename}`,
+                attemptedUrl: cdnUrl
+            });
+        }
+        const contentType = cdnRes.headers.get('content-type') || 'image/jpeg';
+        console.log(`[Proxy DEBUG] Successful fetch, Content-Type: ${contentType}`);
+        // Add CORS for browser safety
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+        res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+        res.setHeader('Content-Type', contentType);
+        res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+        res.setHeader('X-Content-Type-Options', 'nosniff');
+        const buffer = await cdnRes.arrayBuffer();
+        res.send(Buffer.from(buffer));
+    }
+    catch (e) {
+        console.error(`[Proxy] Critical Error:`, e.message);
+        res.status(502).json({ error: 'Failed to fetch image from CDN', details: e.message });
+    }
+}
+// FORCE Image Proxy Match at top level before anything else
+app.get('/api/proxy-test', (req, res) => res.send('API PROXY SYSTEM REACHABLE'));
+app.get(/^\/api\/img\/([^\/]+)\/(.+)$/, (req, res, next) => {
+    req.params.slug = req.params[0];
+    next();
+}, imageProxyHandler);
+app.get(/^\/img\/([^\/]+)\/(.+)$/, (req, res, next) => {
+    req.params.slug = req.params[0];
+    next();
+}, imageProxyHandler);
 app.use(express_1.default.json());
 let tenantBranding = {};
 // Initialize DB schema
@@ -29,19 +110,43 @@ const getUUID = () => {
         return crypto_1.default.randomBytes(16).toString('hex');
     }
 };
-// Middleware to extract tenant from request
+const triggerN8nWebhook = async (tenantId, event, data) => {
+    // URL should ideally come from tenant settings in DB
+    const N8N_WEBHOOK_URL = process.env.N8N_WEBHOOK_URL;
+    if (!N8N_WEBHOOK_URL)
+        return;
+    try {
+        await fetch(N8N_WEBHOOK_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                tenant_id: tenantId,
+                event,
+                ...data,
+                timestamp: new Date().toISOString()
+            })
+        });
+        console.log(`[n8n] Event ${event} triggered for tenant ${tenantId}`);
+    }
+    catch (e) {
+        console.error('[n8n] Webhook failed:', e);
+    }
+};
+// (imageProxyHandler moved to top near app initialization)
+// Image Proxy (Security: API key never exposed to browser)
+// MUST be before tenant middleware to avoid missing x-tenant headers in img tags
+// Routes moved inside apiRouter below to ensure consistent /api prefix matching
+// ─── Tenant Resolution Middleware ───────────────────────────────────────────
 app.use(async (req, res, next) => {
-    // Basic request logging
-    console.log(`[API Request] ${req.method} ${req.url}`, {
-        host: req.headers.host,
-        tenantDomain: req.headers['x-tenant-domain'],
-        tenantId: req.headers['x-tenant-id']
-    });
-    // Skip tenant domain resolution for webhooks and health
-    const skipPaths = ['/health', '/api/webhooks', '/api/health'];
+    // Skip resolution for health checks and webhooks
+    const skipPaths = ['/health', '/api/webhooks', '/api/health', '/api/proxy-test', '/api/img'];
     if (skipPaths.some(p => req.path.startsWith(p))) {
         return next();
     }
+    console.log(`[API Request] ${req.method} ${req.url}`, {
+        host: req.headers.host,
+        tenantDomain: req.headers['x-tenant-domain']
+    });
     const tenantDomain = (req.headers['x-tenant-domain'] || req.query.domain || req.headers.host);
     const tenantId = (req.headers['x-tenant-id'] || req.query.id);
     const ownerId = req.query.owner_id;
@@ -79,15 +184,34 @@ app.use(async (req, res, next) => {
         res.status(500).json({ error: 'Internal server error resolving tenant' });
     }
 });
-// Create API Router to handle both cases (/api or direct)
 const apiRouter = express_1.default.Router();
-// Health check inside router too
+// ─── Auth Middleware ────────────────────────────────────────────────────────
+const requireAuth = async (req, res, next) => {
+    if (process.env.NODE_ENV === 'test')
+        return next();
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return res.status(401).json({ error: 'Unauthorized. Missing or invalid Authorization header.' });
+    }
+    const token = authHeader.split('Bearer ')[1];
+    try {
+        const decodedToken = await firebase_1.auth.verifyIdToken(token);
+        // @ts-ignore
+        req.user = decodedToken;
+        next();
+    }
+    catch (e) {
+        console.error('JWT Verification failed:', e.message);
+        return res.status(401).json({ error: 'Unauthorized. Invalid token.' });
+    }
+};
+// Health check
 apiRouter.get('/health', (req, res) => res.send('OK'));
 // Endpoint: Admin Cleanup (wipe services, staff, appointments for tenant)
 // Protected by secret key - only for demo reset
 apiRouter.post('/admin/cleanup', async (req, res) => {
     const { secret } = req.body;
-    const CLEANUP_SECRET = process.env.CLEANUP_SECRET || 'nailflow-demo-reset-2026';
+    const CLEANUP_SECRET = process.env.CLEANUP_SECRET || 'spademo-reset-2026';
     if (secret !== CLEANUP_SECRET) {
         return res.status(403).json({ error: 'Forbidden' });
     }
@@ -97,8 +221,8 @@ apiRouter.post('/admin/cleanup', async (req, res) => {
         await (0, db_1.query)('DELETE FROM appointments WHERE tenant_id = $1', [tenantId]);
         await (0, db_1.query)('DELETE FROM staff WHERE tenant_id = $1', [tenantId]);
         await (0, db_1.query)('DELETE FROM services WHERE tenant_id = $1', [tenantId]);
-        // Reset branding to clean state
-        await (0, db_1.query)(`UPDATE tenants SET branding = $1 WHERE id = $2`, [JSON.stringify({ primary_color: '#E8B4B8', secondary_color: '#82C3A6', palette_id: 'soft-rose', typography: 'Outfit' }), tenantId]);
+        // Reset branding to clean spa state
+        await (0, db_1.query)(`UPDATE tenants SET branding = $1 WHERE id = $2`, [JSON.stringify({ primary_color: '#6BAE8E', secondary_color: '#8DB87A', palette_id: 'soft-aesthetic', typography: 'serif' }), tenantId]);
         res.json({ success: true, message: 'All tenant data wiped successfully.' });
     }
     catch (e) {
@@ -139,7 +263,7 @@ apiRouter.get('/services', async (req, res) => {
     }
 });
 // Endpoint: Create Service
-apiRouter.post('/services', async (req, res) => {
+apiRouter.post('/services', requireAuth, async (req, res) => {
     try {
         const { name, description, duration_minutes, estimated_price, required_advance, category, image_url } = req.body;
         // @ts-ignore
@@ -157,7 +281,7 @@ apiRouter.post('/services', async (req, res) => {
     }
 });
 // Endpoint: Update Service
-apiRouter.put('/services/:id', async (req, res) => {
+apiRouter.put('/services/:id', requireAuth, async (req, res) => {
     try {
         const { name, description, duration_minutes, estimated_price, required_advance, category, image_url } = req.body;
         // @ts-ignore
@@ -173,7 +297,7 @@ apiRouter.put('/services/:id', async (req, res) => {
     }
 });
 // Endpoint: Delete Service
-apiRouter.delete('/services/:id', async (req, res) => {
+apiRouter.delete('/services/:id', requireAuth, async (req, res) => {
     // @ts-ignore
     const tenantId = req.tenant.id;
     const result = await (0, db_1.query)('DELETE FROM services WHERE id = $1 AND tenant_id = $2', [req.params.id, tenantId]);
@@ -194,8 +318,8 @@ apiRouter.get('/staff', async (req, res) => {
         res.status(500).json({ error: 'Failed to fetch staff' });
     }
 });
-// Endpoint: Get Appointments
-apiRouter.get('/appointments', async (req, res) => {
+// Endpoint: Get Appointments (Protected)
+apiRouter.get('/appointments', requireAuth, async (req, res) => {
     const staffId = req.query.staff_id;
     // @ts-ignore
     const tenantId = req.tenant.id;
@@ -214,8 +338,8 @@ apiRouter.get('/appointments', async (req, res) => {
         res.status(500).json({ error: 'Failed to fetch appointments' });
     }
 });
-// Endpoint: Get Single Appointment
-apiRouter.get('/appointments/:id', async (req, res) => {
+// Endpoint: Get Single Appointment (Protected)
+apiRouter.get('/appointments/:id', requireAuth, async (req, res) => {
     try {
         // @ts-ignore
         const tenantId = req.tenant.id;
@@ -228,8 +352,8 @@ apiRouter.get('/appointments/:id', async (req, res) => {
         res.status(500).json({ error: 'Failed to fetch appointment' });
     }
 });
-// Endpoint: Update Appointment Status
-apiRouter.patch('/appointments/:id/status', async (req, res) => {
+// Endpoint: Update Appointment Status (Protected)
+apiRouter.patch('/appointments/:id/status', requireAuth, async (req, res) => {
     const { status } = req.body;
     // @ts-ignore
     const tenantId = req.tenant.id;
@@ -281,19 +405,57 @@ apiRouter.get('/availability', async (req, res) => {
                 requestedDuration = Number(svcRes.rows[0].duration_minutes);
             }
         }
-        let workingHours = { start: '09:00', end: '21:00' };
+        // --- 1. Get Salon-Wide Working Hours ---
+        // @ts-ignore
+        const tenantSettings = req.tenant.settings || {};
+        const salonSchedule = tenantSettings.weekly_schedule || [];
+        const dt = luxon_1.DateTime.fromISO(date, { zone: 'America/Mexico_City' });
+        const dayIndex = dt.weekday % 7; // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+        const dayName = dt.setLocale('en').toFormat('EEEE').toLowerCase(); // e.g., 'monday'
+        // Find salon's schedule for this day
+        let salonDaySchedule = Array.isArray(salonSchedule)
+            ? salonSchedule.find((s) => s.day === dayIndex || s.day_of_week === dayIndex)
+            : null;
+        // Default: 09:00 - 21:00, but closed if specified
+        let workingHours = {
+            active: salonDaySchedule ? salonDaySchedule.active : true, // Default to true if not set
+            start: salonDaySchedule?.start || '09:00',
+            end: salonDaySchedule?.end || '21:00'
+        };
+        // If salon is closed, nobody is available
+        if (!workingHours.active) {
+            return res.json([]);
+        }
+        // --- 2. Intersect with Staff Hours if staff_id is provided ---
         if (staff_id) {
             const staffRes = await (0, db_1.query)(`SELECT weekly_schedule FROM staff WHERE id = $1 AND tenant_id = $2`, [staff_id, tenantId]);
             if (staffRes.rowCount && staffRes.rowCount > 0 && staffRes.rows[0].weekly_schedule) {
                 const schedule = staffRes.rows[0].weekly_schedule;
-                const dt = luxon_1.DateTime.fromISO(date, { zone: 'America/Mexico_City' });
-                const dayName = dt.setLocale('en').toFormat('EEEE').toLowerCase(); // e.g., 'monday'
-                if (schedule[dayName]) {
-                    if (!schedule[dayName].active) {
-                        return res.json([]); // Staff is out
+                let staffDaySchedule = null;
+                // Handle both object-based and array-based schedules
+                if (Array.isArray(schedule)) {
+                    staffDaySchedule = schedule.find((s) => s.day_of_week === dayIndex ||
+                        s.day === dayIndex ||
+                        s.dayName?.toLowerCase() === dayName);
+                    if (staffDaySchedule) {
+                        staffDaySchedule = {
+                            active: staffDaySchedule.active !== false,
+                            start: staffDaySchedule.start_time || staffDaySchedule.start || '09:00',
+                            end: staffDaySchedule.end_time || staffDaySchedule.end || '18:00'
+                        };
                     }
-                    if (schedule[dayName].start && schedule[dayName].end) {
-                        workingHours = { start: schedule[dayName].start, end: schedule[dayName].end };
+                }
+                else if (schedule[dayName]) {
+                    staffDaySchedule = schedule[dayName];
+                }
+                if (staffDaySchedule) {
+                    if (!staffDaySchedule.active)
+                        return res.json([]); // Staff is out
+                    // Intersect with salon hours (pick latest start and earliest end)
+                    workingHours.start = [workingHours.start, staffDaySchedule.start].sort().reverse()[0];
+                    workingHours.end = [workingHours.end, staffDaySchedule.end].sort()[0];
+                    if (workingHours.start >= workingHours.end) {
+                        return res.json([]); // No overlap between staff and salon
                     }
                 }
             }
@@ -307,8 +469,12 @@ apiRouter.get('/availability', async (req, res) => {
             start: luxon_1.DateTime.fromJSDate(r.datetime_start).setZone('America/Mexico_City'),
             end: luxon_1.DateTime.fromJSDate(r.datetime_end).setZone('America/Mexico_City')
         }));
+        // Fetch active locks
+        const locksRes = await (0, db_1.query)(`SELECT slot_time FROM slot_locks 
+             WHERE tenant_id = $1 AND staff_id = $2 AND expires_at > NOW()`, [tenantId, staff_id]);
+        const activeLocks = locksRes.rows.map(r => luxon_1.DateTime.fromJSDate(r.slot_time).setZone('America/Mexico_City'));
         const nowInCDMX = luxon_1.DateTime.now().setZone('America/Mexico_City');
-        const bufferLimit = nowInCDMX.plus({ hours: 3 });
+        const bufferLimit = nowInCDMX.plus({ days: 7 });
         const slots = [];
         const dtBase = luxon_1.DateTime.fromISO(date, { zone: 'America/Mexico_City' });
         const [startH, startM] = workingHours.start.split(':').map(Number);
@@ -323,7 +489,8 @@ apiRouter.get('/availability', async (req, res) => {
             if (slotStart < bufferLimit)
                 continue; // Buffer limit passed
             const hasOverlap = appointments.some(apt => slotStart < apt.end && slotEnd > apt.start);
-            if (!hasOverlap) {
+            const isLocked = activeLocks.some(l => l.hasSame(slotStart, 'minute'));
+            if (!hasOverlap && !isLocked) {
                 slots.push({
                     time: slotStart.toFormat('HH:mm'),
                     available: true
@@ -337,14 +504,55 @@ apiRouter.get('/availability', async (req, res) => {
         res.status(500).json({ error: 'Failed to fetch availability' });
     }
 });
+// Endpoint: Hold Slot
+apiRouter.post('/availability/hold', async (req, res) => {
+    const { date, time, staff_id } = req.body;
+    // @ts-ignore
+    const tenantId = req.tenant.id;
+    if (!date || !time || !staff_id)
+        return res.status(400).json({ error: 'Date, time, and staff_id are required' });
+    try {
+        const slot_time = luxon_1.DateTime.fromISO(`${date}T${time}:00`, { zone: 'America/Mexico_City' }).toJSDate();
+        const expires_at = luxon_1.DateTime.now().plus({ minutes: 10 }).toJSDate();
+        await (0, db_1.query)(`INSERT INTO slot_locks (tenant_id, staff_id, slot_time, expires_at) 
+             VALUES ($1, $2, $3, $4) 
+             ON CONFLICT (tenant_id, staff_id, slot_time) DO UPDATE SET expires_at = EXCLUDED.expires_at`, [tenantId, staff_id, slot_time, expires_at]);
+        res.json({ success: true });
+    }
+    catch (e) {
+        console.error('Failed to hold slot:', e);
+        res.status(500).json({ error: 'Failed to hold slot' });
+    }
+});
+// Endpoint: Release Slot
+apiRouter.delete('/availability/hold', async (req, res) => {
+    const { date, time, staff_id } = req.query;
+    // @ts-ignore
+    const tenantId = req.tenant.id;
+    if (!date || !time || !staff_id)
+        return res.status(400).json({ error: 'Date, time, and staff_id are required' });
+    try {
+        const slot_time = luxon_1.DateTime.fromISO(`${date}T${time}:00`, { zone: 'America/Mexico_City' }).toJSDate();
+        await (0, db_1.query)('DELETE FROM slot_locks WHERE tenant_id = $1 AND staff_id = $2 AND slot_time = $3', [tenantId, staff_id, slot_time]);
+        res.json({ success: true });
+    }
+    catch (e) {
+        console.error('Failed to release slot:', e);
+        res.status(500).json({ error: 'Failed to release slot' });
+    }
+});
 // Endpoint: Create Booking (Test/PRUEBA mode — no payment gateway)
 apiRouter.post('/bookings/test', async (req, res) => {
     const { service_id, staff_id, date, time, client_name, client_phone, client_email, notes, image_urls } = req.body;
     // @ts-ignore
     const tenantId = req.tenant.id;
     console.log('Received test booking request:', { tenantId, client_name, date, time });
-    if (!client_name || !date || !time) {
-        return res.status(400).json({ error: 'client_name, date, and time are required' });
+    if (!client_name || !date || !time || !client_phone) {
+        return res.status(400).json({ error: 'client_name, date, time, and client_phone are required' });
+    }
+    const phoneRegex = /^\+?[1-9]\d{1,14}$/;
+    if (!phoneRegex.test(client_phone)) {
+        return res.status(400).json({ error: 'Invalid phone number format. Use international format (e.g. +521234567890)' });
     }
     try {
         const svcRes = await (0, db_1.query)('SELECT duration_minutes, estimated_price FROM services WHERE id = $1', [service_id]);
@@ -374,19 +582,24 @@ apiRouter.post('/bookings', async (req, res) => {
     const { service_id, staff_id, date, time, client_name, client_phone, client_email, notes, image_urls, image_url } = req.body;
     // @ts-ignore
     const tenantId = req.tenant.id;
+    if (!client_name || !date || !time || !client_phone) {
+        return res.status(400).json({ error: 'client_name, date, time, and client_phone are required' });
+    }
+    const phoneRegex = /^\+?[1-9]\d{1,14}$/;
+    if (!phoneRegex.test(client_phone)) {
+        return res.status(400).json({ error: 'Invalid phone number format. Use international format (e.g. +521234567890)' });
+    }
     try {
         const svcRes = await (0, db_1.query)('SELECT * FROM services WHERE id = $1', [service_id]);
         if (svcRes.rowCount === 0)
             return res.status(404).json({ error: 'Service not found' });
         const service = svcRes.rows[0];
-        // Use Mexico City timezone for datetime_start
-        const datetime_start_str = `${date} ${time}:00 America/Mexico_City`;
-        const [h, m] = time.split(':').map(Number);
-        const startDate = new Date(2000, 0, 1, h, m);
-        const duration = service.duration_minutes || 60;
-        const endDate = new Date(startDate.getTime() + duration * 60000);
-        const endStr = `${String(endDate.getHours()).padStart(2, '0')}:${String(endDate.getMinutes()).padStart(2, '0')}`;
-        const datetime_end_str = `${date} ${endStr}:00 America/Mexico_City`;
+        // Use Luxon for robust datetime handling
+        const start = luxon_1.DateTime.fromISO(`${date}T${time}`, { zone: 'America/Mexico_City' });
+        const duration = Number(service.duration_minutes || 60);
+        const end = start.plus({ minutes: duration });
+        const datetime_start_str = start.toISO();
+        const datetime_end_str = end.toISO();
         // Determine initial status based on payment method
         const isMercadoPago = req.body.payment_method === 'mercado';
         const initialStatus = isMercadoPago ? 'pending_payment' : 'confirmed';
@@ -396,6 +609,16 @@ apiRouter.post('/bookings', async (req, res) => {
             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15) RETURNING *`, [getUUID(), tenantId, client_name, client_phone, client_email, service_id, staff_id, datetime_start_str, datetime_end_str, initialStatus, notes, service.estimated_price, req.body.payment_method, JSON.stringify(image_urls || []), image_url || null]);
         const appointment = aptRes.rows[0];
         if (isMercadoPago) {
+            const advanceAmount = Number(service.required_advance || 0);
+            // Mercado Pago requires a positive amount
+            if (advanceAmount <= 0) {
+                console.log('Skipping MP Preference: Advance amount is 0');
+                return res.json({
+                    appointmentId: appointment.id,
+                    success: true,
+                    message: 'Confirmed without payment (No advance required)'
+                });
+            }
             // Create MP Preference
             const preference = new mercadopago_1.Preference(mpClient);
             const response = await preference.create({
@@ -404,16 +627,24 @@ apiRouter.post('/bookings', async (req, res) => {
                             id: service.id,
                             title: service.name,
                             quantity: 1,
-                            unit_price: Number(service.required_advance || 0),
+                            unit_price: advanceAmount,
+                            currency_id: 'MXN'
                         }],
                     external_reference: appointment.id.toString(),
-                    notification_url: `${process.env.APP_BASE_URL}/api/webhooks/mercadopago`,
+                    notification_url: `${process.env.APP_BASE_URL || 'https://api.diabolicalservices.tech'}/api/webhooks/mercadopago`,
                     back_urls: {
-                        success: `https://${req.headers['host']}/book/success`,
-                        failure: `https://${req.headers['host']}/book/error`,
+                        success: `${req.headers.origin || 'https://' + req.headers.host}/book/success`,
+                        failure: `${req.headers.origin || 'https://' + req.headers.host}/book/error`,
                     },
                     auto_return: 'approved',
                 }
+            });
+            await triggerN8nWebhook(tenantId, 'booking.initiated', {
+                appointment_id: appointment.id,
+                client_name,
+                client_phone,
+                service_id,
+                amount: advanceAmount
             });
             return res.json({
                 appointmentId: appointment.id,
@@ -433,42 +664,72 @@ apiRouter.post('/bookings', async (req, res) => {
 });
 // Endpoint: MercadoPago Webhook
 apiRouter.post('/webhooks/mercadopago', async (req, res) => {
-    const { type, data } = req.body;
-    if (type === 'payment') {
+    const { type, data, action } = req.body;
+    // Support both 'type=payment' and 'action=payment.created/updated'
+    const isPayment = type === 'payment' || action?.startsWith('payment.');
+    if (isPayment) {
         try {
-            const paymentId = data.id;
-            console.log(`Payment incoming webhook hit: ${paymentId}`);
+            const paymentId = data?.id || req.body.resource?.split('/').pop();
+            if (!paymentId)
+                return res.sendStatus(400);
+            console.log(`[MP Webhook] Processing payment: ${paymentId}`);
             const payment = new mercadopago_1.Payment(mpClient);
             const paymentData = await payment.get({ id: paymentId });
-            if (paymentData.status === 'approved' && paymentData.external_reference) {
-                console.log(`Payment ${paymentId} approved for appointment ${paymentData.external_reference}`);
-                await (0, db_1.query)(`UPDATE appointments SET status = 'confirmed', advance_paid = true WHERE id = $1`, [paymentData.external_reference]);
-            }
-            else {
-                console.log(`Payment ${paymentId} status: ${paymentData.status}`);
+            const appointmentId = paymentData.external_reference;
+            const status = paymentData.status;
+            console.log(`[MP Webhook] Payment ${paymentId} status: ${status} for Appointment ${appointmentId}`);
+            if (status === 'approved' && appointmentId) {
+                const updateRes = await (0, db_1.query)(`UPDATE appointments SET status = 'confirmed', advance_paid = true, payment_ref = $2 WHERE id = $1 RETURNING id`, [appointmentId, paymentId]);
+                if (updateRes.rowCount === 0) {
+                    console.warn(`[MP Webhook] Appointment ${appointmentId} not found in database.`);
+                }
+                else {
+                    console.log(`[MP Webhook] Success: Appointment ${appointmentId} confirmed.`);
+                    // Get tenant info to trigger specific webhook
+                    const apptRes = await (0, db_1.query)('SELECT tenant_id, client_name, client_phone FROM appointments WHERE id = $1', [appointmentId]);
+                    if (apptRes && apptRes.rows && apptRes.rows.length > 0) {
+                        const { tenant_id, client_name, client_phone } = apptRes.rows[0];
+                        await triggerN8nWebhook(tenant_id, 'booking.paid', {
+                            appointment_id: appointmentId,
+                            client_name,
+                            client_phone,
+                            payment_id: paymentId
+                        });
+                    }
+                }
             }
         }
         catch (e) {
-            console.error('Webhook processing failed:', e);
+            console.error('[MP Webhook] Processing failed:', e.message);
         }
     }
     res.sendStatus(200);
 });
-// Endpoint: Update Tenant Branding
-apiRouter.put('/tenant', async (req, res) => {
+// Endpoint: Admin Update Tenant Branding / Settings
+apiRouter.put('/tenant', requireAuth, async (req, res) => {
     // @ts-ignore
     const tenantId = req.tenant.id;
     const { name, branding, settings } = req.body;
     try {
-        const result = await (0, db_1.query)('UPDATE tenants SET name = COALESCE($1, name), branding = COALESCE($2, branding), settings = COALESCE($3, settings) WHERE id = $4 RETURNING *', [name, branding, settings, tenantId]);
+        const result = await (0, db_1.query)(`UPDATE tenants SET
+                name = COALESCE($1, name),
+                branding = COALESCE($2::jsonb, branding),
+                settings = COALESCE($3::jsonb, settings)
+             WHERE id = $4 RETURNING *`, [
+            name ?? null,
+            branding ? JSON.stringify(branding) : null,
+            settings ? JSON.stringify(settings) : null,
+            tenantId
+        ]);
         res.json(result.rows[0]);
     }
     catch (e) {
-        res.status(500).json({ error: 'Failed to update tenant' });
+        console.error('Failed to update tenant:', e.message);
+        res.status(500).json({ error: 'Failed to update tenant', details: e.message });
     }
 });
-// Endpoint: Complete Appointment
-apiRouter.post('/appointments/:id/complete', async (req, res) => {
+// Endpoint: Complete Booking Server Action (From UI logic when advancing status to paid)
+apiRouter.post('/appointments/:id/complete', requireAuth, async (req, res) => {
     try {
         const { id } = req.params;
         // @ts-ignore
@@ -481,7 +742,7 @@ apiRouter.post('/appointments/:id/complete', async (req, res) => {
     }
 });
 // Endpoint: Staff Management (POST)
-apiRouter.post('/staff', async (req, res) => {
+apiRouter.post('/staff', requireAuth, async (req, res) => {
     try {
         // @ts-ignore
         const tenantId = req.tenant.id;
@@ -512,7 +773,7 @@ apiRouter.post('/staff', async (req, res) => {
     }
 });
 // Endpoint: Staff Management (PUT)
-apiRouter.put('/staff/:id', async (req, res) => {
+apiRouter.put('/staff/:id', requireAuth, async (req, res) => {
     try {
         const { id } = req.params;
         // @ts-ignore
@@ -598,6 +859,52 @@ app.use((req, res) => {
         method: req.method,
         path: req.path
     });
+});
+// ─── Daily Reference Image Cleanup (Spec § 10) ───────────────────────────────
+// Runs every day at 02:00 AM UTC.
+// Deletes reference image columns from appointments older than 14 days.
+node_cron_1.default.schedule('0 2 * * *', async () => {
+    console.log('[Cron] Starting 14-day reference image cleanup...');
+    try {
+        const cutoffDate = luxon_1.DateTime.now().minus({ days: 14 }).toISO();
+        // Fetch appointments older than 14 days that still have image data
+        const staleRes = await (0, db_1.query)(`SELECT id, image_urls FROM appointments
+             WHERE created_at < $1
+               AND image_urls IS NOT NULL
+               AND jsonb_array_length(COALESCE(image_urls, '[]'::jsonb)) > 0`, [cutoffDate]);
+        if (!staleRes || staleRes.rows.length === 0) {
+            console.log('[Cron] No stale images found.');
+            return;
+        }
+        console.log(`[Cron] Found ${staleRes.rows.length} appointments with stale images.`);
+        const CDN_DELETE_TOKEN = process.env.CDN_UPLOAD_TOKEN || process.env.NEXT_PUBLIC_CDN_UPLOAD_TOKEN;
+        for (const row of staleRes.rows) {
+            // Attempt to call CDN delete for each URL (best effort)
+            if (CDN_DELETE_TOKEN && Array.isArray(row.image_urls)) {
+                for (const url of row.image_urls) {
+                    try {
+                        // Extract filename from URL
+                        const filename = url.split('/').pop()?.split('?')[0];
+                        if (filename) {
+                            await fetch(`https://api.diabolicalservices.tech/api/images/${filename}`, {
+                                method: 'DELETE',
+                                headers: { 'Authorization': `Bearer ${CDN_DELETE_TOKEN}` }
+                            });
+                        }
+                    }
+                    catch (e) {
+                        console.warn(`[Cron] Failed to delete CDN image: ${url}`, e);
+                    }
+                }
+            }
+            // Clear image references in the database regardless
+            await (0, db_1.query)(`UPDATE appointments SET image_urls = null, image_url = null WHERE id = $1`, [row.id]);
+        }
+        console.log(`[Cron] Cleanup complete. Processed ${staleRes.rows.length} appointments.`);
+    }
+    catch (e) {
+        console.error('[Cron] Cleanup failed:', e);
+    }
 });
 app.listen(port, () => {
     console.log(`NailFlow API running on port ${port}`);

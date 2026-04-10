@@ -72,6 +72,14 @@ async function initDb() {
       client_phone VARCHAR(255),
       PRIMARY KEY (tenant_id, client_phone)
     );
+
+    CREATE TABLE IF NOT EXISTS slot_locks (
+      tenant_id TEXT,
+      staff_id TEXT,
+      slot_time TIMESTAMP WITH TIME ZONE,
+      expires_at TIMESTAMP WITH TIME ZONE,
+      PRIMARY KEY (tenant_id, staff_id, slot_time)
+    );
   `);
     // Migrations: Ensure all columns exist
     console.log('Running migrations...');
@@ -113,7 +121,7 @@ async function initDb() {
       VALUES ($1, $2, $3, $4, $5, $6, $7)
       ON CONFLICT (id) DO UPDATE SET
         domain = EXCLUDED.domain,
-        name = EXCLUDED.name,
+        name = COALESCE(tenants.name, EXCLUDED.name),
         branding = COALESCE(tenants.branding, EXCLUDED.branding),
         settings = COALESCE(tenants.settings, EXCLUDED.settings),
         subscription = COALESCE(tenants.subscription, EXCLUDED.subscription),
@@ -121,13 +129,13 @@ async function initDb() {
     `, [
         'demo-tenant',
         'demo.diabolicalservices.tech',
-        'NailFlow Demo',
+        'Spa Demo',
         JSON.stringify({
-            primary_color: '#E8B4B8',
-            secondary_color: '#82C3A6',
-            palette_id: 'soft-rose',
-            typography: 'Outfit',
-            tagline: 'Tu oasis de belleza'
+            primary_color: '#6BAE8E',
+            secondary_color: '#8DB87A',
+            palette_id: 'soft-aesthetic',
+            typography: 'serif',
+            tagline: 'Tu santuario de bienestar'
         }),
         JSON.stringify({ currency: 'MXN', timezone: 'America/Mexico_City' }),
         JSON.stringify({ status: 'active', plan: 'pro' }),

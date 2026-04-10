@@ -38,7 +38,9 @@ const admin = __importStar(require("firebase-admin"));
 // environment variable pointing to your Firebase Admin service account key JSON file.
 // Example: set GOOGLE_APPLICATION_CREDENTIALS="C:\path\to\serviceAccountKey.json"
 // Then run: npx ts-node src/seed.ts
-admin.initializeApp();
+if (!admin.apps.length) {
+    admin.initializeApp();
+}
 const db = admin.firestore();
 async function seed() {
     console.log('🌱 Starting Firebase Seeding...');
@@ -49,8 +51,9 @@ async function seed() {
         domain: 'demo.com', // maps to localhost or demo.com
         branding: {
             logo_url: '',
-            primary_color: '#E8B4B8', // Stitch soft variant
-            secondary_color: '#CDB4DB',
+            primary_color: '#6BAE8E', // Jade Spa
+            secondary_color: '#8DB87A',
+            tagline: 'Tu santuario de bienestar'
         },
         settings: {
             currency: 'MXN',
@@ -74,21 +77,21 @@ async function seed() {
     const staffMembers = [
         {
             id: 'owner_abc',
-            name: 'Sarah (Dueña)',
-            email: 'sarah@glowstudio.com',
+            name: 'Sofía (Dueña)',
+            email: 'sofia@spademo.com',
             role: 'owner',
             photo_url: '',
-            bio: 'Nail technician with 5 years of experience.',
+            bio: 'Terapeuta de spa con 8 años de experiencia en relajación holística.',
             services_offered: ['svc_1', 'svc_2', 'svc_3'],
             weekly_schedule: defaultSchedule
         },
         {
             id: 'staff_xyz',
-            name: 'Maria Vargas',
-            email: 'maria@glowstudio.com',
+            name: 'Valentina',
+            email: 'valentina@spademo.com',
             role: 'staff',
             photo_url: '',
-            bio: 'Specialist in acrylics and nail art.',
+            bio: 'Especialista en masajes y tratamientos faciales.',
             services_offered: ['svc_2', 'svc_4'],
             weekly_schedule: defaultSchedule
         }
@@ -101,10 +104,10 @@ async function seed() {
     console.log('Creating Services...');
     const servicesRef = db.collection('tenants').doc(tenantId).collection('services');
     const services = [
-        { id: 'svc_1', name: 'Kapping Gel', duration_minutes: 90, estimated_price: 350, required_advance: 100 },
-        { id: 'svc_2', name: 'Acrílicas Esculpidas', duration_minutes: 120, estimated_price: 550, required_advance: 200 },
-        { id: 'svc_3', name: 'Manicura Rusa', duration_minutes: 60, estimated_price: 250, required_advance: 100 },
-        { id: 'svc_4', name: 'Pedicura Spa', duration_minutes: 75, estimated_price: 400, required_advance: 150 },
+        { id: 'svc_1', name: 'Masaje Relajante', duration_minutes: 60, estimated_price: 650, required_advance: 200 },
+        { id: 'svc_2', name: 'Facial Hidratante', duration_minutes: 60, estimated_price: 700, required_advance: 200 },
+        { id: 'svc_3', name: 'Ritual de Piedras Calientes', duration_minutes: 90, estimated_price: 950, required_advance: 300 },
+        { id: 'svc_4', name: 'Masaje de Tejido Profundo', duration_minutes: 75, estimated_price: 800, required_advance: 250 },
     ];
     for (const s of services) {
         await servicesRef.doc(s.id).set(s);
