@@ -1,12 +1,12 @@
 {
-    "name": "nailflow-monorepo",
+    "name": "spademo-monorepo",
     "version": "1.0.0",
     "private": true,
     "workspaces": [
         "apps/*"
     ],
     "scripts": {
-        "dev": "concurrently \"npm run dev -w @nailflow/api\" \"npm run dev -w @nailflow/web\"",
+        "dev": "concurrently \"npm run dev -w @spademo/api\" \"npm run dev -w @spademo/web\"",
         "build": "npm run build --workspaces",
         "install:all": "npm install"
     },
