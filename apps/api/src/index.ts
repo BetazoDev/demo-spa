@@ -255,7 +255,6 @@ apiRouter.post('/auth/login', async (req, res) => {
 apiRouter.get('/health', (req, res) => res.send('OK'));
 
 // Panic Button: Force Seed via URL
-import { seed } from './seed-pg';
 apiRouter.get('/admin/seed', async (req, res) => {
     try {
         await seed();
