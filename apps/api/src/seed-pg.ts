@@ -17,7 +17,7 @@ const staffList = [
     { id: 'staff-2', name: 'Valentina Cruz', email: 'valentina@spademo.com', role: 'staff', photo_url: 'https://i.pravatar.cc/150?u=valentina-cruz', bio: 'Especialista en tratamientos faciales y rituales de bienestar.', active: true, color_identifier: '#8DB87A', services_offered: ['svc-3', 'svc-5', 'svc-6'] },
 ];
 
-async function seed() {
+export async function seed() {
     const dbUrl = process.env.DATABASE_URL || 'UNDEFINED';
     console.log('🌱 Seeding Postgres for tenant:', TENANT_ID);
     console.log('🔗 Connection URL present:', dbUrl !== 'UNDEFINED');

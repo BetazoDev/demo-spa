@@ -5,6 +5,7 @@ import { MercadoPagoConfig, Preference, Payment } from 'mercadopago';
 import { query } from './lib/db';
 import { DateTime } from 'luxon';
 import { initDb } from './init-db';
+import { seed } from './seed-pg';
 import crypto from 'crypto';
 import cron from 'node-cron';
 
@@ -1109,29 +1110,15 @@ cron.schedule('0 2 * * *', async () => {
 app.listen(port, async () => {
     console.log(`🚀 NailFlow API trying to initialize on port ${port}`);
     try {
-        await initializeDb();
+        await initDb();
         
         // Auto-Seed: Ensure at least one admin exists and demo services are present
         const tenantId = 'demo-tenant';
         const adminCheck = await query('SELECT id FROM users WHERE email = $1', ['admin@demo.com']);
         
         if (adminCheck && adminCheck.rowCount === 0) {
-            console.log('🌱 No admin found, seeding default data into production...');
-            await query(`
-                INSERT INTO users (id, tenant_id, email, password, role)
-                VALUES ($1, $2, $3, $4, $5)
-                ON CONFLICT (email) DO NOTHING
-            `, ['user-admin', tenantId, 'admin@demo.com', 'admin123', 'admin']);
-            
-            // Seed base services
-            const services = [
-                { id: 'svc-1', name: 'Masaje Relajante', duration_minutes: 60, estimated_price: 650, required_advance: 200, category: 'Masajes' },
-                { id: 'svc-2', name: 'Facial Hidratante', duration_minutes: 60, estimated_price: 700, required_advance: 200, category: 'Faciales' },
-            ];
-            for (const s of services) {
-                await query('INSERT INTO services (id, tenant_id, name, duration_minutes, estimated_price, required_advance, category) VALUES ($1, $2, $3, $4, $5, $6, $7) ON CONFLICT (id) DO NOTHING', 
-                [s.id, tenantId, s.name, s.duration_minutes, s.estimated_price, s.required_advance, s.category]);
-            }
+            console.log('🌱 No admin found, auto-triggering seed in production...');
+            await seed();
             console.log('✅ Auto-seed successful.');
         }
         
