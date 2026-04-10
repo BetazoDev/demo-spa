@@ -28,6 +28,7 @@
   "optionalDependencies": {
     "@next/swc-linux-x64-gnu": "^14.2.15",
     "@next/swc-linux-x64-musl": "^14.2.15",
-    "lightningcss": "^1.29.1"
+    "lightningcss": "^1.29.1",
+    "lightningcss-linux-x64-gnu": "^1.29.1"
   }
 }

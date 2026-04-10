@@ -17,7 +17,12 @@ const staffList = [
 ];
 
 async function seed() {
+    const dbUrl = process.env.DATABASE_URL || 'UNDEFINED';
     console.log('🌱 Seeding Postgres for tenant:', TENANT_ID);
+    console.log('🔗 Connection URL present:', dbUrl !== 'UNDEFINED');
+    if (dbUrl !== 'UNDEFINED') {
+        console.log('📍 Connection string starts with:', dbUrl.substring(0, 20) + '...');
+    }
 
     try {
         // 1. Clear existing data (if any) - Optional: only for demo tenant
