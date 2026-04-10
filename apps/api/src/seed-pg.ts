@@ -1,4 +1,5 @@
 import { query } from './lib/db';
+import { initDb } from './init-db';
 
 const TENANT_ID = 'demo-tenant';
 
@@ -25,6 +26,11 @@ async function seed() {
     }
 
     try {
+        // 0. Initialize Database Schema
+        console.log('🏗️ Initializing database schema...');
+        await initDb();
+        console.log('✅ Schema ready.');
+
         // 1. Clear existing data (if any) - Optional: only for demo tenant
         await query('DELETE FROM appointments WHERE tenant_id = $1', [TENANT_ID]);
         await query('DELETE FROM staff WHERE tenant_id = $1', [TENANT_ID]);
