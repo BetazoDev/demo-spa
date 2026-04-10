@@ -223,7 +223,7 @@ const requireAuth = async (req: any, res: any, next: any) => {
     // Check if it looks like our real token
     const [userId] = token.split(':');
     const result = await query('SELECT * FROM users WHERE id = $1', [userId]);
-    if (result.rowCount > 0) {
+    if (result && result.rowCount && result.rowCount > 0) {
         req.user = result.rows[0];
         return next();
     }
@@ -235,7 +235,7 @@ apiRouter.post('/auth/login', async (req, res) => {
     const { email, password } = req.body;
     try {
         const result = await query('SELECT * FROM users WHERE email = $1 AND password = $2', [email, password]);
-        if (result.rowCount === 0) {
+        if (!result || result.rowCount === 0) {
             return res.status(401).json({ error: 'Credenciales inválidas' });
         }
         const user = result.rows[0];
