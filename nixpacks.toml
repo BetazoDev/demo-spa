@@ -1,0 +1,12 @@
+[phases.setup]
+nixPkgs = ["nodejs_20"]
+
+[phases.install]
+# Force full install from root to link workspaces
+cmds = ["npm install"]
+
+[phases.build]
+# Build using the workspace command. This works for both if run from root.
+# For Web app: we will set build command in Dokploy if possible, 
+# but here we'll build both to be absolutely sure dependencies are met.
+cmds = ["npm run build --workspaces"]
