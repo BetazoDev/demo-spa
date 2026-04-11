@@ -8,7 +8,7 @@ export default async function RootPage() {
   const headersList = headers();
   let domain = headersList.get('host') || 'demo.diabolicalservices.tech';
   
-  if (domain.includes('localhost') || domain.includes('127.0.0.1')) {
+  if (domain.includes('localhost') || domain.includes('127.0.0.1') || domain.includes('spa-demo.diabolicalservices.tech')) {
     domain = 'demo.diabolicalservices.tech';
   }
 
@@ -19,7 +19,7 @@ export default async function RootPage() {
       <div className="p-20 text-center">
         <h1 className="text-2xl font-bold">Tenant no encontrado</h1>
         <p>Dominio intentado: {domain}</p>
-        <p>API URL: {process.env.NEXT_PUBLIC_API_URL || 'https://demo-spa-back.diabolicalservices.tech'}</p>
+        <p>API URL: {process.env.NEXT_PUBLIC_API_URL || 'https://spa-demo-back.diabolicalservices.tech'}</p>
         <a href="/login" className="text-jade underline mt-4 block">Ir al Login</a>
       </div>
     );
@@ -29,7 +29,6 @@ export default async function RootPage() {
   
   // Prefer strictly owner, then admin, then any active staff member
   const owner = allStaff.find(s => s.role === 'owner') || 
-                allStaff.find(s => s.role === 'admin') || 
                 allStaff.find(s => s.active) ||
                 allStaff[0];
 

@@ -3,7 +3,9 @@ import { query } from './lib/db';
 
 export async function getTenantByDomain(domain: string): Promise<Tenant | null> {
     let searchDomain = domain;
-    if (domain.includes('localhost') || domain === 'api-demo.diabolicalservices.tech') {
+    if (domain.includes('localhost') || 
+        domain === 'api-demo.diabolicalservices.tech' || 
+        domain === 'spa-demo.diabolicalservices.tech') {
         searchDomain = 'demo.diabolicalservices.tech';
     }
 

@@ -39,3 +39,16 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# build artifacts
+apps/api/dist/
+
+# logs and temp files
+*.log
+*.txt
+!README.md
+
+# test files
+test-*.js
+check-*.js
+*-gen.js
