@@ -3,16 +3,27 @@ import BookingWidget from '@/components/booking/BookingWidget';
 import { notFound } from 'next/navigation';
 import { headers } from 'next/headers';
 
+export const dynamic = 'force-dynamic';
+
 export default async function RootPage() {
   // Determine domain from headers or use default
   const headersList = headers();
-  let domain = headersList.get('host') || 'demo.diabolicalservices.tech';
-  
+  const host = headersList.get('host') || 'demo.diabolicalservices.tech';
+  let domain = host.split(':')[0];
+
   if (domain.includes('localhost') || domain.includes('127.0.0.1') || domain.includes('spa-demo.diabolicalservices.tech')) {
     domain = 'demo.diabolicalservices.tech';
   }
 
   const tenant = await api.getTenant(domain);
+
+  // Robust staff fetching
+  let allStaff = await api.getStaff(domain).catch(() => []);
+
+  // If no staff found for specific domain, try demo fallback
+  if (allStaff.length === 0 && domain !== 'demo.diabolicalservices.tech') {
+    allStaff = await api.getStaff('demo.diabolicalservices.tech').catch(() => []);
+  }
 
   if (!tenant) {
     return (
@@ -26,11 +37,12 @@ export default async function RootPage() {
   }
 
   const allStaff = await api.getStaff(domain).catch(() => []);
-  
+
   // Prefer strictly owner, then admin, then any active staff member
-  const owner = allStaff.find(s => s.role === 'owner') || 
-                allStaff.find(s => s.active) ||
-                allStaff[0];
+  const owner = allStaff.find(s => s.role === 'owner') ||
+    allStaff.find(s => s.role === 'staff') ||
+    allStaff.find(s => s.active) ||
+    allStaff[0];
 
   if (!owner) {
     return (
