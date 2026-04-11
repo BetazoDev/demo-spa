@@ -115,6 +115,14 @@ app.get(/^\/api\/img\/([^\/]+)\/(.+)$/, (req, res, next) => {
     req.params.slug = req.params[0];
     next();
 }, imageProxyHandler);
+
+app.get('/', (req, res) => {
+    res.json({
+        status: 'online',
+        service: 'NailFlow API',
+        timestamp: new Date().toISOString()
+    });
+});
 app.get(/^\/img\/([^\/]+)\/(.+)$/, (req, res, next) => {
     req.params.slug = req.params[0];
     next();
@@ -1113,36 +1121,25 @@ cron.schedule('0 2 * * *', async () => {
     }
 });
 
-// Root handler to satisfy health checks and avoid 404/502 confusion
-app.get('/', (req, res) => {
-    res.json({
-        status: 'online',
-        service: 'NailFlow API',
-        timestamp: new Date().toISOString(),
-        database: 'connected'
-    });
+app.listen(port, () => {
+    console.log(`🚀 NailFlow API listening on port ${port}`);
 });
 
-app.listen(port, async () => {
-    console.log(`🚀 NailFlow API listening on port ${port}`);
+// Run DB initialization in background
+(async () => {
     try {
         console.log('📦 Initializing database schema...');
         await initDb();
-        
-        // Auto-Seed: Ensure at least one admin exists and demo services are present
-        const tenantId = 'demo-tenant';
         const adminCheck = await query('SELECT id FROM users WHERE email = $1', ['admin@demo.com']);
-        
         if (adminCheck && adminCheck.rowCount === 0) {
-            console.log('🌱 No admin found, auto-triggering seed in production...');
+            console.log('🌱 No admin found, auto-triggering seed...');
             await seed();
             console.log('✅ Auto-seed successful.');
         } else {
-            console.log('✔ Database already contains data. Skipping auto-seed.');
+            console.log('✔ Database already contains data.');
         }
-
         console.log('✨ System ready.');
     } catch (e: any) {
-        console.error('❌ FATAL: Database initialization failed:', e.message);
+        console.error('❌ Database initialization error:', e.message);
     }
-});
+})();
