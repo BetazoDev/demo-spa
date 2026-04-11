@@ -19,6 +19,5 @@
         "concurrently": "^9.2.1"
     },
     "dependencies": {
-        "lightningcss": "^1.32.0"
     }
 }
