@@ -10,8 +10,8 @@ COPY package.json package-lock.json* ./
 COPY apps/web/package.json ./apps/web/
 COPY apps/api/package.json ./apps/api/
 
-# Install dependencies using npm install (more flexible for cross-platform lockfiles)
-RUN npm install
+# Install dependencies focusing on package.json (ignoring potentially platform-tainted lockfile)
+RUN npm install --no-package-lock
 
 # Stage 2: Build the application
 FROM node:20-slim AS builder
