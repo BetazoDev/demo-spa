@@ -1,6 +1,6 @@
 import { Tenant, Staff, Service, Appointment, BookingData, TimeSlot } from './types';
 
-const API_URL = 'https://demo-spa-back.diabolicalservices.tech/api';
+const API_URL = 'https://spa-demo-back.diabolicalservices.tech/api';
 
 const fetchApi = async (path: string, options: RequestInit = {}, domain?: string) => {
     // Ensure path starts with /
