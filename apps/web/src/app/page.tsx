@@ -25,8 +25,18 @@ export default async function RootPage() {
     );
   }
 
-  const allStaff = await api.getStaff().catch(() => []);
-  const owner = allStaff.find(s => s.role === 'owner') || allStaff[0];
+  const allStaff = await api.getStaff(domain).catch(() => []);
+  const owner = allStaff.find(s => s.role === 'owner' || s.role === 'admin') || allStaff[0];
+
+  if (!owner) {
+    return (
+      <div className="p-20 text-center">
+        <h1 className="text-2xl font-serif text-charcoal mb-4">No hay especialistas disponibles</h1>
+        <p className="text-nf-gray mb-8">Por favor, configura tu personal en el panel de administración.</p>
+        <a href="/login" className="text-jade underline">Ir al Panel</a>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-cream selection:bg-jade-pale selection:text-charcoal relative">

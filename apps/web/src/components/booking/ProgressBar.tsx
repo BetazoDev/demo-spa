@@ -6,12 +6,11 @@ interface ProgressBarProps {
     currentStep: BookingStep;
 }
 
-const STEPS: BookingStep[] = ['personal', 'service', 'datetime', 'inspiration', 'summary', 'payment', 'confirmation'];
+const STEPS: BookingStep[] = ['personal', 'service', 'datetime', 'summary', 'payment', 'confirmation'];
 const STEP_LABELS: Record<BookingStep, string> = {
     personal: 'Datos',
     service: 'Servicio',
     datetime: 'Fecha',
-    inspiration: 'Fotos',
     summary: 'Resumen',
     payment: 'Pago',
     confirmation: '✓',
@@ -30,10 +29,9 @@ export default function ProgressBar({ currentStep }: ProgressBarProps) {
                         <div className="flex flex-col items-center flex-1">
                             <div
                                 className={`
-                  w-full h-1.5 rounded-full transition-all duration-300
-                  ${isCompleted ? 'bg-jade' : isActive ? 'bg-gradient-to-r from-pink to-coral' : 'bg-cream-dark'}
-                `}
-                                style={isActive ? { background: 'linear-gradient(90deg, var(--pink), var(--coral))' } : {}}
+                   w-full h-1.5 rounded-full transition-all duration-300
+                   ${isCompleted ? 'bg-jade' : isActive ? 'bg-jade shadow-sm' : 'bg-cream-dark'}
+                 `}
                             />
                             <span
                                 className={`

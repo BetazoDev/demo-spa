@@ -42,10 +42,10 @@ const BookingContext = createContext<BookingContextType | undefined>(undefined);
 export function BookingProvider({
     children,
     tenantId,
-    staffId = 'staff-1',
-    staffName = 'Ana López',
+    staffId = '',
+    staffName = '',
     staffPhoto,
-    salonName = 'Ana Nails Studio',
+    salonName = '',
     initialStep = 'personal',
     onStepChange,
 }: {
@@ -124,7 +124,7 @@ export function BookingProvider({
             total_duration,
             total_required_advance: total_required_advance,
             
-            staff_id: staffId || 'staff-1',
+            staff_id: staffId,
             staff_name: staffName,
             client_name: clientName,
             client_phone: clientPhone,

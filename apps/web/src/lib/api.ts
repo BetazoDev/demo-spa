@@ -93,8 +93,8 @@ export const api = {
     },
 
     // Staff
-    getStaff: async (): Promise<Staff[]> => {
-        return fetchApi('/api/staff');
+    getStaff: async (domain?: string): Promise<Staff[]> => {
+        return fetchApi('/api/staff', {}, domain);
     },
     createStaffMember: async (data: Partial<Staff>): Promise<Staff> => {
         return fetchApi('/api/staff', {
@@ -112,8 +112,8 @@ export const api = {
     },
 
     // Services
-    getServices: async (): Promise<Service[]> => {
-        return fetchApi('/api/services');
+    getServices: async (domain?: string): Promise<Service[]> => {
+        return fetchApi('/api/services', {}, domain);
     },
     createService: async (data: Partial<Service>): Promise<Service> => {
         return fetchApi('/api/services', {

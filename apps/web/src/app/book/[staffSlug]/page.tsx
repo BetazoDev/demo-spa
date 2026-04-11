@@ -25,15 +25,29 @@ export default async function StaffBookingPage({ params }: Props) {
     }
 
     // Resolve the staff member by slug
-    const allStaff = await api.getStaff();
+    const allStaff = await api.getStaff(domain).catch(() => []);
+    
+    // Helper to slugify names consistently
+    const slugify = (text: string) => text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, '-').replace(/[^\w-]+/g, '');
+
     const staffMember = allStaff.find(s => {
-        const memberSlug = s.slug || s.name.toLowerCase().replace(/\s+/g, '-');
+        const memberSlug = s.slug || slugify(s.name);
         return memberSlug === params.staffSlug;
     });
 
-    const staffName = staffMember?.name || params.staffSlug.replace(/-/g, ' ');
-    const staffId = staffMember?.id || 'staff-1';
-    const staffPhoto = staffMember?.photo_url || undefined;
+    if (!staffMember) {
+        return (
+            <div className="p-20 text-center bg-cream min-h-screen">
+                <h1 className="text-2xl font-serif text-charcoal mb-4">Miembro no encontrado</h1>
+                <p className="text-nf-gray mb-8">No pudimos encontrar al especialista "{params.staffSlug.replace(/-/g, ' ')}".</p>
+                <a href="/" className="inline-block px-8 py-4 bg-jade text-white rounded-full font-serif shadow-lg">Ver todos los servicios</a>
+            </div>
+        );
+    }
+
+    const staffName = staffMember.name;
+    const staffId = staffMember.id;
+    const staffPhoto = staffMember.photo_url || undefined;
 
     return (
         <div className="min-h-screen bg-cream selection:bg-pink-pale selection:text-charcoal relative">

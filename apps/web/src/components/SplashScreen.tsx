@@ -43,9 +43,9 @@ export default function SplashScreen({
                     </div>
                 ) : (
                     <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
-                        <circle cx="28" cy="28" r="28" fill="var(--pink-pale)" />
-                        <path d="M28 12 C28 12 14 22 14 34 C14 41.7 20.3 48 28 48 C35.7 48 42 41.7 42 34 C42 22 28 12 28 12Z" fill="var(--pink)" opacity="0.8" />
-                        <path d="M28 20 C28 20 20 28 20 36 C20 40.4 23.6 44 28 44" fill="var(--coral)" opacity="0.5" />
+                        <circle cx="28" cy="28" r="28" fill="var(--jade-pale)" />
+                        <path d="M28 12 C28 12 14 22 14 34 C14 41.7 20.3 48 28 48 C35.7 48 42 41.7 42 34 C42 22 28 12 28 12Z" fill="var(--jade)" opacity="0.8" />
+                        <path d="M28 20 C28 20 20 28 20 36 C20 40.4 23.6 44 28 44" fill="var(--sage)" opacity="0.5" />
                         <line x1="28" y1="48" x2="28" y2="36" stroke="var(--charcoal-light)" strokeWidth="1.5" strokeLinecap="round" />
                     </svg>
                 )}

@@ -37,11 +37,11 @@ export default function TeamPage() {
 
     const getStaffUrl = (member: Staff) => {
         const slug = member.slug || member.name.toLowerCase().replace(/\s+/g, '-');
-        const baseDomain = domain && domain.includes('.') ? domain : `${domain}.nailflow.app`;
+        const currentHost = typeof window !== 'undefined' ? window.location.host : (domain || 'spa-demo.diabolicalservices.tech');
         // Dirección/owner: root domain. Staff: /book/slug
         return member.role === 'owner'
-            ? { href: `https://${baseDomain}`, text: baseDomain }
-            : { href: `https://${baseDomain}/book/${slug}`, text: `${baseDomain}/book/${slug}` };
+            ? { href: `https://${currentHost}`, text: currentHost }
+            : { href: `https://${currentHost}/book/${slug}`, text: `${currentHost}/book/${slug}` };
     };
 
     const handleCopyLink = (member: Staff) => {

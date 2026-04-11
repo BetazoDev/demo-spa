@@ -60,7 +60,7 @@ export default function PersonalDataStep({
                             {staffPhoto ? (
                                 <img src={api.getPublicUrl(staffPhoto)} alt={staffName} className="w-full h-full object-cover" />
                             ) : (
-                                <div className="w-full h-full flex items-center justify-center text-3xl font-bold text-white bg-gradient-to-br from-pink to-coral">
+                                <div className="w-full h-full flex items-center justify-center text-3xl font-bold text-white bg-gradient-to-br from-jade to-forest">
                                     {staffName[0]}
                                 </div>
                             )}

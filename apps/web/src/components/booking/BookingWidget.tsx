@@ -33,7 +33,7 @@ export default function BookingWidget({ tenant, staffId, staffName, staffPhoto, 
         tenant.name ||
         tenant.domain.split('.')[0].charAt(0).toUpperCase() +
         tenant.domain.split('.')[0].slice(1) +
-        ' Nails Studio';
+        ' Spa Zen';
 
     const currentIndex = STEPS.findIndex(s => s.id === currentStep);
 
@@ -64,7 +64,7 @@ export default function BookingWidget({ tenant, staffId, staffName, staffPhoto, 
                         <div className="flex items-center gap-3 mb-10">
                             <div
                                 className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg overflow-hidden"
-                                style={{ background: 'var(--pink)' }}
+                                style={{ background: 'var(--jade)' }}
                             >
                                 {tenant.branding.logo_url ? (
                                     <img src={api.getPublicUrl(tenant.branding.logo_url)} className="w-full h-full object-cover" alt="Logo" />
@@ -74,7 +74,7 @@ export default function BookingWidget({ tenant, staffId, staffName, staffPhoto, 
                             </div>
                             <div>
                                 <p className="font-serif text-white text-base font-semibold leading-tight">{salonName}</p>
-                                <p className="text-white/40 text-[11px] tracking-[0.15em] uppercase mt-0.5">Nail Studio</p>
+                                <p className="text-white/40 text-[11px] tracking-[0.15em] uppercase mt-0.5">Estética & Bienestar</p>
                             </div>
                         </div>
 
@@ -145,7 +145,7 @@ export default function BookingWidget({ tenant, staffId, staffName, staffPhoto, 
 
                                         {/* Active dot */}
                                         {isActive && (
-                                            <div className="ml-auto w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: 'var(--pink)' }} />
+                                            <div className="ml-auto w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: 'var(--jade)' }} />
                                         )}
                                     </div>
                                 );

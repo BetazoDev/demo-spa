@@ -95,7 +95,7 @@ export default function ServiceStep({ selectedServiceIds, onToggle, onNext, onBa
             <div className="flex-1 overflow-y-auto no-scrollbar px-6 py-6 scroll-smooth">
                 {loading ? (
                     <div className="flex flex-col items-center justify-center h-64 gap-4">
-                        <div className="w-10 h-10 border-3 border-jade-pale border-t-pink rounded-full animate-spin" />
+                        <div className="w-10 h-10 border-3 border-jade-pale border-t-jade rounded-full animate-spin" />
                         <p className="font-serif italic text-nf-gray">Preparando catálogo...</p>
                     </div>
                 ) : filteredServices.length === 0 ? (

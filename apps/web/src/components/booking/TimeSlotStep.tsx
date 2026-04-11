@@ -16,7 +16,7 @@ interface TimeSlotStepProps {
     totalDuration?: number;
 }
 
-export default function TimeSlotStep({ selectedDate, selectedTime, onSelect, onNext, onBack, tenantId = 'demo', staffId = 'staff-1', serviceId, totalDuration = 0 }: TimeSlotStepProps) {
+export default function TimeSlotStep({ selectedDate, selectedTime, onSelect, onNext, onBack, tenantId = 'demo', staffId, serviceId, totalDuration = 0 }: TimeSlotStepProps) {
     const [timeSlots, setTimeSlots] = useState<TimeSlot[]>([]);
     const [loading, setLoading] = useState(false);
     const holdIdRef = useRef(`hold_${Date.now()}_${Math.random().toString(36).slice(2)}`);
@@ -136,7 +136,7 @@ export default function TimeSlotStep({ selectedDate, selectedTime, onSelect, onN
 
             {loading ? (
                 <div className="flex flex-col items-center justify-center py-20 gap-4">
-                    <div className="w-10 h-10 border-3 border-jade-pale border-t-pink rounded-full animate-spin" />
+                    <div className="w-10 h-10 border-3 border-jade-pale border-t-jade rounded-full animate-spin" />
                     <p className="font-serif italic text-nf-gray">Consultando agenda...</p>
                 </div>
             ) : timeSlots.length === 0 ? (
