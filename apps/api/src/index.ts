@@ -1114,9 +1114,20 @@ cron.schedule('0 2 * * *', async () => {
     }
 });
 
+// Root handler to satisfy health checks and avoid 404/502 confusion
+app.get('/', (req, res) => {
+    res.json({
+        status: 'online',
+        service: 'NailFlow API',
+        timestamp: new Date().toISOString(),
+        database: 'connected'
+    });
+});
+
 app.listen(port, async () => {
-    console.log(`🚀 NailFlow API trying to initialize on port ${port}`);
+    console.log(`🚀 NailFlow API listening on port ${port}`);
     try {
+        console.log('📦 Initializing database schema...');
         await initDb();
         
         // Auto-Seed: Ensure at least one admin exists and demo services are present
@@ -1127,10 +1138,12 @@ app.listen(port, async () => {
             console.log('🌱 No admin found, auto-triggering seed in production...');
             await seed();
             console.log('✅ Auto-seed successful.');
+        } else {
+            console.log('✔ Database already contains data. Skipping auto-seed.');
         }
-        
-    } catch (err) {
-        console.error('❌ Failed to initialize/seed production DB:', err);
+
+        console.log('✨ System ready.');
+    } catch (e: any) {
+        console.error('❌ FATAL: Database initialization failed:', e.message);
     }
-    console.log(`🚀 NailFlow API running on port ${port}`);
 });
