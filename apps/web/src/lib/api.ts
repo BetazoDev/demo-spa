@@ -1,6 +1,10 @@
 import { Tenant, Staff, Service, Appointment, BookingData, TimeSlot } from './types';
 
-const API_URL = 'https://spa-demo-back.diabolicalservices.tech/api';
+// Use relative URLs in development (Next.js proxy handles CORS)
+// Use full URL in production
+const API_URL = typeof window !== 'undefined' && window.location.hostname === 'localhost'
+  ? '/api'  // Relative URL - Next.js proxy will forward to backend
+  : (process.env.NEXT_PUBLIC_API_URL || 'https://spa-demo-back.diabolicalservices.tech') + '/api';
 
 const fetchApi = async (path: string, options: RequestInit = {}, domain?: string) => {
     // Ensure path starts with /

@@ -9,12 +9,11 @@ const services = [
     { id: 'svc-3', name: 'Facial Hidratante', duration_minutes: 60, estimated_price: 700, required_advance: 200, category: 'Faciales', description: 'Limpieza profunda, exfoliación e hidratación intensiva para tu piel.' },
     { id: 'svc-4', name: 'Ritual de Piedras Calientes', duration_minutes: 90, estimated_price: 950, required_advance: 300, category: 'Rituales', description: 'Combinación de masaje con piedras volcánicas calientes para máxima relajación.' },
     { id: 'svc-5', name: 'Envoltura Corporal', duration_minutes: 60, estimated_price: 750, required_advance: 250, category: 'Corporales', description: 'Tratamiento nutritivo con arcilla y aceites esenciales para tu piel.' },
-    { id: 'svc-6', name: 'Aromaterapia', duration_minutes: 45, estimated_price: 500, required_advance: 150, category: 'Masajes', description: 'Masaje suave con aceites esenciales diseñados para equilibrar mente y cuerpo.' },
 ];
 
 const staffList = [
-    { id: 'staff-1', name: 'Sofía Ramírez', email: 'sofia@spademo.com', role: 'owner', photo_url: 'https://i.pravatar.cc/150?u=sofia-ramirez', bio: 'Terapeuta certificada con 8 años de experiencia en bienestar holístico.', active: true, color_identifier: '#6BAE8E', services_offered: ['svc-1', 'svc-2', 'svc-4', 'svc-6'] },
-    { id: 'staff-2', name: 'Valentina Cruz', email: 'valentina@spademo.com', role: 'staff', photo_url: 'https://i.pravatar.cc/150?u=valentina-cruz', bio: 'Especialista en tratamientos faciales y rituales de bienestar.', active: true, color_identifier: '#8DB87A', services_offered: ['svc-3', 'svc-5', 'svc-6'] },
+    { id: 'staff-1', name: 'Sofía Ramírez', email: 'sofia@spademo.com', role: 'staff', photo_url: 'https://i.pravatar.cc/150?u=sofia-ramirez', bio: 'Terapeuta certificada con 8 años de experiencia en bienestar holístico.', active: true, color_identifier: '#6BAE8E', services_offered: ['svc-1', 'svc-2', 'svc-4'] },
+    { id: 'staff-2', name: 'Valentina Cruz', email: 'valentina@spademo.com', role: 'staff', photo_url: 'https://i.pravatar.cc/150?u=valentina-cruz', bio: 'Especialista en tratamientos faciales y rituales de bienestar.', active: true, color_identifier: '#8DB87A', services_offered: ['svc-3', 'svc-5'] },
 ];
 
 export async function seed() {
@@ -31,7 +30,8 @@ export async function seed() {
         await initDb();
         console.log('✅ Schema ready.');
 
-        // 1. Clear existing data (if any) - Optional: only for demo tenant
+        // 1. Clear existing data for demo tenant
+        console.log('Clearing existing data...');
         await query('DELETE FROM appointments WHERE tenant_id = $1', [TENANT_ID]);
         await query('DELETE FROM staff WHERE tenant_id = $1', [TENANT_ID]);
         await query('DELETE FROM services WHERE tenant_id = $1', [TENANT_ID]);
@@ -70,21 +70,36 @@ export async function seed() {
             `, [s.id, TENANT_ID, s.name, s.email, s.role, s.photo_url, s.bio, s.active, s.color_identifier, s.services_offered]);
         }
 
-        // 4. Insert Admin User
+        // 4. Insert Admin User (role: 'direccion')
         console.log('Inserting admin user...');
         await query(`
             INSERT INTO users (id, tenant_id, email, password, role)
             VALUES ($1, $2, $3, $4, $5)
             ON CONFLICT (email) DO UPDATE SET
-                password = EXCLUDED.password
-        `, ['user-1', TENANT_ID, 'admin@demo.com', 'admin123', 'admin']);
+                password = EXCLUDED.password,
+                role = EXCLUDED.role
+        `, ['user-1', TENANT_ID, 'admin@demo.com', 'admin123', 'direccion']);
 
-        console.log('✅ Seed successful! Spa Demo is ready with 6 services, 2 staff members, and 1 admin user (admin@demo.com / admin123).');
+        console.log('✅ Seed successful! Spa Demo is ready with:');
+        console.log('   - 5 servicios');
+        console.log('   - 2 miembros del staff');
+        console.log('   - 1 usuario administrador (admin@demo.com / admin123)');
+        console.log('   - Rol: direccion');
     } catch (error) {
         console.error('❌ Error during seeding:', error);
-        process.exit(1);
+        throw error; // Re-throw instead of process.exit
     }
-    process.exit(0);
 }
 
-seed();
+// Only run if executed directly (not imported)
+if (require.main === module) {
+    seed()
+        .then(() => {
+            console.log('🎉 Seed completed, exiting...');
+            process.exit(0);
+        })
+        .catch((err) => {
+            console.error('❌ Seed failed:', err);
+            process.exit(1);
+        });
+}
