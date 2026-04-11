@@ -50,7 +50,7 @@ export default async function StaffBookingPage({ params }: Props) {
     const staffPhoto = staffMember.photo_url || undefined;
 
     return (
-        <div className="min-h-screen bg-cream selection:bg-pink-pale selection:text-charcoal relative">
+        <div className="min-h-screen bg-cream selection:bg-jade/20 selection:text-charcoal relative">
             <BookingWidget
                 tenant={tenant}
                 staffId={staffId}

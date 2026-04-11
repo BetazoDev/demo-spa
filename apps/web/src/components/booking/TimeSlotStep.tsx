@@ -37,31 +37,8 @@ export default function TimeSlotStep({ selectedDate, selectedTime, onSelect, onN
         async function loadAvailability() {
             setLoading(true);
             try {
-                const [slots, tenant] = await Promise.all([
-                    api.getAvailability(staffId, selectedDate, serviceId),
-                    api.getTenant(tenantId)
-                ]);
-
-                // Filter by business hours
-                const dateObj = new Date(selectedDate + 'T12:00:00');
-                const dayNum = dateObj.getDay();
-                const daySched = tenant?.settings?.weekly_schedule?.find((s: any) => s.day === dayNum);
-
-                if (daySched && daySched.active) {
-                    const startMin = timeToMinutes(daySched.start);
-                    const endMin = timeToMinutes(daySched.end);
-                    
-                    const filtered = slots.filter(slot => {
-                        const slotMin = timeToMinutes(slot.time);
-                        // Filter by business hours AND ensure total duration fits before closing
-                        return slotMin >= startMin && (slotMin + (totalDuration || 0)) <= endMin;
-                    });
-                    setTimeSlots(filtered);
-                } else {
-                    // Even if no specific schedule, respect duration if endMin were known. 
-                    // But usually there's a daySched. If not, we just show all.
-                    setTimeSlots(slots);
-                }
+                const slots = await api.getAvailability(staffId, selectedDate, serviceId);
+                setTimeSlots(slots);
             } catch (err) {
                 console.error('Failed to load availability:', err);
                 setTimeSlots([]);

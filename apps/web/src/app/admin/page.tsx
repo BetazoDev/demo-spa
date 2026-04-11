@@ -266,8 +266,10 @@ export default function AdminDashboard() {
 
     const handleCopyLink = (member: Staff) => {
         const slug = member.slug || member.name.toLowerCase().replace(/\s+/g, '-');
-        // For Dirección role: use root domain. For staff: use /book/slug
-        const baseDomain = domain && domain.includes('.') ? domain : `${domain}.nailflow.app`;
+        
+        // Use current window host for links
+        const baseDomain = typeof window !== 'undefined' ? window.location.host : (domain || 'spa-demo.diabolicalservices.tech');
+        
         const finalUrl = member.role === 'owner'
             ? `https://${baseDomain}`
             : `https://${baseDomain}/book/${slug}`;
@@ -322,7 +324,7 @@ export default function AdminDashboard() {
                 <p className="text-[10px] tracking-[0.15em] text-aesthetic-sage uppercase font-display italic font-medium mb-2">Links de Reservas del Equipo</p>
                 {staff.map(member => {
                     const slug = member.slug || member.name.toLowerCase().replace(/\s+/g, '-');
-                    const baseDomain = domain && domain.includes('.') ? domain : `${domain}.nailflow.app`;
+                    const baseDomain = typeof window !== 'undefined' ? window.location.host : (domain || 'spa-demo.diabolicalservices.tech');
                     const url = member.role === 'owner'
                         ? baseDomain
                         : `${baseDomain}/book/${slug}`;

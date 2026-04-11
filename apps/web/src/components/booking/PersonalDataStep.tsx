@@ -18,7 +18,7 @@ interface PersonalDataStepProps {
 export default function PersonalDataStep({
     name, phone, email,
     onNameChange, onPhoneChange, onEmailChange, onNext,
-    staffName = 'Ana', staffPhoto,
+    staffName = 'Tu Especialista', staffPhoto,
 }: PersonalDataStepProps) {
     const [errors, setErrors] = useState<Record<string, string>>({});
 

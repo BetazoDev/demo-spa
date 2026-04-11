@@ -26,7 +26,12 @@ export default async function RootPage() {
   }
 
   const allStaff = await api.getStaff(domain).catch(() => []);
-  const owner = allStaff.find(s => s.role === 'owner' || s.role === 'admin') || allStaff[0];
+  
+  // Prefer strictly owner, then admin, then any active staff member
+  const owner = allStaff.find(s => s.role === 'owner') || 
+                allStaff.find(s => s.role === 'admin') || 
+                allStaff.find(s => s.active) ||
+                allStaff[0];
 
   if (!owner) {
     return (
