@@ -1,14 +1,6 @@
 import { Tenant, Staff, Service, Appointment, BookingData, TimeSlot } from './types';
 
-let API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://demo-spa-back.diabolicalservices.tech';
-
-if (!API_URL.endsWith('/api') && !API_URL.includes('/api/')) {
-    API_URL = API_URL.endsWith('/') ? `${API_URL}api` : `${API_URL}/api`;
-}
-
-if (API_URL.endsWith('/')) {
-    API_URL = API_URL.slice(0, -1);
-}
+const API_URL = 'https://demo-spa-back.diabolicalservices.tech/api';
 
 const fetchApi = async (path: string, options: RequestInit = {}, domain?: string) => {
     // Ensure path starts with /
