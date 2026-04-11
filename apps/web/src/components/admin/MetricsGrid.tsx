@@ -15,7 +15,7 @@ interface MetricProps {
     color?: string;
 }
 
-const Metric = ({ label, value, subValue, icon, trend, color = 'var(--pink)' }: MetricProps) => (
+const Metric = ({ label, value, subValue, icon, trend, color = 'var(--aesthetic-forest)' }: MetricProps) => (
     <Card variant="white" className="flex flex-col p-8 group">
         <div className="flex items-start justify-between mb-8">
             <div 
@@ -57,7 +57,7 @@ export const MetricsGrid = ({ income, completedCitations, pendingCitations, newC
                 value={`$${income.toLocaleString()}`} 
                 icon="payments" 
                 trend={{ value: '+12%', positive: true }} 
-                color="var(--pink)"
+                color="var(--aesthetic-jade)"
             />
             <Metric 
                 label="Citas Completadas" 

@@ -92,7 +92,7 @@ function AppointmentDetail({ apt, service, onClose, onComplete, staff }: Appoint
                 {apt.notes && (
                     <div className="px-6 mb-5">
                         <p className="text-[10px] tracking-[0.15em] text-nf-gray uppercase mb-3">Notas de la Clienta</p>
-                        <blockquote className="italic text-charcoal text-sm leading-relaxed border-l-2 pl-4" style={{ borderColor: 'var(--pink)' }}>
+                        <blockquote className="italic text-charcoal text-sm leading-relaxed border-l-2 pl-4" style={{ borderColor: 'var(--aesthetic-jade)' }}>
                             &ldquo;{apt.notes}&rdquo;
                         </blockquote>
                     </div>
@@ -291,7 +291,7 @@ export default function AdminDashboard() {
     if (loading) {
         return (
             <div className="flex items-center justify-center h-64">
-                <div className="w-8 h-8 border-2 border-jade-light border-t-pink rounded-full animate-spin" />
+                <div className="w-8 h-8 border-2 border-jade-light border-t-aesthetic-jade rounded-full animate-spin" />
             </div>
         );
     }
