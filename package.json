@@ -16,13 +16,9 @@
         "seed": "npm run seed -w @spademo/api"
     },
     "devDependencies": {
-        "concurrently": "^9.2.1",
-        "lightningcss-win32-x64-msvc": "^1.32.0"
+        "concurrently": "^9.2.1"
     },
     "dependencies": {
         "lightningcss": "^1.32.0"
-    },
-    "optionalDependencies": {
-        "lightningcss-win32-x64-msvc": "^1.32.0"
     }
 }
