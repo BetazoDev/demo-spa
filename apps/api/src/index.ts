@@ -124,8 +124,7 @@ app.use(express.json());
 
 let tenantBranding: Record<string, any> = {};
 
-// Initialize DB schema
-initDb().catch(console.error);
+// (initDb moved to app.listen below for synchronous startup)
 
 // Helper for safe UUID generation
 const getUUID = () => {
