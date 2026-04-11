@@ -8,11 +8,11 @@ export const dynamic = 'force-dynamic';
 export default async function RootPage() {
   // Determine domain from headers or use default
   const headersList = headers();
-  const host = headersList.get('host') || 'demo.diabolicalservices.tech';
+  const host = headersList.get('host') || 'spa-demo.diabolicalservices.tech';
   let domain = host.split(':')[0];
 
-  if (domain.includes('localhost') || domain.includes('127.0.0.1') || domain.includes('spa-demo.diabolicalservices.tech')) {
-    domain = 'demo.diabolicalservices.tech';
+  if (domain.includes('localhost') || domain.includes('127.0.0.1') || domain === 'demo.diabolicalservices.tech') {
+    domain = 'spa-demo.diabolicalservices.tech';
   }
 
   const tenant = await api.getTenant(domain);
@@ -20,9 +20,9 @@ export default async function RootPage() {
   // Robust staff fetching
   let allStaff = await api.getStaff(domain).catch(() => []);
 
-  // If no staff found for specific domain, try demo fallback
-  if (allStaff.length === 0 && domain !== 'demo.diabolicalservices.tech') {
-    allStaff = await api.getStaff('demo.diabolicalservices.tech').catch(() => []);
+  // If no staff found for specific domain, try spa-demo fallback
+  if (allStaff.length === 0 && domain !== 'spa-demo.diabolicalservices.tech') {
+    allStaff = await api.getStaff('spa-demo.diabolicalservices.tech').catch(() => []);
   }
 
   if (!tenant) {

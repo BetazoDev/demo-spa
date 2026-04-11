@@ -5,8 +5,8 @@ export async function getTenantByDomain(domain: string): Promise<Tenant | null> 
     let searchDomain = domain;
     if (domain.includes('localhost') || 
         domain === 'api-demo.diabolicalservices.tech' || 
-        domain === 'spa-demo.diabolicalservices.tech') {
-        searchDomain = 'demo.diabolicalservices.tech';
+        domain === 'demo.diabolicalservices.tech') {
+        searchDomain = 'spa-demo.diabolicalservices.tech';
     }
 
     const res = await query('SELECT * FROM tenants WHERE domain = $1', [searchDomain]);

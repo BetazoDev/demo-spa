@@ -139,7 +139,7 @@ export async function initDb() {
         owner_id = COALESCE(tenants.owner_id, EXCLUDED.owner_id)
     `, [
     'demo-tenant',
-    'demo.diabolicalservices.tech',
+    'spa-demo.diabolicalservices.tech',
     'Spa Demo',
     JSON.stringify({
       primary_color: '#6BAE8E',
