@@ -15,15 +15,19 @@ const mpClient = new MercadoPagoConfig({ accessToken: process.env.MP_ACCESS_TOKE
 const app = express();
 const port = process.env.PORT || 3000;
 
-app.use(cors({
-    origin: (origin, callback) => {
-        // Allow all origins for now to avoid blocking, but mirroring is safer for CORS
-        callback(null, true);
-    },
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'x-tenant-domain', 'x-tenant-id', 'x-tenant-slug']
-}));
+// ── CORS DEFINITIVO ────────────────────────────────────────────────────────
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', req.headers.origin || '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, x-tenant-domain, x-tenant-id, x-tenant-slug');
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+
+    // Manejar preflight (OPTIONS)
+    if (req.method === 'OPTIONS') {
+        return res.sendStatus(200);
+    }
+    next();
+});
 
 // Image Proxy Handler (Security: API key never exposed to browser)
 async function imageProxyHandler(req: express.Request, res: express.Response) {
