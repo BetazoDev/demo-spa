@@ -103,7 +103,7 @@ export default function SettingsPage() {
     if (loadingTenant) {
         return (
             <div className="flex items-center justify-center h-64">
-                <div className="w-8 h-8 border-2 border-aesthetic-accent border-t-aesthetic-pink rounded-full animate-spin" />
+                <div className="w-8 h-8 border-2 border-aesthetic-accent border-t-aesthetic-jade rounded-full animate-spin" />
             </div>
         );
     }
@@ -113,11 +113,11 @@ export default function SettingsPage() {
             {/* Header */}
             <div className="flex items-center justify-between px-6 py-8 border-b border-aesthetic-accent/20 bg-aesthetic-cream/50 backdrop-blur-md sticky top-0 z-10 transition-all duration-500">
                 <div className="flex items-center justify-center size-10 rounded-full hover:bg-black/5 transition-colors">
-                    <span className="material-symbol text-aesthetic-muted font-light">tune</span>
+                    <span className="material-symbol text-aesthetic-sage font-light">tune</span>
                 </div>
-                <h1 className="font-display text-xl font-medium tracking-tight text-aesthetic-taupe italic">Ajustes de Marca</h1>
+                <h1 className="font-display text-xl font-medium tracking-tight text-aesthetic-forest italic">Ajustes de Marca</h1>
                 <button className="flex items-center justify-center size-10 rounded-full hover:bg-black/5 transition-colors">
-                    <span className="material-symbol text-aesthetic-muted font-light">more_horiz</span>
+                    <span className="material-symbol text-aesthetic-sage font-light">more_horiz</span>
                 </button>
             </div>
 
@@ -177,13 +177,13 @@ export default function SettingsPage() {
                         {/* Name & tagline inputs */}
                         <div className="flex-1 space-y-2">
                             <input
-                                className="w-full bg-transparent border-0 border-b border-cream-dark py-1.5 text-charcoal font-serif text-base focus:outline-none focus:border-pink transition-colors"
+                                className="w-full bg-transparent border-0 border-b border-cream-dark py-1.5 text-charcoal font-serif text-base focus:outline-none focus:border-jade transition-colors"
                                 value={salonName}
                                 onChange={e => setSalonName(e.target.value)}
                                 placeholder="Nombre del salón"
                             />
                             <input
-                                className="w-full bg-transparent border-0 border-b border-cream-dark py-1.5 text-nf-gray text-xs italic focus:outline-none focus:border-pink transition-colors"
+                                className="w-full bg-transparent border-0 border-b border-cream-dark py-1.5 text-nf-gray text-xs italic focus:outline-none focus:border-jade transition-colors"
                                 value={tagline}
                                 onChange={e => setTagline(e.target.value)}
                                 placeholder="Especialidad / tagline"
@@ -194,15 +194,15 @@ export default function SettingsPage() {
 
                 {/* Atmosphere selection */}
                 <section>
-                    <p className="text-[10px] tracking-[0.3em] text-aesthetic-muted uppercase mb-6 font-display italic font-medium">Atmósfera & Aura</p>
+                    <p className="text-[10px] tracking-[0.3em] text-aesthetic-sage uppercase mb-6 font-display italic font-medium">Atmósfera & Aura</p>
                     <div className="space-y-4">
                         {PALETTES.map(palette => (
                             <button
                                 key={palette.id}
                                 onClick={() => setSelectedPalette(palette.id)}
                                 className={`w-full flex items-center gap-5 p-5 rounded-3xl border transition-all duration-300 group ${selectedPalette === palette.id
-                                    ? 'bg-white border-aesthetic-pink/30 shadow-minimal'
-                                    : 'bg-white/40 border-aesthetic-accent hover:border-aesthetic-pink/20'
+                                    ? 'bg-white border-aesthetic-jade/30 shadow-minimal'
+                                    : 'bg-white/40 border-aesthetic-accent hover:border-aesthetic-jade/20'
                                     }`}
                             >
                                 {/* Swatches */}
@@ -212,11 +212,11 @@ export default function SettingsPage() {
                                     ))}
                                 </div>
                                 <div className="flex-1 text-left min-w-0">
-                                    <h4 className="font-display italic text-lg text-aesthetic-taupe leading-tight">{palette.name}</h4>
-                                    <p className="text-[10px] text-aesthetic-muted/60 font-display italic leading-tight mt-1 truncate">{palette.description}</p>
+                                    <h4 className="font-display italic text-lg text-aesthetic-forest leading-tight">{palette.name}</h4>
+                                    <p className="text-[10px] text-aesthetic-sage/60 font-display italic leading-tight mt-1 truncate">{palette.description}</p>
                                 </div>
                                 {/* Selection indicator */}
-                                <div className={`size-6 rounded-full border-2 flex items-center justify-center transition-all duration-500 ${selectedPalette === palette.id ? 'border-aesthetic-pink bg-aesthetic-pink text-white' : 'border-aesthetic-accent'}`}>
+                                <div className={`size-6 rounded-full border-2 flex items-center justify-center transition-all duration-500 ${selectedPalette === palette.id ? 'border-aesthetic-jade bg-aesthetic-jade text-white' : 'border-aesthetic-accent'}`}>
                                     {selectedPalette === palette.id && <span className="material-symbol text-sm font-bold">check</span>}
                                 </div>
                             </button>
@@ -246,7 +246,7 @@ export default function SettingsPage() {
 
                 {/* Preview card */}
                 <section>
-                    <p className="text-[10px] tracking-[0.3em] text-aesthetic-muted uppercase mb-6 font-display italic font-medium">Previsualización del Perfil</p>
+                    <p className="text-[10px] tracking-[0.3em] text-aesthetic-sage uppercase mb-6 font-display italic font-medium">Previsualización del Perfil</p>
                     <div className="relative group perspective-1000">
                         <div
                             className="w-full aspect-[4/5] rounded-[3rem] p-8 flex flex-col items-center justify-center text-center shadow-soft transition-all duration-1000 relative overflow-hidden group-hover:shadow-2xl"
@@ -312,3 +312,4 @@ export default function SettingsPage() {
         </div>
     );
 }
+

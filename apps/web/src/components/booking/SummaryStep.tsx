@@ -1,19 +1,11 @@
 'use client';
 
-import { useState } from 'react';
 import { BookingData } from '@/lib/types';
-import { api } from '@/lib/api';
 
 interface SummaryStepProps {
     booking: BookingData;
-    /** Local blob URLs for previewing selected images (not yet uploaded) */
-    localPreviews: string[];
-    /** Actual File objects waiting to be uploaded */
-    pendingFiles: File[];
-    tenantId: string;
-    onNext: (cdnUrls?: string[]) => void;
+    onNext: () => void;
     onBack: () => void;
-    onAddImage: () => void;
 }
 
 function formatFullDate(dateStr: string) {
@@ -22,34 +14,12 @@ function formatFullDate(dateStr: string) {
     return d.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
 }
 
-export default function SummaryStep({ booking, localPreviews, pendingFiles, tenantId, onNext, onBack, onAddImage }: SummaryStepProps) {
+export default function SummaryStep({ booking, onNext, onBack }: SummaryStepProps) {
     const price = Number(booking.service_price) || 0;
     const advance = Number(booking.service_required_advance) || 0;
-    const [isUploading, setIsUploading] = useState(false);
-    const [uploadStatus, setUploadStatus] = useState('');
 
-    const handleConfirm = async () => {
-        let cdnUrls: string[] = [];
-
-        if (pendingFiles.length > 0) {
-            setIsUploading(true);
-            try {
-                for (let i = 0; i < pendingFiles.length; i++) {
-                    setUploadStatus(`Subiendo foto ${i + 1} de ${pendingFiles.length}...`);
-                    const url = await api.uploadImage(tenantId, 'clientas', pendingFiles[i], 'clients');
-                    cdnUrls.push(url);
-                }
-            } catch (e) {
-                console.error('Image upload failed:', e);
-                // Continue without images rather than blocking booking
-                cdnUrls = [];
-            } finally {
-                setIsUploading(false);
-                setUploadStatus('');
-            }
-        }
-
-        onNext(cdnUrls);
+    const handleConfirm = () => {
+        onNext();
     };
 
     return (
@@ -57,17 +27,17 @@ export default function SummaryStep({ booking, localPreviews, pendingFiles, tena
             {/* Header: Sticky at the top */}
             <div className="bg-white/80 backdrop-blur-md sticky top-0 z-30 border-b border-cream-dark/30 shadow-sm">
                 <div className="flex items-center justify-between px-6 pt-6 pb-2">
-                    <button onClick={onBack} disabled={isUploading} className="flex items-center gap-2 text-nf-gray text-xs font-bold uppercase tracking-widest hover:text-pink transition-colors group">
-                        <div className="w-8 h-8 rounded-full bg-white shadow-sm flex items-center justify-center group-hover:bg-pink-pale transition-colors">
+                    <button onClick={onBack} className="flex items-center gap-2 text-nf-gray text-xs font-bold uppercase tracking-widest hover:text-jade transition-colors group">
+                        <div className="w-8 h-8 rounded-full bg-white shadow-sm flex items-center justify-center group-hover:bg-jade-pale transition-colors">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
                         </div>
                     </button>
                     <div className="flex gap-1.5">
-                        <div className="w-2 h-2 rounded-full bg-pink opacity-20" />
-                        <div className="w-2 h-2 rounded-full bg-pink opacity-20" />
-                        <div className="w-2 h-2 rounded-full bg-pink opacity-20" />
-                        <div className="w-2 h-2 rounded-full bg-pink opacity-20" />
-                        <div className="w-2 h-2 rounded-full bg-pink" />
+                        <div className="w-2 h-2 rounded-full bg-jade opacity-20" />
+                        <div className="w-2 h-2 rounded-full bg-jade opacity-20" />
+                        <div className="w-2 h-2 rounded-full bg-jade opacity-20" />
+                        <div className="w-2 h-2 rounded-full bg-jade opacity-20" />
+                        <div className="w-2 h-2 rounded-full bg-jade" />
                         {[...Array(2)].map((_, i) => (
                             <div key={i} className="w-2 h-2 rounded-full bg-cream-dark opacity-30" />
                         ))}
@@ -77,7 +47,7 @@ export default function SummaryStep({ booking, localPreviews, pendingFiles, tena
                 <div className="px-6 pt-4 pb-4">
                     <p className="text-[10px] tracking-[0.2em] text-nf-gray uppercase font-bold mb-1">Paso 5: Resumen</p>
                     <h1 className="font-serif text-3xl text-charcoal leading-tight">
-                        Confirma tu <span className="text-pink">cita</span>
+                        Confirma tu <span className="text-jade">cita</span>
                     </h1>
                 </div>
             </div>
@@ -86,19 +56,19 @@ export default function SummaryStep({ booking, localPreviews, pendingFiles, tena
             <div className="flex-1 overflow-y-auto no-scrollbar px-6 py-8">
                 {/* Unified Main Card */}
                 <div className="bg-white rounded-[2.5rem] p-8 shadow-xl border border-cream-dark/30 mb-8 relative overflow-hidden">
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-pink-pale/20 rounded-full -mr-16 -mt-16 blur-2xl" />
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-jade-pale/20 rounded-full -mr-16 -mt-16 blur-2xl" />
 
                     <div className="relative z-10">
                         <div className="mb-8">
                             <p className="text-[10px] font-bold text-nf-gray uppercase tracking-widest mb-4 flex items-center gap-2">
-                                <span className="w-6 h-6 rounded-lg bg-pink-pale flex items-center justify-center text-xs">✨</span>
+                                <span className="w-6 h-6 rounded-lg bg-jade-pale flex items-center justify-center text-xs">✨</span>
                                 Servicios Seleccionados
                             </p>
                             <div className="space-y-3">
                                 {booking.selected_services?.map((svc) => (
                                     <div key={svc.id} className="flex justify-between items-center group bg-cream/30 p-4 rounded-2xl border border-cream-dark/10">
                                         <h2 className="font-serif text-lg text-charcoal font-bold">{svc.name}</h2>
-                                        <span className="text-sm font-bold text-pink">${Number(svc.estimated_price)}</span>
+                                        <span className="text-sm font-bold text-jade">${Number(svc.estimated_price)}</span>
                                     </div>
                                 )) || (
                                     <div className="bg-cream/30 p-4 rounded-2xl border border-cream-dark/10">
@@ -142,12 +112,12 @@ export default function SummaryStep({ booking, localPreviews, pendingFiles, tena
                             </div>
 
                             {Number(booking.total_required_advance || advance) > 0 && (
-                                <div className="p-5 rounded-3xl bg-pink-pale/20 border border-pink-light/20">
+                                <div className="p-5 rounded-3xl bg-jade-pale/20 border border-jade-light/20">
                                     <div className="flex justify-between items-center mb-3">
                                         <div className="flex flex-col">
-                                            <span className="text-xs font-bold uppercase tracking-[0.2em] text-pink">Seña para reservar</span>
+                                            <span className="text-xs font-bold uppercase tracking-[0.2em] text-jade">Seña para reservar</span>
                                         </div>
-                                        <span className="font-serif text-xl font-bold text-pink">${Number(booking.total_required_advance || advance).toFixed(2)}</span>
+                                        <span className="font-serif text-xl font-bold text-jade">${Number(booking.total_required_advance || advance).toFixed(2)}</span>
                                     </div>
                                     <p className="text-[9px] text-nf-gray leading-relaxed font-medium uppercase tracking-wider opacity-70">
                                         Este monto se descontará del total el día de tu cita. Pago seguro vía Mercado Pago.
@@ -157,54 +127,17 @@ export default function SummaryStep({ booking, localPreviews, pendingFiles, tena
                         </div>
                     </div>
                 </div>
-
-                {/* Reference photos */}
-                <div className="mb-10 px-2">
-                    <div className="flex items-center justify-between mb-4">
-                        <h3 className="font-serif text-lg text-charcoal">Fotos de <span className="italic">referencia</span></h3>
-                    </div>
-
-                    {localPreviews.length > 0 ? (
-                        <div className="flex gap-4 overflow-x-auto pb-4 thin-scrollbar">
-                            {localPreviews.map((url, idx) => (
-                                <div key={idx} className="w-24 h-24 rounded-2xl overflow-hidden flex-shrink-0 shadow-md border-2 border-white transform rotate-1 hover:rotate-0 transition-all">
-                                    <img src={url} alt={`ref-${idx}`} className="w-full h-full object-cover" />
-                                </div>
-                            ))}
-                        </div>
-                    ) : (
-                        <button
-                            onClick={onAddImage}
-                            disabled={isUploading}
-                            className="w-full py-4 rounded-2xl border-2 border-dashed border-pink/20 flex items-center justify-center gap-3 bg-white hover:bg-pink-pale hover:border-pink/40 transition-all group"
-                        >
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-pink/40 group-hover:text-pink transition-colors">
-                                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" /><circle cx="12" cy="13" r="4" />
-                            </svg>
-                            <span className="text-[11px] text-nf-gray font-bold uppercase tracking-widest">Añadir fotos de inspiración</span>
-                        </button>
-                    )}
-                </div>
             </div>
 
             {/* CTA: Sticky at the bottom */}
-            <div className={`sticky bottom-0 left-0 right-0 p-8 bg-white/80 backdrop-blur-xl border-t border-cream-dark/50 z-40 transition-all duration-500 ${isUploading ? 'opacity-80' : ''}`}>
+            <div className={`sticky bottom-0 left-0 right-0 p-8 bg-white/80 backdrop-blur-xl border-t border-cream-dark/50 z-40 transition-all duration-500`}>
                 <button
                     onClick={handleConfirm}
-                    disabled={!booking.date || !booking.time || (!booking.service_id && !booking.selected_services?.length) || isUploading}
+                    disabled={!booking.date || !booking.time || (!booking.service_id && !booking.selected_services?.length)}
                     className="w-full max-w-lg mx-auto py-5 rounded-full text-base font-serif flex items-center justify-center gap-3 shadow-lg btn-gradient text-white transform hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                 >
-                    {isUploading ? (
-                        <>
-                            <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                            {uploadStatus || 'Subiendo imágenes...'}
-                        </>
-                    ) : (
-                        <>
-                            Confirmar Reserva
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
-                        </>
-                    )}
+                    Confirmar Reserva
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
                 </button>
             </div>
         </div>

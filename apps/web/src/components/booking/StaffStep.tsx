@@ -39,7 +39,7 @@ export default function StaffStep({ selectedStaffId, onSelect, onNext, onBack }:
             <div className="flex-1 overflow-y-auto px-6 py-4">
                 {loading ? (
                     <div className="flex justify-center py-10">
-                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-pink"></div>
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-jade"></div>
                     </div>
                 ) : (
                     <div className="space-y-3 stagger-children">
@@ -49,12 +49,12 @@ export default function StaffStep({ selectedStaffId, onSelect, onNext, onBack }:
                             className={`
                                 w-full text-left p-4 rounded-2xl transition-all duration-200 border-2 flex items-center gap-4
                                 ${selectedStaffId === 'any'
-                                    ? 'border-pink bg-pink-pale shadow-md'
+                                    ? 'border-jade bg-jade-pale shadow-md'
                                     : 'border-transparent bg-white shadow-sm hover:shadow-md hover:border-cream-dark'
                                 }
                             `}
                         >
-                            <div className={`w-12 h-12 rounded-full border-2 border-dashed flex items-center justify-center text-xl shadow-inner ${selectedStaffId === 'any' ? 'bg-white border-pink text-pink' : 'bg-gray-50 border-gray-300 text-gray-400'}`}>
+                            <div className={`w-12 h-12 rounded-full border-2 border-dashed flex items-center justify-center text-xl shadow-inner ${selectedStaffId === 'any' ? 'bg-white border-jade text-jade' : 'bg-gray-50 border-gray-300 text-gray-400'}`}>
                                 💫
                             </div>
                             <div>
@@ -75,7 +75,7 @@ export default function StaffStep({ selectedStaffId, onSelect, onNext, onBack }:
                                     className={`
                                         w-full text-left p-4 rounded-2xl transition-all duration-200 border-2 flex items-center gap-4
                                         ${isSelected
-                                            ? 'border-pink bg-pink-pale shadow-md'
+                                            ? 'border-jade bg-jade-pale shadow-md'
                                             : 'border-transparent bg-white shadow-sm hover:shadow-md hover:border-cream-dark'
                                         }
                                     `}
@@ -109,3 +109,4 @@ export default function StaffStep({ selectedStaffId, onSelect, onNext, onBack }:
         </div>
     );
 }
+

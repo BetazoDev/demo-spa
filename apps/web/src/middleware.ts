@@ -42,3 +42,4 @@ export default function middleware(req: NextRequest) {
     // Rewrite everything to `/[domain]${url.pathname}`
     return NextResponse.rewrite(new URL(`/${hostname}${url.pathname}`, req.url));
 }
+

@@ -20,8 +20,8 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
                         className={`
                             peer w-full bg-white/60 border border-aesthetic-accent/30 rounded-2xl py-4 pb-3 pt-6 px-6 
                             ${leftIcon ? 'pl-14' : ''}
-                            ${error ? 'border-red-200 ring-1 ring-red-200' : 'border-aesthetic-accent/20 focus:border-aesthetic-pink/50 focus:ring-1 focus:ring-aesthetic-pink/20'}
-                            outline-none transition-all duration-300 font-display italic text-base text-aesthetic-taupe
+                            ${error ? 'border-red-200 ring-1 ring-red-200' : 'border-aesthetic-accent/20 focus:border-aesthetic-jade/50 focus:ring-1 focus:ring-aesthetic-jade/20'}
+                            outline-none transition-all duration-300 font-display italic text-base text-aesthetic-forest
                             focus:bg-white focus:shadow-minimal
                             ${className}
                         `}
@@ -30,9 +30,9 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
                     {label && (
                         <label className={`
-                            absolute top-1/2 -translate-y-1/2 text-[10px] uppercase tracking-[0.2em] font-bold text-aesthetic-muted/40
+                            absolute top-1/2 -translate-y-1/2 text-[10px] uppercase tracking-[0.2em] font-bold text-aesthetic-sage/40
                             transition-all duration-300 pointer-events-none select-none
-                            peer-focus:top-3.5 peer-focus:text-aesthetic-pink peer-focus:scale-95
+                            peer-focus:top-3.5 peer-focus:text-aesthetic-jade peer-focus:scale-95
                             peer-[:not(:placeholder-shown)]:top-3.5 peer-[:not(:placeholder-shown)]:scale-95
                             ${leftIcon ? 'left-14' : 'left-6'}
                         `}>
@@ -43,8 +43,8 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
                     {leftIcon && (
                         <div className={`
                             absolute left-6 top-1/2 -translate-y-1/2 transition-all duration-300 h-6 flex items-center
-                            peer-focus:text-aesthetic-pink peer-focus:scale-110
-                            ${props.value || props.defaultValue ? 'text-aesthetic-pink' : 'text-aesthetic-muted/40'}
+                            peer-focus:text-aesthetic-jade peer-focus:scale-110
+                            ${props.value || props.defaultValue ? 'text-aesthetic-jade' : 'text-aesthetic-sage/40'}
                         `}>
                             {typeof leftIcon === 'string' ? (
                                 <span className="material-symbol text-xl font-light">{leftIcon}</span>
@@ -57,7 +57,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
                 {error ? (
                     <span className="text-[9px] text-red-400 font-bold px-4 uppercase tracking-[0.1em] mt-1">{error}</span>
                 ) : helperText ? (
-                    <span className="text-[9px] text-aesthetic-muted/60 px-4 uppercase tracking-[0.1em] mt-1">{helperText}</span>
+                    <span className="text-[9px] text-aesthetic-sage/60 px-4 uppercase tracking-[0.1em] mt-1">{helperText}</span>
                 ) : null}
             </div>
         );
@@ -65,3 +65,4 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
 );
 
 Input.displayName = 'Input';
+

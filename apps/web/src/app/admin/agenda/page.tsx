@@ -10,8 +10,8 @@ const MONTH_NAMES = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Jul
 const DAY_SHORT = ['Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa', 'Do'];
 
 const STATUS_LABELS: Record<string, { label: string; color: string; bg: string }> = {
-    confirmed: { label: 'CONFIRMADA', color: 'var(--aesthetic-pink)', bg: 'var(--aesthetic-soft-pink)' },
-    pending_payment: { label: 'PENDIENTE', color: 'var(--aesthetic-taupe)', bg: 'var(--aesthetic-beige)' },
+    confirmed: { label: 'CONFIRMADA', color: 'var(--aesthetic-jade)', bg: 'var(--aesthetic-pale-jade)' },
+    pending_payment: { label: 'PENDIENTE', color: 'var(--aesthetic-forest)', bg: 'var(--aesthetic-beige)' },
     cancelled: { label: 'CANCELADA', color: 'var(--gray-light)', bg: 'var(--cream-dark)' },
     completed: { label: 'COMPLETADA', color: '#88C999', bg: 'rgba(136, 201, 153, 0.1)' },
 };
@@ -27,7 +27,6 @@ interface AppointmentDetailProps {
 
 function AppointmentDetail({ apt, service, staff, salonName, onClose, onComplete }: AppointmentDetailProps) {
     const [completing, setCompleting] = useState(false);
-    const [lbIndex, setLbIndex] = useState<number | null>(null);
 
     const s = STATUS_LABELS[apt.status] || STATUS_LABELS.pending_payment;
     const startDate = new Date(apt.datetime_start);
@@ -48,70 +47,45 @@ function AppointmentDetail({ apt, service, staff, salonName, onClose, onComplete
                 <div className="flex-1 overflow-y-auto pb-8">
                     {/* Top bar */}
                     <div className="flex items-center justify-between px-6 pt-6 pb-4">
-                        <button onClick={onClose} className="text-aesthetic-muted hover:text-aesthetic-taupe transition-colors">
+                        <button onClick={onClose} className="text-aesthetic-sage hover:text-aesthetic-forest transition-colors">
                             <span className="material-symbol font-light">arrow_back</span>
                         </button>
                     </div>
 
                     {/* Client header */}
                     <div className="px-6 pb-6">
-                        <h1 className="font-display text-4xl font-light italic text-aesthetic-taupe mb-2 tracking-tight">{apt.client_name}</h1>
+                        <h1 className="font-display text-4xl font-light italic text-aesthetic-forest mb-2 tracking-tight">{apt.client_name}</h1>
                         <div className="flex items-center gap-3">
                             <span className="text-[10px] tracking-[0.2em] uppercase font-bold px-3 py-1 rounded-full" style={{ background: s.bg, color: s.color }}>
                                 {s.label}
                             </span>
-                            <span className="text-aesthetic-muted text-sm font-display italic tracking-wide">{service?.name || 'Servicio'}</span>
+                            <span className="text-aesthetic-sage text-sm font-display italic tracking-wide">{service?.name || 'Servicio'}</span>
                         </div>
                     </div>
 
                     {/* Details card */}
                     <div className="mx-6 bg-white/60 backdrop-blur-sm rounded-[2.5rem] border border-aesthetic-accent p-8 mb-5 shadow-minimal">
-                        <p className="text-[10px] tracking-[0.3em] text-aesthetic-muted uppercase mb-6 font-display italic font-medium">Detalles del turno</p>
+                        <p className="text-[10px] tracking-[0.3em] text-aesthetic-sage uppercase mb-6 font-display italic font-medium">Detalles del turno</p>
                         <div className="grid grid-cols-2 gap-y-8 gap-x-4">
                             <div>
-                                <p className="text-[9px] tracking-[0.2em] text-aesthetic-muted/60 uppercase font-bold mb-1">Fecha</p>
-                                <p className="font-display text-lg italic text-aesthetic-taupe capitalize leading-tight">{dateStr}</p>
+                                <p className="text-[9px] tracking-[0.2em] text-aesthetic-sage/60 uppercase font-bold mb-1">Fecha</p>
+                                <p className="font-display text-lg italic text-aesthetic-forest capitalize leading-tight">{dateStr}</p>
                             </div>
                             <div>
-                                <p className="text-[9px] tracking-[0.2em] text-aesthetic-muted/60 uppercase font-bold mb-1">Hora</p>
-                                <p className="font-display text-lg italic text-aesthetic-taupe leading-tight">{timeStr}</p>
+                                <p className="text-[9px] tracking-[0.2em] text-aesthetic-sage/60 uppercase font-bold mb-1">Hora</p>
+                                <p className="font-display text-lg italic text-aesthetic-forest leading-tight">{timeStr}</p>
                             </div>
                             <div>
-                                <p className="text-[9px] tracking-[0.2em] text-aesthetic-muted/60 uppercase font-bold mb-1">Especialista</p>
-                                <p className="font-display text-lg italic text-aesthetic-taupe leading-tight">{staff?.name || 'Por asignar'}</p>
+                                <p className="text-[9px] tracking-[0.2em] text-aesthetic-sage/60 uppercase font-bold mb-1">Especialista</p>
+                                <p className="font-display text-lg italic text-aesthetic-forest leading-tight">{staff?.name || 'Por asignar'}</p>
                             </div>
                             <div>
-                                <p className="text-[9px] tracking-[0.2em] text-aesthetic-muted/60 uppercase font-bold mb-1">Estado</p>
-                                <p className="font-display text-lg italic text-aesthetic-taupe leading-tight capitalize">{s.label.toLowerCase()}</p>
+                                <p className="text-[9px] tracking-[0.2em] text-aesthetic-sage/60 uppercase font-bold mb-1">Estado</p>
+                                <p className="font-display text-lg italic text-aesthetic-forest leading-tight capitalize">{s.label.toLowerCase()}</p>
                             </div>
                         </div>
                     </div>
 
-                    {/* Reference photos */}
-                    {(apt.image_url || (apt.image_urls && apt.image_urls.length > 0)) && (
-                        <div className="px-6 mb-5">
-                            <p className="text-[10px] tracking-[0.15em] text-nf-gray uppercase mb-3">Fotos de Referencia</p>
-                            <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
-                                {(apt.image_urls || (apt.image_url ? [apt.image_url] : [])).map((url, idx) => (
-                                    <div
-                                        key={idx}
-                                        className="w-28 h-28 rounded-2xl overflow-hidden flex-shrink-0 cursor-zoom-in hover:scale-105 active:scale-95 transition-all"
-                                        onClick={() => setLbIndex(idx)}
-                                    >
-                                        <img src={api.getPublicUrl(url)} alt={`ref-${idx}`} className="w-full h-full object-cover" />
-                                    </div>
-                                ))}
-                            </div>
-
-                            {lbIndex !== null && (
-                                <Lightbox
-                                    images={(apt.image_urls || (apt.image_url ? [apt.image_url] : [])).map(u => api.getPublicUrl(u))}
-                                    initialIndex={lbIndex}
-                                    onClose={() => setLbIndex(null)}
-                                />
-                            )}
-                        </div>
-                    )}
 
                     {/* Client notes */}
                     {apt.notes && (
@@ -147,7 +121,7 @@ function AppointmentDetail({ apt, service, staff, salonName, onClose, onComplete
                         href={`https://wa.me/${apt.client_phone.replace(/\D/g, '')}?text=${encodeURIComponent(waMessage)}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="w-full py-4 rounded-full font-display italic text-lg tracking-wide border border-aesthetic-pink/20 bg-aesthetic-soft-pink text-aesthetic-taupe flex items-center justify-center gap-3 transition-all duration-300 hover:shadow-minimal active:scale-[0.98]"
+                        className="w-full py-4 rounded-full font-display italic text-lg tracking-wide border border-aesthetic-jade/20 bg-aesthetic-pale-jade text-aesthetic-forest flex items-center justify-center gap-3 transition-all duration-300 hover:shadow-minimal active:scale-[0.98]"
                     >
                         <span className="material-symbol text-xl text-[#25D366]">chat</span>
                         WhatsApp
@@ -161,7 +135,7 @@ function AppointmentDetail({ apt, service, staff, salonName, onClose, onComplete
                                     setCompleting(false);
                                 }}
                                 disabled={completing || !isPast}
-                                className={`w-full py-4 rounded-full font-display italic text-lg tracking-wide flex items-center justify-center gap-3 transition-all duration-300 shadow-lg ${!isPast ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-aesthetic-taupe text-white hover:bg-black active:scale-[0.98]'}`}
+                                className={`w-full py-4 rounded-full font-display italic text-lg tracking-wide flex items-center justify-center gap-3 transition-all duration-300 shadow-lg ${!isPast ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-aesthetic-forest text-white hover:bg-black active:scale-[0.98]'}`}
                             >
                                 {completing ? (
                                     <div className="size-5 border-2 border-white/20 border-t-white rounded-full animate-spin" />
@@ -173,7 +147,7 @@ function AppointmentDetail({ apt, service, staff, salonName, onClose, onComplete
                                 )}
                             </button>
                             {!isPast && (
-                                <p className="text-center text-[9px] uppercase tracking-widest text-aesthetic-muted/40 mt-2 font-bold animate-fade-in">Se habilitará al pasar el horario</p>
+                                <p className="text-center text-[9px] uppercase tracking-widest text-aesthetic-sage/40 mt-2 font-bold animate-fade-in">Se habilitará al pasar el horario</p>
                             )}
                         </div>
                     )}
@@ -206,9 +180,9 @@ function WeeklyView({ baseDate, appointments, services, onSelectDate, onSelectAp
             <div className="grid grid-cols-[60px_repeat(7,1fr)] border-b border-aesthetic-accent/20 bg-white/60">
                 <div className="h-12" />
                 {weekDays.map((day, i) => (
-                    <div key={i} className={`h-12 flex flex-col items-center justify-center border-l border-aesthetic-accent/10 ${isSameDay(day, today) ? 'bg-aesthetic-soft-pink/30' : ''}`}>
-                        <span className="text-[8px] uppercase font-bold text-aesthetic-muted/40 tracking-widest">{DAY_SHORT[i]}</span>
-                        <span className={`text-sm font-display italic ${isSameDay(day, today) ? 'text-aesthetic-pink font-bold' : 'text-aesthetic-taupe'}`}>{day.getDate()}</span>
+                    <div key={i} className={`h-12 flex flex-col items-center justify-center border-l border-aesthetic-accent/10 ${isSameDay(day, today) ? 'bg-aesthetic-pale-jade/30' : ''}`}>
+                        <span className="text-[8px] uppercase font-bold text-aesthetic-sage/40 tracking-widest">{DAY_SHORT[i]}</span>
+                        <span className={`text-sm font-display italic ${isSameDay(day, today) ? 'text-aesthetic-jade font-bold' : 'text-aesthetic-forest'}`}>{day.getDate()}</span>
                     </div>
                 ))}
             </div>
@@ -219,7 +193,7 @@ function WeeklyView({ baseDate, appointments, services, onSelectDate, onSelectAp
                     {hours.map(hour => (
                         <div key={hour} className="contents">
                             <div className="h-16 flex items-center justify-center border-t border-aesthetic-accent/10">
-                                <span className="text-[10px] text-aesthetic-muted/60 font-medium">{hour}:00</span>
+                                <span className="text-[10px] text-aesthetic-sage/60 font-medium">{hour}:00</span>
                             </div>
                             {weekDays.map((_, i) => (
                                 <div key={`${hour}-${i}`} className="h-16 border-t border-l border-aesthetic-accent/10" />
@@ -263,11 +237,11 @@ function WeeklyView({ baseDate, appointments, services, onSelectDate, onSelectAp
                                         className={`w-full h-full rounded-lg border flex flex-col p-1.5 transition-all overflow-hidden ${
                                             apt.status === 'completed' 
                                             ? 'bg-green-50 border-green-100 text-green-700 opacity-60' 
-                                            : 'bg-white border-aesthetic-accent shadow-sm group-hover:border-aesthetic-pink group-hover:shadow-minimal'
+                                            : 'bg-white border-aesthetic-accent shadow-sm group-hover:border-aesthetic-jade group-hover:shadow-minimal'
                                         }`}
                                     >
-                                        <p className="text-[8px] font-bold truncate uppercase tracking-tighter leading-none mb-1 text-aesthetic-taupe">{apt.client_name}</p>
-                                        <p className="text-[7px] italic truncate text-aesthetic-muted leading-none">{svc?.name || 'Cita'}</p>
+                                        <p className="text-[8px] font-bold truncate uppercase tracking-tighter leading-none mb-1 text-aesthetic-forest">{apt.client_name}</p>
+                                        <p className="text-[7px] italic truncate text-aesthetic-sage leading-none">{svc?.name || 'Cita'}</p>
                                     </div>
                                 </div>
                             );
@@ -346,7 +320,7 @@ export default function AgendaPage() {
     if (loading) {
         return (
             <div className="flex items-center justify-center p-20">
-                <div className="size-10 border-2 border-aesthetic-accent border-t-aesthetic-pink rounded-full animate-spin" />
+                <div className="size-10 border-2 border-aesthetic-accent border-t-aesthetic-jade rounded-full animate-spin" />
             </div>
         );
     }
@@ -356,17 +330,17 @@ export default function AgendaPage() {
             {/* Header */}
             <div className="px-6 pt-12 pb-4">
                 <div className="flex items-center justify-between mb-4">
-                    <p className="text-[10px] tracking-[0.3em] text-aesthetic-muted uppercase font-display italic font-medium">Cronograma</p>
+                    <p className="text-[10px] tracking-[0.3em] text-aesthetic-sage uppercase font-display italic font-medium">Cronograma</p>
                     <div className="flex items-center gap-1 bg-white/50 p-1 rounded-full border border-aesthetic-accent">
                         <button 
                             onClick={() => setViewMode('daily')}
-                            className={`px-4 py-1.5 rounded-full text-[9px] font-bold uppercase tracking-wider transition-all ${viewMode === 'daily' ? 'bg-aesthetic-taupe text-white shadow-sm' : 'text-aesthetic-muted hover:text-aesthetic-taupe'}`}
+                            className={`px-4 py-1.5 rounded-full text-[9px] font-bold uppercase tracking-wider transition-all ${viewMode === 'daily' ? 'bg-aesthetic-forest text-white shadow-sm' : 'text-aesthetic-sage hover:text-aesthetic-forest'}`}
                         >
                             Día
                         </button>
                         <button 
                             onClick={() => setViewMode('weekly')}
-                            className={`px-4 py-1.5 rounded-full text-[9px] font-bold uppercase tracking-wider transition-all ${viewMode === 'weekly' ? 'bg-aesthetic-taupe text-white shadow-sm' : 'text-aesthetic-muted hover:text-aesthetic-taupe'}`}
+                            className={`px-4 py-1.5 rounded-full text-[9px] font-bold uppercase tracking-wider transition-all ${viewMode === 'weekly' ? 'bg-aesthetic-forest text-white shadow-sm' : 'text-aesthetic-sage hover:text-aesthetic-forest'}`}
                         >
                             7 Días
                         </button>
@@ -374,25 +348,25 @@ export default function AgendaPage() {
                 </div>
                 
                 <div className="flex items-center justify-between gap-4">
-                    <h1 className="font-display text-4xl font-medium tracking-tight text-aesthetic-taupe italic flex-1 truncate">
+                    <h1 className="font-display text-4xl font-medium tracking-tight text-aesthetic-forest italic flex-1 truncate">
                         {MONTH_NAMES[selectedDate.getMonth()]} {selectedDate.getFullYear()}
                     </h1>
                     <div className="flex items-center gap-1 bg-white/50 p-1 rounded-full border border-aesthetic-accent mr-2">
                         <button 
                             onClick={() => setSelectedDate(addDays(selectedDate, viewMode === 'daily' ? -1 : -7))}
-                            className="p-1.5 rounded-full hover:bg-aesthetic-accent text-aesthetic-taupe transition-colors"
+                            className="p-1.5 rounded-full hover:bg-aesthetic-accent text-aesthetic-forest transition-colors"
                         >
                             <span className="material-symbol text-xl leading-none">chevron_left</span>
                         </button>
                         <button 
                             onClick={() => setSelectedDate(new Date())}
-                            className="text-[10px] px-2 font-bold uppercase tracking-tight text-aesthetic-muted hover:text-aesthetic-pink transition-colors"
+                            className="text-[10px] px-2 font-bold uppercase tracking-tight text-aesthetic-sage hover:text-aesthetic-jade transition-colors"
                         >
                             Hoy
                         </button>
                         <button 
                             onClick={() => setSelectedDate(addDays(selectedDate, viewMode === 'daily' ? 1 : 7))}
-                            className="p-1.5 rounded-full hover:bg-aesthetic-accent text-aesthetic-taupe transition-colors"
+                            className="p-1.5 rounded-full hover:bg-aesthetic-accent text-aesthetic-forest transition-colors"
                         >
                             <span className="material-symbol text-xl leading-none">chevron_right</span>
                         </button>
@@ -415,18 +389,18 @@ export default function AgendaPage() {
                                     key={idx}
                                     onClick={() => setSelectedDate(day)}
                                     className={`flex-shrink-0 flex flex-col items-center gap-1.5 px-5 py-6 rounded-[2.5rem] transition-all duration-500 border relative ${isSelected
-                                        ? 'bg-aesthetic-taupe text-white border-aesthetic-taupe shadow-minimal scale-105 z-10'
-                                        : 'bg-white border-aesthetic-accent text-aesthetic-muted hover:border-aesthetic-pink/30'
+                                        ? 'bg-aesthetic-forest text-white border-aesthetic-forest shadow-minimal scale-105 z-10'
+                                        : 'bg-white border-aesthetic-accent text-aesthetic-sage hover:border-aesthetic-jade/30'
                                         }`}
                                 >
-                                    <span className={`text-[9px] tracking-[0.2em] uppercase font-bold ${isSelected ? 'text-white/60' : 'text-aesthetic-muted/40'}`}>
+                                    <span className={`text-[9px] tracking-[0.2em] uppercase font-bold ${isSelected ? 'text-white/60' : 'text-aesthetic-sage/40'}`}>
                                         {DAY_SHORT[dayOfWeek]}
                                     </span>
-                                    <span className={`text-2xl font-display italic leading-none ${isToday && !isSelected ? 'text-aesthetic-pink' : ''}`}>
+                                    <span className={`text-2xl font-display italic leading-none ${isToday && !isSelected ? 'text-aesthetic-jade' : ''}`}>
                                         {day.getDate()}
                                     </span>
                                     {hasAppointments && (
-                                        <span className={`size-1 rounded-full absolute bottom-4 ${isSelected ? 'bg-white' : 'bg-aesthetic-pink'}`} />
+                                        <span className={`size-1 rounded-full absolute bottom-4 ${isSelected ? 'bg-white' : 'bg-aesthetic-jade'}`} />
                                     )}
                                 </button>
                             );
@@ -437,10 +411,10 @@ export default function AgendaPage() {
                     <div className="px-6 mt-8 space-y-10">
                         <div className="flex items-center justify-between">
                             <div className="space-y-1">
-                                <h2 className="text-[10px] tracking-[0.3em] text-aesthetic-muted uppercase font-display italic font-medium">
+                                <h2 className="text-[10px] tracking-[0.3em] text-aesthetic-sage uppercase font-display italic font-medium">
                                     Disponibilidad
                                 </h2>
-                                <p className="font-display text-xl italic text-aesthetic-taupe">
+                                <p className="font-display text-xl italic text-aesthetic-forest">
                                     {dayAppointments.length === 0 ? 'Día libre' : `${dayAppointments.length} turnos programados`}
                                 </p>
                             </div>
@@ -448,9 +422,9 @@ export default function AgendaPage() {
 
                         {dayAppointments.length === 0 ? (
                             <div className="bg-white/40 backdrop-blur-sm rounded-[3rem] border border-dashed border-aesthetic-accent py-20 text-center shadow-minimal">
-                                <span className="material-symbol text-aesthetic-muted/20 text-5xl mb-4 font-light italic">spa</span>
-                                <p className="font-display text-2xl italic text-aesthetic-muted opacity-40">No hay citas para este día</p>
-                                <button onClick={() => setSelectedDate(today)} className="mt-6 text-[10px] tracking-[0.2em] font-bold uppercase text-aesthetic-taupe hover:text-aesthetic-pink transition-colors">Volver a hoy</button>
+                                <span className="material-symbol text-aesthetic-sage/20 text-5xl mb-4 font-light italic">spa</span>
+                                <p className="font-display text-2xl italic text-aesthetic-sage opacity-40">No hay citas para este día</p>
+                                <button onClick={() => setSelectedDate(today)} className="mt-6 text-[10px] tracking-[0.2em] font-bold uppercase text-aesthetic-forest hover:text-aesthetic-jade transition-colors">Volver a hoy</button>
                             </div>
                         ) : (
                             <div className="space-y-6">
@@ -465,22 +439,22 @@ export default function AgendaPage() {
                                     return (
                                         <div key={apt.id} className="group relative pl-20" onClick={() => setSelectedApt(apt)}>
                                             <div className="absolute left-10 top-0 bottom-0 w-px bg-aesthetic-accent/30" />
-                                            <div className={`absolute left-[37px] top-8 size-2 rounded-full border-2 z-10 ${isCompleted ? 'border-[#88C999] bg-[#88C999]' : 'border-aesthetic-pink bg-white'}`} />
+                                            <div className={`absolute left-[37px] top-8 size-2 rounded-full border-2 z-10 ${isCompleted ? 'border-[#88C999] bg-[#88C999]' : 'border-aesthetic-jade bg-white'}`} />
 
                                             <div className="absolute left-0 top-6 w-14 text-right">
-                                                <p className="font-display text-xl italic text-aesthetic-taupe leading-none">{timeStr}</p>
-                                                <p className="text-[9px] text-aesthetic-muted font-bold tracking-widest mt-1 opacity-50 uppercase">{svc?.duration_minutes || 60} min</p>
+                                                <p className="font-display text-xl italic text-aesthetic-forest leading-none">{timeStr}</p>
+                                                <p className="text-[9px] text-aesthetic-sage font-bold tracking-widest mt-1 opacity-50 uppercase">{svc?.duration_minutes || 60} min</p>
                                             </div>
 
                                             <div
-                                                className={`w-full text-left bg-white rounded-[2rem] p-6 shadow-minimal border border-aesthetic-accent group-hover:border-aesthetic-pink/30 cursor-pointer transition-all duration-500 ${isCompleted ? 'opacity-60 bg-aesthetic-cream/20' : ''}`}
+                                                className={`w-full text-left bg-white rounded-[2rem] p-6 shadow-minimal border border-aesthetic-accent group-hover:border-aesthetic-jade/30 cursor-pointer transition-all duration-500 ${isCompleted ? 'opacity-60 bg-aesthetic-cream/20' : ''}`}
                                             >
                                                 <div className="flex items-center justify-between gap-4">
                                                     <div className="flex-1 min-w-0">
-                                                        <h4 className="font-display text-2xl italic text-aesthetic-taupe truncate mb-1">{apt.client_name}</h4>
+                                                        <h4 className="font-display text-2xl italic text-aesthetic-forest truncate mb-1">{apt.client_name}</h4>
                                                         <div className="flex items-center gap-2">
-                                                            <span className="material-symbol text-xs text-aesthetic-pink">content_cut</span>
-                                                            <p className="text-xs text-aesthetic-muted font-display italic leading-none">{svc?.name || 'Servicio de Belleza'}</p>
+                                                            <span className="material-symbol text-xs text-aesthetic-jade">content_cut</span>
+                                                            <p className="text-xs text-aesthetic-sage font-display italic leading-none">{svc?.name || 'Servicio de Belleza'}</p>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -505,11 +479,11 @@ export default function AgendaPage() {
                                                             <span className="text-[10px] tracking-[0.2em] uppercase font-bold">{isPast ? 'Completar Cita' : 'Cita Futura'}</span>
                                                         </button>
                                                     ) : (
-                                                        <span className="text-[10px] tracking-[0.2em] uppercase font-bold text-aesthetic-muted/40">
+                                                        <span className="text-[10px] tracking-[0.2em] uppercase font-bold text-aesthetic-sage/40">
                                                             {apt.status === 'pending_payment' ? 'Pendiente' : 'Confirmada'}
                                                         </span>
                                                     )}
-                                                    <span className="text-sm font-semibold text-aesthetic-taupe">${svc?.estimated_price || 0}</span>
+                                                    <span className="text-sm font-semibold text-aesthetic-forest">${svc?.estimated_price || 0}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -545,3 +519,4 @@ export default function AgendaPage() {
         </div>
     );
 }
+

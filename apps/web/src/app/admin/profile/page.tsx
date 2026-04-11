@@ -187,14 +187,14 @@ export default function ProfilePage() {
         <div className="min-h-full pb-24" style={{ background: 'var(--cream)' }}>
             {/* Header */}
             <div className="px-6 pt-8 pb-6">
-                <p className="text-[10px] tracking-[0.3em] text-aesthetic-muted uppercase mb-2 font-display italic font-medium">Administración</p>
-                <h1 className="font-display text-4xl font-light italic tracking-tight text-aesthetic-taupe">Mi Perfil</h1>
+                <p className="text-[10px] tracking-[0.3em] text-aesthetic-sage uppercase mb-2 font-display italic font-medium">Administración</p>
+                <h1 className="font-display text-4xl font-light italic tracking-tight text-aesthetic-forest">Mi Perfil</h1>
             </div>
 
             {/* Avatar section */}
             <div className="px-6 mb-8">
                 <Card variant="white" className="flex items-center gap-5 p-6">
-                    <div className="size-24 rounded-full bg-aesthetic-soft-pink border-4 border-white shadow-soft flex items-center justify-center text-aesthetic-taupe text-4xl font-display italic flex-shrink-0 overflow-hidden ring-1 ring-aesthetic-accent/50">
+                    <div className="size-24 rounded-full bg-aesthetic-pale-jade border-4 border-white shadow-soft flex items-center justify-center text-aesthetic-forest text-4xl font-display italic flex-shrink-0 overflow-hidden ring-1 ring-aesthetic-accent/50">
                         {logoPreview ? (
                             <img src={api.getPublicUrl(logoPreview)} alt="Logo" className="w-full h-full object-cover" />
                         ) : (
@@ -202,8 +202,8 @@ export default function ProfilePage() {
                         )}
                     </div>
                     <div className="flex-1 min-w-0">
-                        <p className="font-display text-lg italic text-aesthetic-taupe truncate">{user?.email || 'Sin sesión'}</p>
-                        <p className="text-[10px] tracking-[0.15em] text-aesthetic-muted uppercase mt-1">Administrador</p>
+                        <p className="font-display text-lg italic text-aesthetic-forest truncate">{user?.email || 'Sin sesión'}</p>
+                        <p className="text-[10px] tracking-[0.15em] text-aesthetic-sage uppercase mt-1">Administrador</p>
                     </div>
                 </Card>
             </div>
@@ -215,7 +215,7 @@ export default function ProfilePage() {
                         <button
                             key={id}
                             onClick={() => setTab(id as typeof tab)}
-                            className={`flex flex-1 items-center justify-center gap-2 py-3.5 px-6 rounded-[1.5rem] text-[10px] tracking-[0.2em] uppercase font-bold transition-all whitespace-nowrap ${tab === id ? 'bg-white text-aesthetic-pink shadow-md' : 'text-aesthetic-muted hover:text-aesthetic-taupe hover:bg-white/30'}`}
+                            className={`flex flex-1 items-center justify-center gap-2 py-3.5 px-6 rounded-[1.5rem] text-[10px] tracking-[0.2em] uppercase font-bold transition-all whitespace-nowrap ${tab === id ? 'bg-white text-aesthetic-jade shadow-md' : 'text-aesthetic-sage hover:text-aesthetic-forest hover:bg-white/30'}`}
                         >
                             <span className="material-symbol text-base">{icon}</span>
                             {label}
@@ -229,19 +229,19 @@ export default function ProfilePage() {
                 {tab === 'info' && (
                     <div className="space-y-6 animate-fade-in">
                         <Card variant="white" className="p-8 border-none shadow-soft overflow-hidden">
-                            <h3 className="font-display text-2xl italic text-aesthetic-taupe mb-8">Información del Salón</h3>
+                            <h3 className="font-display text-2xl italic text-aesthetic-forest mb-8">Información del Salón</h3>
                             
                             <div className="space-y-8">
                                 <div className="flex flex-col items-center">
                                     <div className="relative cursor-pointer group mb-4" onClick={() => logoRef.current?.click()}>
-                                        <div className="w-28 h-28 rounded-full overflow-hidden border-4 border-white shadow-soft flex items-center justify-center bg-aesthetic-cream/40 transition-transform group-hover:scale-105 duration-500 ring-2 ring-aesthetic-pink/20">
+                                        <div className="w-28 h-28 rounded-full overflow-hidden border-4 border-white shadow-soft flex items-center justify-center bg-aesthetic-cream/40 transition-transform group-hover:scale-105 duration-500 ring-2 ring-aesthetic-jade/20">
                                             {logoPreview ? (
                                                 <img src={api.getPublicUrl(logoPreview)} alt="logo" className="w-full h-full object-cover" />
                                             ) : (
                                                 <span className="material-symbol text-4xl text-aesthetic-accent/40">add_photo_alternate</span>
                                             )}
                                         </div>
-                                        <div className="absolute -bottom-1 -right-1 size-9 rounded-full bg-aesthetic-pink text-white flex items-center justify-center shadow-lg border-2 border-white group-hover:scale-110 transition-transform">
+                                        <div className="absolute -bottom-1 -right-1 size-9 rounded-full bg-aesthetic-jade text-white flex items-center justify-center shadow-lg border-2 border-white group-hover:scale-110 transition-transform">
                                             <span className="material-symbol text-lg">edit</span>
                                         </div>
                                         <input
@@ -258,7 +258,7 @@ export default function ProfilePage() {
                                             }}
                                         />
                                     </div>
-                                    <p className="text-[10px] tracking-[0.2em] text-aesthetic-muted uppercase font-bold">Logotipo Principal</p>
+                                    <p className="text-[10px] tracking-[0.2em] text-aesthetic-sage uppercase font-bold">Logotipo Principal</p>
                                 </div>
 
                                 <Input
@@ -297,8 +297,8 @@ export default function ProfilePage() {
                 {tab === 'horarios' && (
                     <div className="space-y-6 animate-fade-in">
                         <Card variant="white" className="p-8 border-none shadow-soft">
-                            <h3 className="font-display text-2xl italic text-aesthetic-taupe mb-2">Horarios de Atención</h3>
-                            <p className="text-[11px] text-aesthetic-muted mb-8 leading-relaxed uppercase tracking-[0.15em] font-bold italic opacity-70">
+                            <h3 className="font-display text-2xl italic text-aesthetic-forest mb-2">Horarios de Atención</h3>
+                            <p className="text-[11px] text-aesthetic-sage mb-8 leading-relaxed uppercase tracking-[0.15em] font-bold italic opacity-70">
                                 Define tus horas de operación para el booking dinámico.
                             </p>
 
@@ -306,7 +306,7 @@ export default function ProfilePage() {
                                 {['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'].map((dayName, idx) => {
                                     const sched = weeklySchedule.find(s => s.day === idx) || { day: idx, active: false, start: '09:00', end: '18:00' };
                                     return (
-                                        <div key={idx} className={`p-5 rounded-[2rem] border-2 transition-all duration-500 ${sched.active ? 'bg-aesthetic-cream/30 border-aesthetic-pink/20 shadow-sm' : 'bg-gray-50/50 border-gray-100/50 opacity-40 grayscale-[0.5]'}`}>
+                                        <div key={idx} className={`p-5 rounded-[2rem] border-2 transition-all duration-500 ${sched.active ? 'bg-aesthetic-cream/30 border-aesthetic-jade/20 shadow-sm' : 'bg-gray-50/50 border-gray-100/50 opacity-40 grayscale-[0.5]'}`}>
                                             <div className="flex items-center justify-between mb-4">
                                                 <div className="flex items-center gap-4">
                                                     <button 
@@ -317,11 +317,11 @@ export default function ProfilePage() {
                                                             else newSched.push({ day: idx, active: true, start: '09:00', end: '18:00' });
                                                             setWeeklySchedule(newSched);
                                                         }}
-                                                        className={`size-7 rounded-full flex items-center justify-center transition-all duration-300 ${sched.active ? 'bg-aesthetic-pink text-white shadow-mid' : 'bg-gray-200 text-gray-400'}`}
+                                                        className={`size-7 rounded-full flex items-center justify-center transition-all duration-300 ${sched.active ? 'bg-aesthetic-jade text-white shadow-mid' : 'bg-gray-200 text-gray-400'}`}
                                                     >
                                                         {sched.active ? <span className="material-symbol text-base font-bold">check</span> : <span className="material-symbol text-base font-bold">close</span>}
                                                     </button>
-                                                    <span className={`text-xs font-bold uppercase tracking-widest ${sched.active ? 'text-aesthetic-taupe' : 'text-gray-400'}`}>{dayName}</span>
+                                                    <span className={`text-xs font-bold uppercase tracking-widest ${sched.active ? 'text-aesthetic-forest' : 'text-gray-400'}`}>{dayName}</span>
                                                 </div>
                                                 {sched.active && (
                                                     <div className="flex items-center gap-1.5 px-3 py-1 bg-green-50 rounded-full">
@@ -334,7 +334,7 @@ export default function ProfilePage() {
                                             {sched.active && (
                                                 <div className="flex items-center gap-4 pl-11 animate-fade-in">
                                                     <div className="flex-1 relative">
-                                                        <span className="absolute -top-6 left-1 text-[8px] uppercase tracking-widest text-aesthetic-muted font-bold">Inicio</span>
+                                                        <span className="absolute -top-6 left-1 text-[8px] uppercase tracking-widest text-aesthetic-sage font-bold">Inicio</span>
                                                         <input 
                                                             type="time" 
                                                             value={sched.start}
@@ -344,14 +344,14 @@ export default function ProfilePage() {
                                                                 newSched[i].start = e.target.value;
                                                                 setWeeklySchedule(newSched);
                                                             }}
-                                                            className="w-full bg-white border-none rounded-2xl px-4 py-3 text-xs font-bold text-aesthetic-taupe shadow-sm focus:ring-2 focus:ring-aesthetic-pink/20 outline-none" 
+                                                            className="w-full bg-white border-none rounded-2xl px-4 py-3 text-xs font-bold text-aesthetic-forest shadow-sm focus:ring-2 focus:ring-aesthetic-jade/20 outline-none" 
                                                         />
                                                     </div>
-                                                    <div className="pt-2 text-aesthetic-muted opacity-30">
+                                                    <div className="pt-2 text-aesthetic-sage opacity-30">
                                                         <span className="material-symbol text-lg">arrow_forward</span>
                                                     </div>
                                                     <div className="flex-1 relative">
-                                                        <span className="absolute -top-6 left-1 text-[8px] uppercase tracking-widest text-aesthetic-muted font-bold">Cierre</span>
+                                                        <span className="absolute -top-6 left-1 text-[8px] uppercase tracking-widest text-aesthetic-sage font-bold">Cierre</span>
                                                         <input 
                                                             type="time" 
                                                             value={sched.end}
@@ -361,7 +361,7 @@ export default function ProfilePage() {
                                                                 newSched[i].end = e.target.value;
                                                                 setWeeklySchedule(newSched);
                                                             }}
-                                                            className="w-full bg-white border-none rounded-2xl px-4 py-3 text-xs font-bold text-aesthetic-taupe shadow-sm focus:ring-2 focus:ring-aesthetic-pink/20 outline-none" 
+                                                            className="w-full bg-white border-none rounded-2xl px-4 py-3 text-xs font-bold text-aesthetic-forest shadow-sm focus:ring-2 focus:ring-aesthetic-jade/20 outline-none" 
                                                         />
                                                     </div>
                                                 </div>
@@ -381,7 +381,7 @@ export default function ProfilePage() {
                 {tab === 'password' && (
                     <div className="space-y-6 animate-fade-in">
                         <Card variant="white" className="p-8 border-none shadow-soft">
-                            <h3 className="font-display text-2xl italic text-aesthetic-taupe mb-8">Cambiar Contraseña</h3>
+                            <h3 className="font-display text-2xl italic text-aesthetic-forest mb-8">Cambiar Contraseña</h3>
                             
                             <div className="space-y-6">
                                 <Input
@@ -436,8 +436,8 @@ export default function ProfilePage() {
                     <div className="space-y-6 animate-fade-in">
                         {/* Section heading */}
                         <div>
-                            <h2 className="font-display text-2xl italic text-aesthetic-taupe">Programa de Lealtad</h2>
-                            <p className="text-[11px] text-aesthetic-muted mt-1 uppercase tracking-[0.15em] font-bold italic opacity-70">
+                            <h2 className="font-display text-2xl italic text-aesthetic-forest">Programa de Lealtad</h2>
+                            <p className="text-[11px] text-aesthetic-sage mt-1 uppercase tracking-[0.15em] font-bold italic opacity-70">
                                 Configura las recompensas para tus clientes frecuentes.
                             </p>
                         </div>
@@ -446,8 +446,8 @@ export default function ProfilePage() {
                             {/* Toggle header */}
                             <div className="flex items-center justify-between gap-4 pb-6 border-b border-aesthetic-cream/60">
                                 <div>
-                                    <p className="text-sm font-bold text-aesthetic-taupe tracking-wide">Activar Programa de Clientes Frecuentes</p>
-                                    <p className="text-[10px] text-aesthetic-muted mt-0.5 uppercase tracking-[0.1em]">
+                                    <p className="text-sm font-bold text-aesthetic-forest tracking-wide">Activar Programa de Clientes Frecuentes</p>
+                                    <p className="text-[10px] text-aesthetic-sage mt-0.5 uppercase tracking-[0.1em]">
                                         {loyaltyEnabled ? 'El programa está activo' : 'Activa el programa para configurarlo'}
                                     </p>
                                 </div>
@@ -457,8 +457,8 @@ export default function ProfilePage() {
                                     role="switch"
                                     aria-checked={loyaltyEnabled}
                                     onClick={() => setLoyaltyEnabled(v => !v)}
-                                    className={`relative inline-flex h-7 w-12 items-center rounded-full transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-aesthetic-pink/30 flex-shrink-0 ${
-                                        loyaltyEnabled ? 'bg-aesthetic-pink' : 'bg-gray-200'
+                                    className={`relative inline-flex h-7 w-12 items-center rounded-full transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-aesthetic-jade/30 flex-shrink-0 ${
+                                        loyaltyEnabled ? 'bg-aesthetic-jade' : 'bg-gray-200'
                                     }`}
                                 >
                                     <span
@@ -475,12 +475,12 @@ export default function ProfilePage() {
 
                                     {/* Visits required */}
                                     <div className="space-y-2">
-                                        <label className="block text-[10px] uppercase tracking-[0.2em] font-bold text-aesthetic-taupe">
+                                        <label className="block text-[10px] uppercase tracking-[0.2em] font-bold text-aesthetic-forest">
                                             Visitas requeridas para recompensa
                                         </label>
                                         <div className="flex items-center gap-4">
                                             <div className="relative flex-1">
-                                                <span className="absolute left-4 top-1/2 -translate-y-1/2 material-symbol text-base text-aesthetic-muted">counter_1</span>
+                                                <span className="absolute left-4 top-1/2 -translate-y-1/2 material-symbol text-base text-aesthetic-sage">counter_1</span>
                                                 <input
                                                     type="number"
                                                     min={1}
@@ -488,7 +488,7 @@ export default function ProfilePage() {
                                                     value={loyaltyVisits}
                                                     onChange={e => setLoyaltyVisits(Math.max(1, Number(e.target.value)))}
                                                     placeholder="5"
-                                                    className="w-full bg-gray-50 border border-gray-100 rounded-2xl pl-10 pr-4 py-3.5 text-sm font-bold text-aesthetic-taupe shadow-sm focus:ring-2 focus:ring-aesthetic-pink/20 focus:bg-white focus:border-aesthetic-pink/30 outline-none transition-all"
+                                                    className="w-full bg-gray-50 border border-gray-100 rounded-2xl pl-10 pr-4 py-3.5 text-sm font-bold text-aesthetic-forest shadow-sm focus:ring-2 focus:ring-aesthetic-jade/20 focus:bg-white focus:border-aesthetic-jade/30 outline-none transition-all"
                                                 />
                                             </div>
                                             {/* Stepper helpers */}
@@ -496,60 +496,60 @@ export default function ProfilePage() {
                                                 <button
                                                     type="button"
                                                     onClick={() => setLoyaltyVisits(v => Math.min(50, v + 1))}
-                                                    className="size-8 rounded-full bg-aesthetic-cream hover:bg-aesthetic-soft-pink flex items-center justify-center transition-colors"
+                                                    className="size-8 rounded-full bg-aesthetic-cream hover:bg-aesthetic-pale-jade flex items-center justify-center transition-colors"
                                                 >
-                                                    <span className="material-symbol text-sm text-aesthetic-taupe">add</span>
+                                                    <span className="material-symbol text-sm text-aesthetic-forest">add</span>
                                                 </button>
                                                 <button
                                                     type="button"
                                                     onClick={() => setLoyaltyVisits(v => Math.max(1, v - 1))}
-                                                    className="size-8 rounded-full bg-aesthetic-cream hover:bg-aesthetic-soft-pink flex items-center justify-center transition-colors"
+                                                    className="size-8 rounded-full bg-aesthetic-cream hover:bg-aesthetic-pale-jade flex items-center justify-center transition-colors"
                                                 >
-                                                    <span className="material-symbol text-sm text-aesthetic-taupe">remove</span>
+                                                    <span className="material-symbol text-sm text-aesthetic-forest">remove</span>
                                                 </button>
                                             </div>
                                         </div>
-                                        <p className="text-[9px] text-aesthetic-muted uppercase tracking-widest pl-1">Número de citas completadas para desbloquear la recompensa</p>
+                                        <p className="text-[9px] text-aesthetic-sage uppercase tracking-widest pl-1">Número de citas completadas para desbloquear la recompensa</p>
                                     </div>
 
                                     {/* Reward type */}
                                     <div className="space-y-2">
-                                        <label className="block text-[10px] uppercase tracking-[0.2em] font-bold text-aesthetic-taupe">
+                                        <label className="block text-[10px] uppercase tracking-[0.2em] font-bold text-aesthetic-forest">
                                             Tipo de Recompensa
                                         </label>
                                         <div className="relative">
-                                            <span className="absolute left-4 top-1/2 -translate-y-1/2 material-symbol text-base text-aesthetic-muted">card_giftcard</span>
+                                            <span className="absolute left-4 top-1/2 -translate-y-1/2 material-symbol text-base text-aesthetic-sage">card_giftcard</span>
                                             <select
                                                 value={loyaltyRewardType}
                                                 onChange={e => setLoyaltyRewardType(e.target.value as 'discount' | 'free_service')}
-                                                className="w-full appearance-none bg-gray-50 border border-gray-100 rounded-2xl pl-10 pr-10 py-3.5 text-sm font-bold text-aesthetic-taupe shadow-sm focus:ring-2 focus:ring-aesthetic-pink/20 focus:bg-white focus:border-aesthetic-pink/30 outline-none transition-all cursor-pointer"
+                                                className="w-full appearance-none bg-gray-50 border border-gray-100 rounded-2xl pl-10 pr-10 py-3.5 text-sm font-bold text-aesthetic-forest shadow-sm focus:ring-2 focus:ring-aesthetic-jade/20 focus:bg-white focus:border-aesthetic-jade/30 outline-none transition-all cursor-pointer"
                                             >
                                                 <option value="discount">Porcentaje de Descuento</option>
                                                 <option value="free_service">Servicio Gratis</option>
                                             </select>
-                                            <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 material-symbol text-base text-aesthetic-muted">expand_more</span>
+                                            <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 material-symbol text-base text-aesthetic-sage">expand_more</span>
                                         </div>
                                     </div>
 
                                     {/* Discount value — only when discount type is selected */}
                                     {loyaltyRewardType === 'discount' && (
                                         <div className="space-y-2 animate-fade-in">
-                                            <label className="block text-[10px] uppercase tracking-[0.2em] font-bold text-aesthetic-taupe">
+                                            <label className="block text-[10px] uppercase tracking-[0.2em] font-bold text-aesthetic-forest">
                                                 Valor del Descuento
                                             </label>
                                             <div className="relative">
-                                                <span className="absolute left-4 top-1/2 -translate-y-1/2 material-symbol text-base text-aesthetic-muted">percent</span>
+                                                <span className="absolute left-4 top-1/2 -translate-y-1/2 material-symbol text-base text-aesthetic-sage">percent</span>
                                                 <input
                                                     type="number"
                                                     min={1}
                                                     max={100}
                                                     value={loyaltyDiscountValue}
                                                     onChange={e => setLoyaltyDiscountValue(Math.min(100, Math.max(1, Number(e.target.value))))}
-                                                    className="w-full bg-gray-50 border border-gray-100 rounded-2xl pl-10 pr-12 py-3.5 text-sm font-bold text-aesthetic-taupe shadow-sm focus:ring-2 focus:ring-aesthetic-pink/20 focus:bg-white focus:border-aesthetic-pink/30 outline-none transition-all"
+                                                    className="w-full bg-gray-50 border border-gray-100 rounded-2xl pl-10 pr-12 py-3.5 text-sm font-bold text-aesthetic-forest shadow-sm focus:ring-2 focus:ring-aesthetic-jade/20 focus:bg-white focus:border-aesthetic-jade/30 outline-none transition-all"
                                                 />
-                                                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-bold text-aesthetic-pink">%</span>
+                                                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-bold text-aesthetic-jade">%</span>
                                             </div>
-                                            <p className="text-[9px] text-aesthetic-muted uppercase tracking-widest pl-1">Porcentaje de descuento aplicado a la cita de recompensa</p>
+                                            <p className="text-[9px] text-aesthetic-sage uppercase tracking-widest pl-1">Porcentaje de descuento aplicado a la cita de recompensa</p>
                                         </div>
                                     )}
 
@@ -580,3 +580,4 @@ export default function ProfilePage() {
         </div>
     );
 }
+

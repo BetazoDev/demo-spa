@@ -7,7 +7,6 @@ import { api } from '@/lib/api';
 interface ConfirmationStepProps {
     booking: BookingData;
     appointmentId?: string | null;
-    pendingFiles?: File[];
     tenantId?: string;
     salonName?: string;
 }
@@ -53,7 +52,7 @@ export default function ConfirmationStep({ booking, salonName = 'Ana Nails Studi
                 <div className="w-full max-w-sm space-y-4">
                     <button
                         onClick={() => window.location.reload()}
-                        className="w-full py-5 rounded-full text-base font-serif flex items-center justify-center gap-3 shadow-lg bg-aesthetic-taupe text-white transform hover:scale-[1.02] active:scale-[0.98] transition-all"
+                        className="w-full py-5 rounded-full text-base font-serif flex items-center justify-center gap-3 shadow-lg bg-aesthetic-forest text-white transform hover:scale-[1.02] active:scale-[0.98] transition-all"
                     >
                         <span className="material-symbol">refresh</span>
                         Intentar de nuevo
@@ -67,23 +66,23 @@ export default function ConfirmationStep({ booking, salonName = 'Ana Nails Studi
         <div className="flex flex-col min-h-full items-center p-6 py-12 animate-fade-in overflow-y-auto" style={{ background: 'var(--cream)' }}>
             {/* Success Decoration */}
             <div className="relative mb-12">
-                <div className="w-32 h-32 rounded-full bg-pink-pale flex items-center justify-center relative z-10 shadow-xl border-4 border-white animate-scale-in">
+                <div className="w-32 h-32 rounded-full bg-jade-pale flex items-center justify-center relative z-10 shadow-xl border-4 border-white animate-scale-in">
                     {saving ? (
-                        <div className="w-10 h-10 border-4 border-pink-light border-t-pink rounded-full animate-spin" />
+                        <div className="w-10 h-10 border-4 border-jade-light border-t-jade rounded-full animate-spin" />
                     ) : (
                         <div className="text-5xl animate-bounce-subtle">✨</div>
                     )}
                 </div>
                 {/* Floating particles */}
-                <div className="absolute top-0 -left-4 w-4 h-4 rounded-full bg-pink animate-ping opacity-20" />
-                <div className="absolute bottom-4 -right-4 w-6 h-6 rounded-full bg-pink-light animate-pulse" />
-                <div className="absolute -top-4 right-8 w-3 h-3 rounded-full bg-coral animate-ping opacity-30" />
+                <div className="absolute top-0 -left-4 w-4 h-4 rounded-full bg-jade animate-ping opacity-20" />
+                <div className="absolute bottom-4 -right-4 w-6 h-6 rounded-full bg-jade-light animate-pulse" />
+                <div className="absolute -top-4 right-8 w-3 h-3 rounded-full bg-sage animate-ping opacity-30" />
             </div>
 
             {/* Heading */}
             <div className="text-center mb-10 stagger-children">
                 <h1 className="font-serif text-4xl text-charcoal leading-tight mb-3">
-                    {saving ? 'Preparando todo...' : <>¡Tu cita está <span className="text-pink">lista!</span></>}
+                    {saving ? 'Preparando todo...' : <>¡Tu cita está <span className="text-jade">lista!</span></>}
                 </h1>
                 <p className="text-sm text-nf-gray max-w-[280px] mx-auto leading-relaxed">
                     {saving
@@ -101,7 +100,7 @@ export default function ConfirmationStep({ booking, salonName = 'Ana Nails Studi
                                 <p className="text-[9px] font-bold text-nf-gray uppercase tracking-widest mb-1">Tu cita en</p>
                                 <h2 className="font-serif text-lg text-charcoal font-bold">{salonName}</h2>
                             </div>
-                            <div className="w-10 h-10 rounded-full bg-pink-pale flex items-center justify-center text-lg">💅</div>
+                            <div className="w-10 h-10 rounded-full bg-jade-pale flex items-center justify-center text-lg">💅</div>
                         </div>
 
                         <div className="grid grid-cols-2 gap-6">
@@ -131,27 +130,14 @@ export default function ConfirmationStep({ booking, salonName = 'Ana Nails Studi
 
                         <div className="pt-4 flex items-center justify-between">
                             <div className="flex items-center gap-3">
-                                <div className="w-8 h-8 rounded-full bg-pink-pale flex items-center justify-center text-xs border border-white shadow-sm font-bold text-pink">
+                                <div className="w-8 h-8 rounded-full bg-jade-pale flex items-center justify-center text-xs border border-white shadow-sm font-bold text-jade">
                                     {booking.client_name?.charAt(0) || 'C'}
                                 </div>
                                 <span className="text-xs font-bold text-charcoal uppercase tracking-widest">{booking.client_name}</span>
                             </div>
-                            <span className="text-[9px] font-bold text-pink uppercase tracking-widest">Confirmado</span>
+                            <span className="text-[9px] font-bold text-jade uppercase tracking-widest">Confirmado</span>
                         </div>
 
-                        {(booking.image_urls && booking.image_urls.length > 0) && (
-                            <div className="pt-6 border-t border-cream-dark/30">
-                                <p className="text-[9px] font-bold text-nf-gray uppercase tracking-widest mb-3 flex items-center gap-1.5">
-                                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" /><circle cx="12" cy="13" r="4" /></svg>
-                                    Inspiración
-                                </p>
-                                <div className="flex gap-2 overflow-x-auto pb-1">
-                                    {booking.image_urls.map((url, i) => (
-                                        <img key={i} src={api.getPublicUrl(url)} alt="" className="w-12 h-12 rounded-xl object-cover border border-cream-dark shadow-sm" />
-                                    ))}
-                                </div>
-                            </div>
-                        )}
                     </div>
 
                     {/* Scalloped edge effect */}
@@ -180,7 +166,7 @@ export default function ConfirmationStep({ booking, salonName = 'Ana Nails Studi
 
                     <button
                         onClick={() => window.location.reload()}
-                        className="w-full text-center text-[10px] tracking-[0.2em] text-pink underline-offset-4 hover:underline uppercase font-bold py-4 transition-all"
+                        className="w-full text-center text-[10px] tracking-[0.2em] text-jade underline-offset-4 hover:underline uppercase font-bold py-4 transition-all"
                     >
                         Agendar otra cita
                     </button>
@@ -189,3 +175,4 @@ export default function ConfirmationStep({ booking, salonName = 'Ana Nails Studi
         </div>
     );
 }
+

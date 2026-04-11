@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
 
 // Server-side CDN token — NEVER sent to the browser
-const CDN_DEMO_TOKEN = process.env.CDN_DEMO_TOKEN || process.env.CDN_UPLOAD_TOKEN || 'dmm_7tpONlAMTNtIMLjpr4gMSNqw9LGbgX6X';
-const CDN_CLIENTS_TOKEN = process.env.CDN_CLIENTS_TOKEN || 'dmm_XKnnaMPrgRWaRHQ21deaQ3Krz2B6iBW';
+const CDN_DEMO_TOKEN = process.env.CDN_DEMO_TOKEN || process.env.CDN_UPLOAD_TOKEN || 'dmm_BUMpYAfGICvwTjR7uFUrheWwIYS5rS';
+const CDN_CLIENTS_TOKEN = process.env.CDN_CLIENTS_TOKEN || 'dmm_BUMpYAfGICvwTjR7uFUrheWwIYS5rS';
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api.diabolicalservices.tech';
 
 export async function POST(req: Request) {
@@ -66,3 +66,4 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: 'Internal Server Error', details: e.message }, { status: 500 });
     }
 }
+

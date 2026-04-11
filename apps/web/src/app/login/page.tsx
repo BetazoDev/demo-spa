@@ -45,7 +45,7 @@ export default function LoginPage() {
     };
 
     return (
-        <div className="min-h-screen flex text-charcoal flex-col justify-center sm:py-12 bg-cream selection:bg-pink-pale selection:text-charcoal relative">
+        <div className="min-h-screen flex text-charcoal flex-col justify-center sm:py-12 bg-cream selection:bg-jade-pale selection:text-charcoal relative">
             <div className="p-10 xs:p-0 mx-auto md:w-full md:max-w-md">
                 <div className="bg-white shadow w-full rounded-2xl border border-cream-dark p-8 mb-6">
                     <div className="flex justify-center mb-6">
@@ -73,7 +73,7 @@ export default function LoginPage() {
                                 required
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                className="w-full h-14 px-5 rounded-2xl bg-gray-50 border-2 border-transparent focus:border-pink focus:bg-white outline-none transition-all placeholder-gray-400 font-medium text-[15px] shadow-inner"
+                                className="w-full h-14 px-5 rounded-2xl bg-gray-50 border-2 border-transparent focus:border-jade focus:bg-white outline-none transition-all placeholder-gray-400 font-medium text-[15px] shadow-inner"
                                 placeholder="tu@correo.com"
                             />
                         </div>
@@ -84,7 +84,7 @@ export default function LoginPage() {
                                 required
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                className="w-full h-14 px-5 rounded-2xl bg-gray-50 border-2 border-transparent focus:border-pink focus:bg-white outline-none transition-all placeholder-gray-400 font-medium text-[15px] shadow-inner"
+                                className="w-full h-14 px-5 rounded-2xl bg-gray-50 border-2 border-transparent focus:border-jade focus:bg-white outline-none transition-all placeholder-gray-400 font-medium text-[15px] shadow-inner"
                                 placeholder="••••••••"
                             />
                         </div>
@@ -131,13 +131,14 @@ export default function LoginPage() {
                 </div>
                 <div className="flex flex-col items-center gap-4 text-sm mt-6">
                     <p className="text-nf-gray font-medium">
-                        ¿No tienes cuenta? <Link href="/signup" className="text-pink font-bold hover:text-coral transition-colors">Regístrate aquí</Link>
+                        ¿No tienes cuenta? <Link href="/signup" className="text-jade font-bold hover:text-sage transition-colors">Regístrate aquí</Link>
                     </p>
                     <p className="text-nf-gray font-medium">
-                        ¿Olvidaste tu contraseña? <a href="#" className="text-pink hover:text-coral transition-colors">Recupérala aquí</a>
+                        ¿Olvidaste tu contraseña? <a href="#" className="text-jade hover:text-sage transition-colors">Recupérala aquí</a>
                     </p>
                 </div>
             </div>
         </div>
     );
 }
+

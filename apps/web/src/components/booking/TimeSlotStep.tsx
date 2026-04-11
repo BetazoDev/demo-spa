@@ -107,7 +107,7 @@ export default function TimeSlotStep({ selectedDate, selectedTime, onSelect, onN
                                 py-4 rounded-2xl text-[13px] font-bold transition-all duration-300 border
                                 ${isSelected
                                     ? 'bg-charcoal text-white border-charcoal shadow-lg scale-105'
-                                    : 'bg-white border-cream-dark text-charcoal hover:border-pink hover:bg-pink-pale'}
+                                    : 'bg-white border-cream-dark text-charcoal hover:border-jade hover:bg-jade-pale'}
                             `}
                         >
                             {slot.time}
@@ -128,7 +128,7 @@ export default function TimeSlotStep({ selectedDate, selectedTime, onSelect, onN
                 </div>
                 <button
                     onClick={onBack}
-                    className="w-10 h-10 rounded-full bg-cream-dark/20 flex items-center justify-center text-nf-gray hover:bg-pink-pale hover:text-pink transition-all"
+                    className="w-10 h-10 rounded-full bg-cream-dark/20 flex items-center justify-center text-nf-gray hover:bg-jade-pale hover:text-jade transition-all"
                 >
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M20 12H4M4 12l8-8M4 12l8 8" /></svg>
                 </button>
@@ -136,7 +136,7 @@ export default function TimeSlotStep({ selectedDate, selectedTime, onSelect, onN
 
             {loading ? (
                 <div className="flex flex-col items-center justify-center py-20 gap-4">
-                    <div className="w-10 h-10 border-3 border-pink-pale border-t-pink rounded-full animate-spin" />
+                    <div className="w-10 h-10 border-3 border-jade-pale border-t-pink rounded-full animate-spin" />
                     <p className="font-serif italic text-nf-gray">Consultando agenda...</p>
                 </div>
             ) : timeSlots.length === 0 ? (
@@ -159,7 +159,7 @@ export default function TimeSlotStep({ selectedDate, selectedTime, onSelect, onN
             `}>
                 <div className="max-w-lg mx-auto flex items-center justify-between gap-4">
                     <div className="hidden sm:block">
-                        <p className="text-[10px] font-bold text-pink uppercase tracking-widest mb-0.5">Confirmar para las</p>
+                        <p className="text-[10px] font-bold text-jade uppercase tracking-widest mb-0.5">Confirmar para las</p>
                         <p className="font-serif text-charcoal text-lg font-bold">
                             {selectedTime}
                         </p>
@@ -176,3 +176,4 @@ export default function TimeSlotStep({ selectedDate, selectedTime, onSelect, onN
         </div>
     );
 }
+

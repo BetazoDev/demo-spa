@@ -84,18 +84,18 @@ export default function CalendarStep({ selectedDate, onSelect, onNext: _onNext, 
             {/* Month Navigation */}
             <div className="flex items-center justify-between mb-8">
                 <h2 className="font-serif text-2xl font-bold text-charcoal">
-                    {MONTH_NAMES[currentMonth]} <span className="text-pink font-normal">{currentYear}</span>
+                    {MONTH_NAMES[currentMonth]} <span className="text-jade font-normal">{currentYear}</span>
                 </h2>
                 <div className="flex gap-2">
                     <button
                         onClick={handlePrevMonth}
-                        className="w-10 h-10 rounded-full bg-cream/50 flex items-center justify-center hover:bg-pink-pale hover:text-pink transition-all border border-cream-dark/20 text-nf-gray shadow-sm"
+                        className="w-10 h-10 rounded-full bg-cream/50 flex items-center justify-center hover:bg-jade-pale hover:text-jade transition-all border border-cream-dark/20 text-nf-gray shadow-sm"
                     >
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
                     </button>
                     <button
                         onClick={handleNextMonth}
-                        className="w-10 h-10 rounded-full bg-cream/50 flex items-center justify-center hover:bg-pink-pale hover:text-pink transition-all border border-cream-dark/20 text-nf-gray shadow-sm"
+                        className="w-10 h-10 rounded-full bg-cream/50 flex items-center justify-center hover:bg-jade-pale hover:text-jade transition-all border border-cream-dark/20 text-nf-gray shadow-sm"
                     >
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18l6-6-6-6" /></svg>
                     </button>
@@ -130,20 +130,20 @@ export default function CalendarStep({ selectedDate, onSelect, onNext: _onNext, 
                                 transition-all duration-300 transform
                                 ${disabled
                                     ? 'text-nf-gray/20 cursor-not-allowed'
-                                    : 'cursor-pointer hover:bg-pink-pale hover:text-pink hover:scale-110'}
+                                    : 'cursor-pointer hover:bg-jade-pale hover:text-jade hover:scale-110'}
                                 ${selected
                                     ? 'bg-charcoal text-white shadow-lg scale-110 z-10'
                                     : todayDay
-                                        ? 'text-pink border-2 border-pink-light'
+                                        ? 'text-jade border-2 border-jade-light'
                                         : 'text-charcoal'}
                             `}
                         >
                             {day}
                             {todayDay && !selected && (
-                                <div className="absolute bottom-1.5 w-1 h-1 rounded-full bg-pink" />
+                                <div className="absolute bottom-1.5 w-1 h-1 rounded-full bg-jade" />
                             )}
                             {selected && (
-                                <div className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-pink border-2 border-white flex items-center justify-center animate-scale-in">
+                                <div className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-jade border-2 border-white flex items-center justify-center animate-scale-in">
                                     <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
                                 </div>
                             )}
@@ -154,7 +154,7 @@ export default function CalendarStep({ selectedDate, onSelect, onNext: _onNext, 
 
             <div className="mt-8 flex gap-4 justify-center">
                 <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 rounded-full bg-pink-light border border-pink" />
+                    <div className="w-2 h-2 rounded-full bg-jade-light border border-jade" />
                     <span className="text-[10px] font-bold text-nf-gray uppercase tracking-wider">Hoy</span>
                 </div>
                 <div className="flex items-center gap-2">
@@ -165,3 +165,4 @@ export default function CalendarStep({ selectedDate, onSelect, onNext: _onNext, 
         </div>
     );
 }
+

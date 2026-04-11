@@ -11,8 +11,8 @@ import { MetricsGrid } from '@/components/admin/MetricsGrid';
 import Lightbox from '@/components/ui/Lightbox';
 
 const STATUS_LABELS: Record<string, { label: string; color: string; bg: string }> = {
-    confirmed: { label: 'CONFIRMADA', color: 'var(--aesthetic-pink)', bg: 'var(--aesthetic-soft-pink)' },
-    pending_payment: { label: 'PENDIENTE', color: 'var(--aesthetic-taupe)', bg: 'var(--aesthetic-beige)' },
+    confirmed: { label: 'CONFIRMADA', color: 'var(--aesthetic-jade)', bg: 'var(--aesthetic-pale-jade)' },
+    pending_payment: { label: 'PENDIENTE', color: 'var(--aesthetic-forest)', bg: 'var(--aesthetic-beige)' },
     cancelled: { label: 'CANCELADA', color: 'var(--gray-light)', bg: 'var(--cream-dark)' },
     completed: { label: 'COMPLETADA', color: '#88C999', bg: 'rgba(136, 201, 153, 0.1)' },
 };
@@ -29,7 +29,6 @@ interface AppointmentDetailProps {
 
 function AppointmentDetail({ apt, service, onClose, onComplete, staff }: AppointmentDetailProps) {
     const [completing, setCompleting] = useState(false);
-    const [lbIndex, setLbIndex] = useState<number | null>(null);
     const s = STATUS_LABELS[apt.status] || STATUS_LABELS.pending_payment;
     const startDate = new Date(apt.datetime_start);
     const dateStr = startDate.toLocaleDateString('es-MX', { day: 'numeric', month: 'long', year: 'numeric' });
@@ -46,7 +45,7 @@ function AppointmentDetail({ apt, service, onClose, onComplete, staff }: Appoint
             <div className="relative w-full max-w-md bg-cream h-full shadow-2xl animate-slide-in-right overflow-y-auto" onClick={e => e.stopPropagation()}>
                 {/* Top bar */}
                 <div className="flex items-center justify-between px-6 pt-6 pb-4">
-                    <button onClick={onClose} className="text-aesthetic-muted hover:text-aesthetic-taupe transition-colors">
+                    <button onClick={onClose} className="text-aesthetic-sage hover:text-aesthetic-forest transition-colors">
                         <span className="material-symbol font-light">arrow_back</span>
                     </button>
                     <div className="size-10" />
@@ -54,65 +53,40 @@ function AppointmentDetail({ apt, service, onClose, onComplete, staff }: Appoint
 
                 {/* Client header */}
                 <div className="px-6 pb-6">
-                    <h1 className="font-display text-4xl font-light italic text-aesthetic-taupe mb-2 tracking-tight">{apt.client_name}</h1>
+                    <h1 className="font-display text-4xl font-light italic text-aesthetic-forest mb-2 tracking-tight">{apt.client_name}</h1>
                     <div className="flex items-center gap-3">
                         <span className="text-[10px] tracking-[0.2em] uppercase font-bold px-3 py-1 rounded-full" style={{ background: s.bg, color: s.color }}>
                             {s.label}
                         </span>
-                        <span className="text-aesthetic-muted text-sm font-display italic tracking-wide">{service?.name || 'Servicio'}</span>
+                        <span className="text-aesthetic-sage text-sm font-display italic tracking-wide">{service?.name || 'Servicio'}</span>
                     </div>
                 </div>
 
                 {/* Details card */}
                 <div className="mx-6 bg-white/60 backdrop-blur-sm rounded-[2.5rem] border border-aesthetic-accent p-8 mb-5 shadow-minimal">
-                    <p className="text-[10px] tracking-[0.3em] text-aesthetic-muted uppercase mb-6 font-display italic font-medium">Detalles del turno</p>
+                    <p className="text-[10px] tracking-[0.3em] text-aesthetic-sage uppercase mb-6 font-display italic font-medium">Detalles del turno</p>
                     <div className="grid grid-cols-2 gap-y-8 gap-x-4">
                         <div>
-                            <p className="text-[9px] tracking-[0.2em] text-aesthetic-muted/60 uppercase font-bold mb-1">Fecha</p>
-                            <p className="font-display text-lg italic text-aesthetic-taupe capitalize leading-tight">{dateStr}</p>
+                            <p className="text-[9px] tracking-[0.2em] text-aesthetic-sage/60 uppercase font-bold mb-1">Fecha</p>
+                            <p className="font-display text-lg italic text-aesthetic-forest capitalize leading-tight">{dateStr}</p>
                         </div>
                         <div>
-                            <p className="text-[9px] tracking-[0.2em] text-aesthetic-muted/60 uppercase font-bold mb-1">Hora</p>
-                            <p className="font-display text-lg italic text-aesthetic-taupe leading-tight">{timeStr}</p>
+                            <p className="text-[9px] tracking-[0.2em] text-aesthetic-sage/60 uppercase font-bold mb-1">Hora</p>
+                            <p className="font-display text-lg italic text-aesthetic-forest leading-tight">{timeStr}</p>
                         </div>
                         <div>
-                            <p className="text-[9px] tracking-[0.2em] text-aesthetic-muted/60 uppercase font-bold mb-1">Duración</p>
-                            <p className="font-display text-lg italic text-aesthetic-taupe leading-tight">{duration} min</p>
+                            <p className="text-[9px] tracking-[0.2em] text-aesthetic-sage/60 uppercase font-bold mb-1">Duración</p>
+                            <p className="font-display text-lg italic text-aesthetic-forest leading-tight">{duration} min</p>
                         </div>
                         <div>
-                            <p className="text-[9px] tracking-[0.2em] text-aesthetic-muted/60 uppercase font-bold mb-1">Especialista</p>
-                            <p className="font-display text-lg italic text-aesthetic-taupe leading-tight capitalize">
+                            <p className="text-[9px] tracking-[0.2em] text-aesthetic-sage/60 uppercase font-bold mb-1">Especialista</p>
+                            <p className="font-display text-lg italic text-aesthetic-forest leading-tight capitalize">
                                 {staff.find(s => s.id === apt.staff_id)?.name || 'Sin asignar'}
                             </p>
                         </div>
                     </div>
                 </div>
 
-                {/* Reference photos */}
-                {(apt.image_url || (apt.image_urls && apt.image_urls.length > 0)) && (
-                    <div className="px-6 mb-5">
-                        <p className="text-[10px] tracking-[0.15em] text-nf-gray uppercase mb-3">Fotos de Referencia</p>
-                        <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
-                            {(apt.image_urls || (apt.image_url ? [apt.image_url] : [])).map((url, idx) => (
-                                <div 
-                                    key={idx} 
-                                    className="w-28 h-28 rounded-2xl overflow-hidden flex-shrink-0 cursor-zoom-in hover:scale-105 active:scale-95 transition-all"
-                                    onClick={() => setLbIndex(idx)}
-                                >
-                                    <img src={api.getPublicUrl(url)} alt={`ref-${idx}`} className="w-full h-full object-cover" />
-                                </div>
-                            ))}
-                        </div>
-
-                        {lbIndex !== null && (
-                            <Lightbox
-                                images={(apt.image_urls || (apt.image_url ? [apt.image_url] : [])).map(u => api.getPublicUrl(u))}
-                                initialIndex={lbIndex}
-                                onClose={() => setLbIndex(null)}
-                            />
-                        )}
-                    </div>
-                )}
 
                 {/* Client notes */}
                 {apt.notes && (
@@ -156,7 +130,7 @@ function AppointmentDetail({ apt, service, onClose, onComplete, staff }: Appoint
                         href={`https://wa.me/${apt.client_phone.replace(/\D/g, '')}?text=${encodeURIComponent(waMessage)}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="w-full py-3.5 rounded-full font-display italic text-lg tracking-wide border border-aesthetic-pink/20 bg-aesthetic-soft-pink text-aesthetic-taupe flex items-center justify-center gap-3 transition-all duration-300 hover:shadow-minimal active:scale-[0.98]"
+                        className="w-full py-3.5 rounded-full font-display italic text-lg tracking-wide border border-aesthetic-jade/20 bg-aesthetic-pale-jade text-aesthetic-forest flex items-center justify-center gap-3 transition-all duration-300 hover:shadow-minimal active:scale-[0.98]"
                     >
                         <span className="material-symbol text-xl text-[#25D366]">chat</span>
                         WhatsApp
@@ -170,7 +144,7 @@ function AppointmentDetail({ apt, service, onClose, onComplete, staff }: Appoint
                                 setCompleting(false);
                             }}
                             disabled={completing || new Date() < new Date(apt.datetime_start)}
-                            className="w-full py-3.5 rounded-full font-display italic text-lg tracking-wide bg-aesthetic-taupe text-white flex items-center justify-center gap-3 transition-all duration-300 hover:bg-black active:scale-[0.98] disabled:opacity-50 disabled:grayscale shadow-lg"
+                            className="w-full py-3.5 rounded-full font-display italic text-lg tracking-wide bg-aesthetic-forest text-white flex items-center justify-center gap-3 transition-all duration-300 hover:bg-black active:scale-[0.98] disabled:opacity-50 disabled:grayscale shadow-lg"
                         >
                             {completing ? (
                                 <div className="size-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -185,13 +159,13 @@ function AppointmentDetail({ apt, service, onClose, onComplete, staff }: Appoint
                 </div>
                 
                 {apt.status !== 'completed' && apt.status !== 'cancelled' && new Date() < new Date(apt.datetime_start) && (
-                    <p className="text-[9px] text-center text-aesthetic-muted uppercase tracking-widest font-bold">
+                    <p className="text-[9px] text-center text-aesthetic-sage uppercase tracking-widest font-bold">
                         Habilitado al iniciar el turno
                     </p>
                 )}
                 
                 <div className="pt-2 text-center">
-                    <button className="text-[10px] tracking-[0.3em] text-aesthetic-muted uppercase hover:text-red-400 transition-colors font-display italic font-medium">
+                    <button className="text-[10px] tracking-[0.3em] text-aesthetic-sage uppercase hover:text-red-400 transition-colors font-display italic font-medium">
                         Cancelar Cita
                     </button>
                 </div>
@@ -317,7 +291,7 @@ export default function AdminDashboard() {
     if (loading) {
         return (
             <div className="flex items-center justify-center h-64">
-                <div className="w-8 h-8 border-2 border-pink-light border-t-pink rounded-full animate-spin" />
+                <div className="w-8 h-8 border-2 border-jade-light border-t-pink rounded-full animate-spin" />
             </div>
         );
     }
@@ -326,16 +300,16 @@ export default function AdminDashboard() {
         <div className="relative min-h-full pb-24" style={{ background: 'var(--cream)' }}>
             {/* Header */}
             <div className="px-6 pt-8 pb-0">
-                <p className="text-[10px] tracking-[0.3em] text-aesthetic-muted uppercase mb-2 font-display italic font-medium">
+                <p className="text-[10px] tracking-[0.3em] text-aesthetic-sage uppercase mb-2 font-display italic font-medium">
                     {owner ? `Hola, ${owner.name.split(' ')[0]}` : 'Bienvenida'}
                 </p>
                 <div className="flex items-center justify-between">
-                    <h1 className="font-display text-4xl font-light italic tracking-tight text-aesthetic-taupe">Buenos días ✨</h1>
+                    <h1 className="font-display text-4xl font-light italic tracking-tight text-aesthetic-forest">Buenos días ✨</h1>
                     <div className="size-11 rounded-full overflow-hidden shadow-soft border-2 border-white ring-1 ring-aesthetic-accent/50">
                         {owner?.photo_url ? (
                             <img src={owner.photo_url} alt={owner.name} className="w-full h-full object-cover" />
                         ) : (
-                            <div className="w-full h-full flex items-center justify-center text-sm font-display italic bg-aesthetic-soft-pink text-aesthetic-taupe">
+                            <div className="w-full h-full flex items-center justify-center text-sm font-display italic bg-aesthetic-pale-jade text-aesthetic-forest">
                                 {owner ? owner.name.split(' ').map(n => n[0]).join('').slice(0, 2) : '✦'}
                             </div>
                         )}
@@ -345,7 +319,7 @@ export default function AdminDashboard() {
 
             {/* Staff Booking Links */}
             <div className="mx-6 mt-5 space-y-2">
-                <p className="text-[10px] tracking-[0.15em] text-aesthetic-muted uppercase font-display italic font-medium mb-2">Links de Reservas del Equipo</p>
+                <p className="text-[10px] tracking-[0.15em] text-aesthetic-sage uppercase font-display italic font-medium mb-2">Links de Reservas del Equipo</p>
                 {staff.map(member => {
                     const slug = member.slug || member.name.toLowerCase().replace(/\s+/g, '-');
                     const baseDomain = domain && domain.includes('.') ? domain : `${domain}.nailflow.app`;
@@ -355,23 +329,23 @@ export default function AdminDashboard() {
                     const isCopied = copiedSlug === member.id;
                     return (
                         <div key={member.id} className="bg-white rounded-2xl p-3.5 shadow-sm flex items-center gap-3 border border-aesthetic-accent/30">
-                            <div className="size-9 rounded-full flex items-center justify-center text-xs font-display italic bg-aesthetic-soft-pink text-aesthetic-taupe border border-aesthetic-accent overflow-hidden flex-shrink-0">
+                            <div className="size-9 rounded-full flex items-center justify-center text-xs font-display italic bg-aesthetic-pale-jade text-aesthetic-forest border border-aesthetic-accent overflow-hidden flex-shrink-0">
                                 {member.photo_url ? (
                                     <img src={member.photo_url} alt={member.name} className="w-full h-full object-cover" />
                                 ) : member.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
                             </div>
                             <div className="flex-1 min-w-0">
-                                <p className="text-xs font-medium text-aesthetic-taupe font-display truncate">
+                                <p className="text-xs font-medium text-aesthetic-forest font-display truncate">
                                     {member.name}
-                                    {member.role === 'owner' && <span className="ml-1 text-[9px] text-aesthetic-pink">(Dirección)</span>}
+                                    {member.role === 'owner' && <span className="ml-1 text-[9px] text-aesthetic-jade">(Dirección)</span>}
                                 </p>
-                                <p className="text-[10px] text-aesthetic-muted/60 truncate font-display italic">https://{url}</p>
+                                <p className="text-[10px] text-aesthetic-sage/60 truncate font-display italic">https://{url}</p>
                             </div>
                             <button
                                 onClick={() => handleCopyLink(member)}
                                 className={`flex-shrink-0 p-2 rounded-xl transition-all duration-200 hover:scale-105 ${isCopied ? 'bg-[#88C999]/10' : 'bg-aesthetic-cream'}`}
                             >
-                                <span className={`material-symbol text-base ${isCopied ? 'text-[#88C999]' : 'text-aesthetic-muted'}`}>
+                                <span className={`material-symbol text-base ${isCopied ? 'text-[#88C999]' : 'text-aesthetic-sage'}`}>
                                     {isCopied ? 'check' : 'content_copy'}
                                 </span>
                             </button>
@@ -383,13 +357,13 @@ export default function AdminDashboard() {
             {/* Metrics Dashboard */}
             <div className="px-6 mt-8">
                 <div className="flex items-center justify-between mb-6">
-                    <h2 className="font-display text-xl italic text-aesthetic-taupe">Resumen de Negocio</h2>
+                    <h2 className="font-display text-xl italic text-aesthetic-forest">Resumen de Negocio</h2>
                     <div className="flex gap-1 bg-aesthetic-cream rounded-full p-1">
                         {([['day', 'Hoy'], ['week', 'Semana'], ['month', 'Mes']] as [IncomePeriod, string][]).map(([id, label]) => (
                             <button
                                 key={id}
                                 onClick={() => setIncomePeriod(id)}
-                                className={`px-4 py-1.5 rounded-full text-[10px] font-bold tracking-[0.1em] uppercase transition-all duration-200 ${incomePeriod === id ? 'bg-white shadow-sm text-aesthetic-taupe' : 'text-aesthetic-muted/60'}`}
+                                className={`px-4 py-1.5 rounded-full text-[10px] font-bold tracking-[0.1em] uppercase transition-all duration-200 ${incomePeriod === id ? 'bg-white shadow-sm text-aesthetic-forest' : 'text-aesthetic-sage/60'}`}
                             >
                                 {label}
                             </button>
@@ -409,9 +383,9 @@ export default function AdminDashboard() {
             {/* Pending Appointments */}
             <div className="px-6 mt-6">
                 <div className="flex items-center justify-between mb-4">
-                    <h2 className="font-display text-xl italic text-aesthetic-taupe">Pendientes</h2>
+                    <h2 className="font-display text-xl italic text-aesthetic-forest">Pendientes</h2>
                     {pendingAppointments.length > 0 && (
-                        <span className="text-[11px] tracking-[0.12em] font-semibold uppercase text-aesthetic-pink">
+                        <span className="text-[11px] tracking-[0.12em] font-semibold uppercase text-aesthetic-jade">
                             {pendingAppointments.length} turno{pendingAppointments.length !== 1 ? 's' : ''}
                         </span>
                     )}
@@ -419,8 +393,8 @@ export default function AdminDashboard() {
 
                 {pendingAppointments.length === 0 ? (
                     <div className="text-center py-8 bg-white/30 rounded-3xl border border-dashed border-aesthetic-accent">
-                        <span className="material-symbol text-aesthetic-muted/20 text-3xl font-light">check_circle</span>
-                        <p className="text-aesthetic-muted/40 text-sm italic font-display mt-2">Todas las citas han sido completadas ✨</p>
+                        <span className="material-symbol text-aesthetic-sage/20 text-3xl font-light">check_circle</span>
+                        <p className="text-aesthetic-sage/40 text-sm italic font-display mt-2">Todas las citas han sido completadas ✨</p>
                     </div>
                 ) : (
                     <div className="space-y-3 stagger-children">
@@ -461,7 +435,7 @@ export default function AdminDashboard() {
             {/* Completed Appointments */}
             <div className="px-6 mt-6">
                 <div className="flex items-center justify-between mb-4">
-                    <h2 className="font-display text-xl italic text-aesthetic-taupe flex items-center gap-2">
+                    <h2 className="font-display text-xl italic text-aesthetic-forest flex items-center gap-2">
                         <span className="material-symbol text-[#88C999] text-lg">check_circle</span>
                         Completadas hoy
                     </h2>
@@ -474,7 +448,7 @@ export default function AdminDashboard() {
 
                 {completedToday.length === 0 ? (
                     <div className="text-center py-8 bg-white/30 rounded-3xl border border-dashed border-aesthetic-accent">
-                        <p className="text-aesthetic-muted/40 text-sm italic font-display">Sin citas completadas aún hoy</p>
+                        <p className="text-aesthetic-sage/40 text-sm italic font-display">Sin citas completadas aún hoy</p>
                     </div>
                 ) : (
                     <div className="space-y-3 stagger-children">
@@ -502,7 +476,7 @@ export default function AdminDashboard() {
                                         <span className="text-[10px] tracking-[0.12em] uppercase font-semibold text-[#88C999]">
                                             COMPLETADA
                                         </span>
-                                        <span className="text-sm font-semibold text-aesthetic-taupe">${svc?.estimated_price || 0}</span>
+                                        <span className="text-sm font-semibold text-aesthetic-forest">${svc?.estimated_price || 0}</span>
                                     </div>
                                 </button>
                             );
@@ -527,3 +501,4 @@ export default function AdminDashboard() {
         </div>
     );
 }
+

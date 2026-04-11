@@ -47,14 +47,14 @@ export default function ServiceStep({ selectedServiceIds, onToggle, onNext, onBa
             {/* Header: Sticky at the top */}
             <div className="bg-white/80 backdrop-blur-md sticky top-0 z-30 border-b border-cream-dark/30 shadow-sm">
                 <div className="flex items-center justify-between px-6 pt-6 pb-2">
-                    <button onClick={onBack} className="flex items-center gap-2 text-nf-gray text-xs font-bold uppercase tracking-widest hover:text-pink transition-colors group">
-                        <div className="w-8 h-8 rounded-full bg-white shadow-sm flex items-center justify-center group-hover:bg-pink-pale transition-colors">
+                    <button onClick={onBack} className="flex items-center gap-2 text-nf-gray text-xs font-bold uppercase tracking-widest hover:text-jade transition-colors group">
+                        <div className="w-8 h-8 rounded-full bg-white shadow-sm flex items-center justify-center group-hover:bg-jade-pale transition-colors">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
                         </div>
                     </button>
                     <div className="flex gap-1.5">
-                        <div className="w-2 h-2 rounded-full bg-pink opacity-20" />
-                        <div className="w-2 h-2 rounded-full bg-pink" />
+                        <div className="w-2 h-2 rounded-full bg-jade opacity-20" />
+                        <div className="w-2 h-2 rounded-full bg-jade" />
                         {[...Array(5)].map((_, i) => (
                             <div key={i} className="w-2 h-2 rounded-full bg-cream-dark opacity-30" />
                         ))}
@@ -64,7 +64,7 @@ export default function ServiceStep({ selectedServiceIds, onToggle, onNext, onBa
                 <div className="px-6 pt-4 pb-2">
                     <p className="text-[10px] tracking-[0.2em] text-nf-gray uppercase font-bold mb-1">Paso 2: Servicios</p>
                     <h1 className="font-serif text-3xl text-charcoal leading-tight">
-                        ¿Qué <span className="text-pink">deseo</span> hoy?
+                        ¿Qué <span className="text-jade">deseo</span> hoy?
                     </h1>
                 </div>
 
@@ -79,8 +79,8 @@ export default function ServiceStep({ selectedServiceIds, onToggle, onNext, onBa
                                     className={`
                                         whitespace-nowrap px-6 py-2.5 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] transition-all duration-300
                                         ${category === cat
-                                            ? 'bg-aesthetic-taupe text-white shadow-md scale-105'
-                                            : 'bg-white text-aesthetic-muted border border-aesthetic-accent/50 hover:bg-aesthetic-cream/40'}
+                                            ? 'bg-aesthetic-forest text-white shadow-md scale-105'
+                                            : 'bg-white text-aesthetic-sage border border-aesthetic-accent/50 hover:bg-aesthetic-cream/40'}
                                     `}
                                 >
                                     {cat}
@@ -95,7 +95,7 @@ export default function ServiceStep({ selectedServiceIds, onToggle, onNext, onBa
             <div className="flex-1 overflow-y-auto no-scrollbar px-6 py-6 scroll-smooth">
                 {loading ? (
                     <div className="flex flex-col items-center justify-center h-64 gap-4">
-                        <div className="w-10 h-10 border-3 border-pink-pale border-t-pink rounded-full animate-spin" />
+                        <div className="w-10 h-10 border-3 border-jade-pale border-t-pink rounded-full animate-spin" />
                         <p className="font-serif italic text-nf-gray">Preparando catálogo...</p>
                     </div>
                 ) : filteredServices.length === 0 ? (
@@ -118,23 +118,23 @@ export default function ServiceStep({ selectedServiceIds, onToggle, onNext, onBa
                                 >
                                     <div className={`
                                         flex items-center gap-5 p-5 bg-white
-                                        ${isSelected ? 'ring-2 ring-pink' : ''}
+                                        ${isSelected ? 'ring-2 ring-jade' : ''}
                                     `}>
                                         {/* Image/Icon */}
                                         <div className="relative w-24 h-24 rounded-2xl overflow-hidden shadow-inner flex-shrink-0">
                                             {service.image_url ? (
                                                 <img src={api.getPublicUrl(service.image_url)} alt={service.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
                                             ) : (
-                                                <div className="w-full h-full bg-pink-pale flex items-center justify-center text-3xl">💅</div>
+                                                <div className="w-full h-full bg-jade-pale flex items-center justify-center text-3xl">💅</div>
                                             )}
                                         </div>
 
                                         {/* Info */}
                                         <div className="flex-1 min-w-0 pr-4">
                                             <div className="flex items-center gap-2 mb-1">
-                                                <span className="text-[10px] font-bold text-pink uppercase tracking-widest">{service.category || 'General'}</span>
+                                                <span className="text-[10px] font-bold text-jade uppercase tracking-widest">{service.category || 'General'}</span>
                                             </div>
-                                            <h3 className="font-serif text-xl text-charcoal leading-tight mb-2 group-hover:text-pink transition-colors line-clamp-2">{service.name}</h3>
+                                            <h3 className="font-serif text-xl text-charcoal leading-tight mb-2 group-hover:text-jade transition-colors line-clamp-2">{service.name}</h3>
 
                                             <div className="flex items-center gap-4">
                                                 <div className="flex items-center gap-1.5">
@@ -153,7 +153,7 @@ export default function ServiceStep({ selectedServiceIds, onToggle, onNext, onBa
                                         {/* Select Indicator */}
                                         <div className={`
                                             absolute top-4 right-4 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all duration-300
-                                            ${isSelected ? 'bg-pink border-pink scale-110 rotate-0 shadow-lg' : 'border-cream-dark opacity-30 -rotate-90 scale-75'}
+                                            ${isSelected ? 'bg-jade border-jade scale-110 rotate-0 shadow-lg' : 'border-cream-dark opacity-30 -rotate-90 scale-75'}
                                         `}>
                                             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
                                         </div>
@@ -179,7 +179,7 @@ export default function ServiceStep({ selectedServiceIds, onToggle, onNext, onBa
             `}>
                 <div className="max-w-lg mx-auto flex items-center justify-between gap-4">
                     <div className="min-w-0">
-                        <p className="text-[10px] font-bold text-pink uppercase tracking-widest mb-0.5">
+                        <p className="text-[10px] font-bold text-jade uppercase tracking-widest mb-0.5">
                             {totalSelected} {totalSelected === 1 ? 'Servicio' : 'Servicios'}
                         </p>
                         <p className="font-serif text-charcoal text-xl font-bold">
@@ -198,3 +198,4 @@ export default function ServiceStep({ selectedServiceIds, onToggle, onNext, onBa
         </div>
     );
 }
+

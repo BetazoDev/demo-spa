@@ -8,15 +8,13 @@ import { Card } from '@/components/ui/Card';
 
 interface PaymentStepProps {
     booking: BookingData;
-    /** Files pending CDN upload — will be uploaded on booking confirmation */
-    pendingFiles: File[];
     tenantId: string;
-    /** Called with appointment ID and optionally CDN URLs after successful booking */
-    onBookingConfirmed: (appointmentId: string, cdnUrls?: string[]) => void;
+    /** Called with appointment ID after successful booking */
+    onBookingConfirmed: (appointmentId: string) => void;
     onBack: () => void;
 }
 
-export default function PaymentStep({ booking, pendingFiles, tenantId, onBookingConfirmed, onBack }: PaymentStepProps) {
+export default function PaymentStep({ booking, tenantId, onBookingConfirmed, onBack }: PaymentStepProps) {
     const [method, setMethod] = useState<PaymentMethod>('prueba');
     const [cardName, setCardName] = useState('');
     const [cardNumber, setCardNumber] = useState('');
@@ -83,24 +81,24 @@ export default function PaymentStep({ booking, pendingFiles, tenantId, onBooking
             {/* Header: Sticky at the top */}
             <div className="bg-white/80 backdrop-blur-md sticky top-0 z-30 border-b border-cream-dark/30 shadow-sm">
                 <div className="flex items-center justify-between px-6 pt-6 pb-2">
-                    <button onClick={onBack} disabled={loading} className="flex items-center gap-2 text-nf-gray text-xs font-bold uppercase tracking-widest hover:text-pink transition-colors group">
-                        <div className="w-8 h-8 rounded-full bg-white shadow-sm flex items-center justify-center group-hover:bg-pink-pale transition-colors">
+                    <button onClick={onBack} disabled={loading} className="flex items-center gap-2 text-nf-gray text-xs font-bold uppercase tracking-widest hover:text-jade transition-colors group">
+                        <div className="w-8 h-8 rounded-full bg-white shadow-sm flex items-center justify-center group-hover:bg-jade-pale transition-colors">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
                         </div>
                     </button>
                     <div className="flex gap-1.5">
-                        <div className="w-2 h-2 rounded-full bg-pink opacity-20" />
-                        <div className="w-2 h-2 rounded-full bg-pink opacity-20" />
-                        <div className="w-2 h-2 rounded-full bg-pink opacity-20" />
-                        <div className="w-2 h-2 rounded-full bg-pink opacity-20" />
-                        <div className="w-2 h-2 rounded-full bg-pink opacity-20" />
-                        <div className="w-2 h-2 rounded-full bg-pink" />
+                        <div className="w-2 h-2 rounded-full bg-jade opacity-20" />
+                        <div className="w-2 h-2 rounded-full bg-jade opacity-20" />
+                        <div className="w-2 h-2 rounded-full bg-jade opacity-20" />
+                        <div className="w-2 h-2 rounded-full bg-jade opacity-20" />
+                        <div className="w-2 h-2 rounded-full bg-jade opacity-20" />
+                        <div className="w-2 h-2 rounded-full bg-jade" />
                     </div>
                 </div>
 
                 <div className="px-6 pt-4 pb-4">
                     <p className="text-[10px] tracking-[0.2em] text-nf-gray uppercase font-bold mb-1">Paso 6: Pago Anticipado</p>
-                    <h1 className="font-serif text-3xl text-charcoal leading-tight">Seguridad <span className="text-pink">Total</span></h1>
+                    <h1 className="font-serif text-3xl text-charcoal leading-tight">Seguridad <span className="text-jade">Total</span></h1>
                 </div>
             </div>
 
@@ -125,12 +123,12 @@ export default function PaymentStep({ booking, pendingFiles, tenantId, onBooking
                             >
                                 <Card 
                                     variant="white" 
-                                    className={`flex flex-col items-center gap-2 p-4 border-2 transition-all duration-300 ${method === m.id ? 'border-pink ring-4 ring-pink/10 scale-[1.02]' : 'border-transparent opacity-60 grayscale-[0.5] hover:opacity-100 hover:grayscale-0'}`}
+                                    className={`flex flex-col items-center gap-2 p-4 border-2 transition-all duration-300 ${method === m.id ? 'border-jade ring-4 ring-jade/10 scale-[1.02]' : 'border-transparent opacity-60 grayscale-[0.5] hover:opacity-100 hover:grayscale-0'}`}
                                 >
-                                    <div className={method === m.id ? 'text-pink' : 'text-aesthetic-muted/40'}>
+                                    <div className={method === m.id ? 'text-jade' : 'text-aesthetic-sage/40'}>
                                         <span className="material-symbol text-2xl font-light">{m.icon}</span>
                                     </div>
-                                    <span className={`text-[8px] tracking-[0.1em] uppercase font-bold ${method === m.id ? 'text-pink' : 'text-aesthetic-muted/60'}`}>
+                                    <span className={`text-[8px] tracking-[0.1em] uppercase font-bold ${method === m.id ? 'text-jade' : 'text-aesthetic-sage/60'}`}>
                                         {m.label}
                                     </span>
                                 </Card>
@@ -174,3 +172,4 @@ export default function PaymentStep({ booking, pendingFiles, tenantId, onBooking
         </div>
     );
 }
+

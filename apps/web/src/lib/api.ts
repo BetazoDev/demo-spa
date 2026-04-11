@@ -3,16 +3,16 @@ import { Tenant, Staff, Service, Appointment, BookingData, TimeSlot } from './ty
 // Use relative URLs in development (Next.js proxy handles CORS)
 // Use full URL in production
 const API_URL = typeof window !== 'undefined' && window.location.hostname === 'localhost'
-  ? '/api'  // Relative URL - Next.js proxy will forward to backend
-  : (process.env.NEXT_PUBLIC_API_URL || 'https://spa-demo-back.diabolicalservices.tech') + '/api';
+    ? '/api'  // Relative URL - Next.js proxy will forward to backend
+    : (process.env.NEXT_PUBLIC_API_URL || 'https://spa-demo-back.diabolicalservices.tech') + '/api';
 
 const fetchApi = async (path: string, options: RequestInit = {}, domain?: string) => {
     // Ensure path starts with /
     const cleanPath = path.startsWith('/') ? path : `/${path}`;
-    
+
     // Avoid double /api in the final URL if path already includes it
     const finalUrl = `${API_URL.replace(/\/api$/, '')}${cleanPath.startsWith('/api') ? cleanPath : `/api${cleanPath}`}`;
-    
+
     // Add tenant domain header for resolution
     const headers = new Headers(options.headers || {});
 
@@ -165,13 +165,7 @@ export const api = {
             body: JSON.stringify({ status }),
         });
     },
-    updateAppointmentImages: async (id: string, image_urls: string[]): Promise<void> => {
-        return fetchApi(`/api/appointments/${id}/images`, {
-            method: 'PATCH',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ image_urls }),
-        });
-    },
+
 
     // Slot Locking
     holdTimeSlot: async (date: string, time: string, staff_id: string): Promise<{ success: boolean }> => {
@@ -222,13 +216,13 @@ export const api = {
             }
 
             const data = await response.json();
-            const clientSlug = 'nailssalon'; 
+            const clientSlug = 'demo-spa';
 
             if (data.uploaded && data.uploaded.length > 0) {
                 const item = data.uploaded[0];
                 // Clean any tokens from URLs returned by the CDN
                 const rawUrl = item.url || item.cdnUrl || `https://cdn.diabolicalservices.tech/${clientSlug}/${item.filename}`;
-                return rawUrl.split('?')[0]; 
+                return rawUrl.split('?')[0];
             } else if (data.duplicates && data.duplicates.length > 0) {
                 const item = data.duplicates[0];
                 const rawUrl = item.url || item.cdnUrl || `https://cdn.diabolicalservices.tech/${clientSlug}/${item.filename}`;
@@ -261,23 +255,24 @@ export const api = {
 
         // If it was a proxy URL like /api/img/nailssalon/image.jpg, we need the path after /img/
         if (url.includes('/api/img/') || url.includes('/img/')) {
-             const parts = url.split(url.includes('/api/img/') ? '/api/img/' : '/img/');
-             if (parts.length > 1) {
-                 cleanPath = parts[1].split('?')[0];
-             }
+            const parts = url.split(url.includes('/api/img/') ? '/api/img/' : '/img/');
+            if (parts.length > 1) {
+                cleanPath = parts[1].split('?')[0];
+            }
         }
 
         // Standardize leading slashes
         cleanPath = cleanPath.replace(/^\/+/, '');
 
         // Ensure the root project slug is always present
-        const clientSlug = 'nailssalon';
+        const clientSlug = 'demo-spa';
         const pathParts = cleanPath.split('/').filter(Boolean);
         if (pathParts[0] !== clientSlug) {
             pathParts.unshift(clientSlug);
         }
-        
+
         // Return THE clean direct CDN URL as requested by the user
         return `${CDN_BASE}/${pathParts.join('/')}`;
     },
 };
+

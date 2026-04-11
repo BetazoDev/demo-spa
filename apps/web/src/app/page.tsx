@@ -20,7 +20,7 @@ export default async function RootPage() {
         <h1 className="text-2xl font-bold">Tenant no encontrado</h1>
         <p>Dominio intentado: {domain}</p>
         <p>API URL: {process.env.NEXT_PUBLIC_API_URL || 'https://demo-spa-back.diabolicalservices.tech'}</p>
-        <a href="/login" className="text-pink underline mt-4 block">Ir al Login</a>
+        <a href="/login" className="text-jade underline mt-4 block">Ir al Login</a>
       </div>
     );
   }
@@ -29,7 +29,7 @@ export default async function RootPage() {
   const owner = allStaff.find(s => s.role === 'owner') || allStaff[0];
 
   return (
-    <div className="min-h-screen bg-cream selection:bg-pink-pale selection:text-charcoal relative">
+    <div className="min-h-screen bg-cream selection:bg-jade-pale selection:text-charcoal relative">
       <BookingWidget
         tenant={tenant}
         staffId={owner?.id}
@@ -40,3 +40,4 @@ export default async function RootPage() {
     </div>
   );
 }
+

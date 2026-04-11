@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useState, useMemo, ReactNode } from 'react';
 import { BookingStep, BookingData, Service } from '@/lib/types';
 
-const STEPS: BookingStep[] = ['personal', 'service', 'datetime', 'inspiration', 'summary', 'payment', 'confirmation'];
+const STEPS: BookingStep[] = ['personal', 'service', 'datetime', 'summary', 'payment', 'confirmation'];
 
 interface BookingContextType {
     currentStep: BookingStep;
@@ -23,11 +23,6 @@ interface BookingContextType {
     setSelectedDate: (date: string | null) => void;
     selectedTime: string | null;
     setSelectedTime: (time: string | null) => void;
-    pendingFiles: File[];
-    localPreviews: string[];
-    handleFilesChange: (files: File[], previews: string[]) => void;
-    uploadedImageUrls: string[];
-    setUploadedImageUrls: (urls: string[]) => void;
     confirmedAppointmentId: string | null;
     setConfirmedAppointmentId: (id: string | null) => void;
     tenantId: string;
@@ -39,7 +34,7 @@ interface BookingContextType {
     goNext: () => void;
     goBack: () => void;
     navigate: (step: BookingStep) => void;
-    handleBookingConfirmed: (appointmentId: string, cdnUrls?: string[]) => void;
+    handleBookingConfirmed: (appointmentId: string) => void;
 }
 
 const BookingContext = createContext<BookingContextType | undefined>(undefined);
@@ -74,10 +69,6 @@ export function BookingProvider({
     const [selectedDate, setSelectedDate] = useState<string | null>(null);
     const [selectedTime, setSelectedTime] = useState<string | null>(null);
 
-    // Image state
-    const [pendingFiles, setPendingFiles] = useState<File[]>([]);
-    const [localPreviews, setLocalPreviews] = useState<string[]>([]);
-    const [uploadedImageUrls, setUploadedImageUrls] = useState<string[]>([]);
     const [confirmedAppointmentId, setConfirmedAppointmentId] = useState<string | null>(null);
 
     const navigate = (step: BookingStep) => {
@@ -95,13 +86,7 @@ export function BookingProvider({
         if (i > 0) navigate(STEPS[i - 1]);
     };
 
-    const handleFilesChange = (files: File[], previews: string[]) => {
-        setPendingFiles(files);
-        setLocalPreviews(previews);
-    };
-
-    const handleBookingConfirmed = (appointmentId: string, cdnUrls?: string[]) => {
-        if (cdnUrls) setUploadedImageUrls(cdnUrls);
+    const handleBookingConfirmed = (appointmentId: string) => {
         setConfirmedAppointmentId(appointmentId);
         goNext();
     };
@@ -148,13 +133,8 @@ export function BookingProvider({
         if (staffPhoto) data.staff_photo = staffPhoto;
         if (clientEmail) data.client_email = clientEmail;
 
-        if (uploadedImageUrls.length > 0) {
-            data.image_urls = uploadedImageUrls;
-            data.image_url = uploadedImageUrls[0];
-        }
-
         return data as BookingData;
-    }, [tenantId, selectedDate, selectedTime, selectedServices, staffId, staffName, staffPhoto, clientName, clientPhone, clientEmail, uploadedImageUrls]);
+    }, [tenantId, selectedDate, selectedTime, selectedServices, staffId, staffName, staffPhoto, clientName, clientPhone, clientEmail]);
 
     const value = {
         currentStep, setCurrentStep,
@@ -165,8 +145,6 @@ export function BookingProvider({
         selectedServices, setSelectedServices, toggleService,
         selectedDate, setSelectedDate,
         selectedTime, setSelectedTime,
-        pendingFiles, localPreviews, handleFilesChange,
-        uploadedImageUrls, setUploadedImageUrls,
         confirmedAppointmentId, setConfirmedAppointmentId,
         tenantId, staffId, staffName, staffPhoto, salonName,
         bookingData, goNext, goBack, navigate, handleBookingConfirmed
@@ -182,3 +160,4 @@ export function useBookingContext() {
     }
     return context;
 }
+

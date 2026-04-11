@@ -5,7 +5,6 @@ import { BookingStep, BookingData, Service } from '@/lib/types';
 import PersonalDataStep from './PersonalDataStep';
 import ServiceStep from './ServiceStep';
 import DateTimeStep from './DateTimeStep';
-import ImageUploadStep from './ImageUploadStep';
 import SummaryStep from './SummaryStep';
 import PaymentStep from './PaymentStep';
 import ConfirmationStep from './ConfirmationStep';
@@ -78,34 +77,17 @@ function BookingSteps() {
                     totalDuration={bookingData.total_duration}
                 />
             )}
-            {currentStep === 'inspiration' && (
-                <ImageUploadStep
-                    pendingFiles={pendingFiles}
-                    localPreviews={localPreviews}
-                    onFilesChange={handleFilesChange}
-                    onNext={goNext}
-                    onBack={goBack}
-                    staffName={staffName}
-                />
-            )}
+
             {currentStep === 'summary' && (
                 <SummaryStep
                     booking={bookingData}
-                    localPreviews={localPreviews}
-                    pendingFiles={pendingFiles}
-                    tenantId={tenantId}
-                    onNext={(cdnUrls) => {
-                        if (cdnUrls && cdnUrls.length > 0) setUploadedImageUrls(cdnUrls);
-                        goNext();
-                    }}
+                    onNext={() => goNext()}
                     onBack={goBack}
-                    onAddImage={() => navigate('inspiration')}
                 />
             )}
             {currentStep === 'payment' && (
                 <PaymentStep
                     booking={bookingData}
-                    pendingFiles={[]}
                     tenantId={tenantId}
                     onBookingConfirmed={handleBookingConfirmed}
                     onBack={goBack}
@@ -115,7 +97,6 @@ function BookingSteps() {
                 <ConfirmationStep
                     booking={bookingData}
                     appointmentId={confirmedAppointmentId}
-                    pendingFiles={[]}
                     tenantId={tenantId}
                     salonName={salonName}
                 />
@@ -133,4 +114,5 @@ export default function BookingWizard(props: BookingWizardProps) {
         </div>
     );
 }
+
 

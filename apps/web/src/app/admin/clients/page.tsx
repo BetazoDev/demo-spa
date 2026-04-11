@@ -187,7 +187,7 @@ export default function ClientsPage() {
     if (loading) {
         return (
             <div className="flex items-center justify-center h-64">
-                <div className="w-8 h-8 border-2 border-pink-light border-t-pink rounded-full animate-spin" />
+                <div className="w-8 h-8 border-2 border-jade-light border-t-pink rounded-full animate-spin" />
             </div>
         );
     }
@@ -197,7 +197,7 @@ export default function ClientsPage() {
             {/* Header */}
             <div className="px-6 pt-8 pb-0">
                 <div className="flex items-center justify-center mb-4">
-                    <h1 className="font-display text-4xl font-light italic tracking-tight text-aesthetic-taupe text-center">Mis Clientas</h1>
+                    <h1 className="font-display text-4xl font-light italic tracking-tight text-aesthetic-forest text-center">Mis Clientas</h1>
                 </div>
             </div>
 
@@ -205,10 +205,10 @@ export default function ClientsPage() {
             <div className="px-6 mt-4">
                 <div className="relative group">
                     <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                        <span className="material-symbol text-aesthetic-muted/60 text-xl font-light">search</span>
+                        <span className="material-symbol text-aesthetic-sage/60 text-xl font-light">search</span>
                     </div>
                     <input
-                        className="block w-full pl-11 pr-4 py-3.5 bg-aesthetic-soft-pink/40 border-none rounded-full focus:ring-1 focus:ring-aesthetic-pink/30 placeholder:text-aesthetic-muted/50 text-base font-display italic"
+                        className="block w-full pl-11 pr-4 py-3.5 bg-aesthetic-pale-jade/40 border-none rounded-full focus:ring-1 focus:ring-aesthetic-jade/30 placeholder:text-aesthetic-sage/50 text-base font-display italic"
                         placeholder="Buscar clienta..."
                         value={search}
                         onChange={e => setSearch(e.target.value)}
@@ -253,22 +253,22 @@ export default function ClientsPage() {
                             )}
                             {/* Main row */}
                             <button
-                                className="w-full text-left flex items-center gap-5 p-5 active:bg-aesthetic-soft-pink/20 transition-colors"
+                                className="w-full text-left flex items-center gap-5 p-5 active:bg-aesthetic-pale-jade/20 transition-colors"
                                 onClick={() => setExpandedPhone(expanded ? null : client.phone)}
                             >
                                 {/* Avatar */}
-                                <div className="size-14 rounded-full flex items-center justify-center flex-shrink-0 text-base font-bold font-display italic border border-aesthetic-accent shadow-sm bg-aesthetic-soft-pink text-aesthetic-taupe">
+                                <div className="size-14 rounded-full flex items-center justify-center flex-shrink-0 text-base font-bold font-display italic border border-aesthetic-accent shadow-sm bg-aesthetic-pale-jade text-aesthetic-forest">
                                     {initials}
                                 </div>
                                 {/* Info */}
                                 <div className="flex-1 min-w-0">
                                     <div className="flex items-center gap-2">
-                                        <h3 className="text-xl font-medium leading-tight text-aesthetic-taupe font-display">{client.name}</h3>
+                                        <h3 className="text-xl font-medium leading-tight text-aesthetic-forest font-display">{client.name}</h3>
                                         {client.favorite && (
                                             <span className="material-symbol text-yellow-400 text-lg">star</span>
                                         )}
                                     </div>
-                                    <p className="text-xs text-aesthetic-muted/80 mt-1 font-display italic">
+                                    <p className="text-xs text-aesthetic-sage/80 mt-1 font-display italic">
                                         Ult: {formatDate(client.lastVisit)} • <span className="opacity-60">{client.lastService || 'Servicio'}</span>
                                         {client.visits > 1 && <span className="ml-2 opacity-40">({client.visits} visitas)</span>}
                                     </p>
@@ -277,13 +277,13 @@ export default function ClientsPage() {
                                 <div className="flex items-center gap-2">
                                     <button
                                         onClick={(e) => { e.stopPropagation(); toggleFavorite(client); }}
-                                        className="size-9 rounded-full flex items-center justify-center hover:bg-aesthetic-soft-pink/40 transition-colors"
+                                        className="size-9 rounded-full flex items-center justify-center hover:bg-aesthetic-pale-jade/40 transition-colors"
                                     >
-                                        <span className={`material-symbol text-xl ${client.favorite ? 'text-yellow-400' : 'text-aesthetic-muted/30'}`}>
+                                        <span className={`material-symbol text-xl ${client.favorite ? 'text-yellow-400' : 'text-aesthetic-sage/30'}`}>
                                             {client.favorite ? 'star' : 'star_border'}
                                         </span>
                                     </button>
-                                    <span className={`material-symbol text-aesthetic-muted/40 transition-transform duration-500 scale-125 ${expanded ? 'rotate-180' : ''}`}>
+                                    <span className={`material-symbol text-aesthetic-sage/40 transition-transform duration-500 scale-125 ${expanded ? 'rotate-180' : ''}`}>
                                         expand_more
                                     </span>
                                 </div>
@@ -309,9 +309,9 @@ export default function ClientsPage() {
                                     )}
                                     {client.preferences && (
                                         <div>
-                                            <p className="text-[9px] tracking-[0.3em] text-aesthetic-muted/60 uppercase font-bold mb-2 ml-1">Preferencias</p>
-                                            <div className="bg-aesthetic-soft-pink/20 rounded-2xl p-4 border border-aesthetic-accent/20">
-                                                <p className="italic text-aesthetic-taupe text-sm leading-relaxed font-display">&ldquo;{client.preferences}&rdquo;</p>
+                                            <p className="text-[9px] tracking-[0.3em] text-aesthetic-sage/60 uppercase font-bold mb-2 ml-1">Preferencias</p>
+                                            <div className="bg-aesthetic-pale-jade/20 rounded-2xl p-4 border border-aesthetic-accent/20">
+                                                <p className="italic text-aesthetic-forest text-sm leading-relaxed font-display">&ldquo;{client.preferences}&rdquo;</p>
                                             </div>
                                         </div>
                                     )}
@@ -325,7 +325,7 @@ export default function ClientsPage() {
                                     )}
 
                                     {/* Contact info */}
-                                    <div className="flex flex-wrap gap-3 text-xs text-aesthetic-muted">
+                                    <div className="flex flex-wrap gap-3 text-xs text-aesthetic-sage">
                                         <span className="flex items-center gap-1.5 bg-white rounded-full px-3 py-1.5 border border-aesthetic-accent/20">
                                             <span className="material-symbol text-sm">phone</span>
                                             {client.phone}
@@ -340,27 +340,27 @@ export default function ClientsPage() {
 
                                     <div className="grid grid-cols-3 gap-3">
                                         <div className="bg-white border border-aesthetic-accent rounded-2xl p-4 text-center shadow-sm">
-                                            <p className="font-display text-2xl font-light italic text-aesthetic-taupe mb-1">{client.visits}</p>
-                                            <p className="text-[8px] tracking-[0.2em] text-aesthetic-muted uppercase font-bold">Visitas</p>
+                                            <p className="font-display text-2xl font-light italic text-aesthetic-forest mb-1">{client.visits}</p>
+                                            <p className="text-[8px] tracking-[0.2em] text-aesthetic-sage uppercase font-bold">Visitas</p>
                                         </div>
                                         <div className="bg-white border border-aesthetic-accent rounded-2xl p-4 text-center shadow-sm">
-                                            <p className="font-display text-2xl font-light italic text-aesthetic-taupe mb-1">${client.totalSpent}</p>
-                                            <p className="text-[8px] tracking-[0.2em] text-aesthetic-muted uppercase font-bold">Inversión</p>
+                                            <p className="font-display text-2xl font-light italic text-aesthetic-forest mb-1">${client.totalSpent}</p>
+                                            <p className="text-[8px] tracking-[0.2em] text-aesthetic-sage uppercase font-bold">Inversión</p>
                                         </div>
                                         <div className="bg-white border border-aesthetic-accent rounded-2xl p-4 text-center shadow-sm">
-                                            <p className="font-display text-2xl font-light italic text-aesthetic-taupe mb-1">${client.visits > 0 ? Math.round(client.totalSpent / client.visits) : 0}</p>
-                                            <p className="text-[8px] tracking-[0.2em] text-aesthetic-muted uppercase font-bold">Ticket Prom.</p>
+                                            <p className="font-display text-2xl font-light italic text-aesthetic-forest mb-1">${client.visits > 0 ? Math.round(client.totalSpent / client.visits) : 0}</p>
+                                            <p className="text-[8px] tracking-[0.2em] text-aesthetic-sage uppercase font-bold">Ticket Prom.</p>
                                         </div>
                                     </div>
 
                                     <div className="flex gap-3 pt-2">
                                         <button
                                             onClick={() => setHistoryClient(client)}
-                                            className="flex-1 py-4 rounded-full bg-aesthetic-pink text-white text-[10px] tracking-[0.2em] uppercase font-bold shadow-minimal transition-all active:scale-[0.98]"
+                                            className="flex-1 py-4 rounded-full bg-aesthetic-jade text-white text-[10px] tracking-[0.2em] uppercase font-bold shadow-minimal transition-all active:scale-[0.98]"
                                         >
                                             Ver Historial
                                         </button>
-                                        <button className="size-12 rounded-full border border-aesthetic-accent flex items-center justify-center text-aesthetic-muted hover:bg-aesthetic-soft-pink/40 transition-all">
+                                        <button className="size-12 rounded-full border border-aesthetic-accent flex items-center justify-center text-aesthetic-sage hover:bg-aesthetic-pale-jade/40 transition-all">
                                             <span className="material-symbol text-xl">call</span>
                                         </button>
                                     </div>
@@ -384,19 +384,19 @@ export default function ClientsPage() {
 
             {/* History Modal */}
             {historyClient && (
-                <div className="fixed inset-0 bg-aesthetic-taupe/40 backdrop-blur-md z-[100] flex items-end sm:items-center justify-center animate-fade-in" onClick={() => setHistoryClient(null)}>
+                <div className="fixed inset-0 bg-aesthetic-forest/40 backdrop-blur-md z-[100] flex items-end sm:items-center justify-center animate-fade-in" onClick={() => setHistoryClient(null)}>
                     <div className="bg-aesthetic-cream rounded-t-[3rem] sm:rounded-[3rem] w-full max-w-lg max-h-[85vh] shadow-2xl relative border border-white/50 overflow-hidden flex flex-col" onClick={e => e.stopPropagation()}>
                         {/* Decorative */}
-                        <div className="absolute top-0 right-0 size-40 bg-aesthetic-pink/10 blur-3xl rounded-full -mr-20 -mt-20" />
+                        <div className="absolute top-0 right-0 size-40 bg-aesthetic-jade/10 blur-3xl rounded-full -mr-20 -mt-20" />
 
                         {/* Header */}
                         <div className="p-8 pb-4 relative">
                             <button onClick={() => setHistoryClient(null)} className="absolute top-6 right-6 size-10 rounded-full bg-white/50 flex items-center justify-center hover:bg-white transition-colors">
-                                <span className="material-symbol text-aesthetic-muted">close</span>
+                                <span className="material-symbol text-aesthetic-sage">close</span>
                             </button>
-                            <p className="text-[10px] tracking-[0.4em] text-aesthetic-muted uppercase mb-2 font-display italic font-medium">Historial Completo</p>
-                            <h2 className="font-display text-3xl italic text-aesthetic-taupe leading-tight">{historyClient.name}</h2>
-                            <div className="flex items-center gap-3 mt-2 text-xs text-aesthetic-muted">
+                            <p className="text-[10px] tracking-[0.4em] text-aesthetic-sage uppercase mb-2 font-display italic font-medium">Historial Completo</p>
+                            <h2 className="font-display text-3xl italic text-aesthetic-forest leading-tight">{historyClient.name}</h2>
+                            <div className="flex items-center gap-3 mt-2 text-xs text-aesthetic-sage">
                                 <span>{historyClient.phone}</span>
                                 {historyClient.email && <span>• {historyClient.email}</span>}
                             </div>
@@ -421,11 +421,11 @@ export default function ClientsPage() {
                                     <div key={apt.id || idx} className="bg-white rounded-2xl p-5 border border-aesthetic-accent/20 shadow-sm">
                                         <div className="flex items-start justify-between gap-3">
                                             <div className="flex-1 min-w-0">
-                                                <p className="font-display text-lg italic text-aesthetic-taupe truncate">{svc?.name || 'Servicio'}</p>
-                                                <p className="text-xs text-aesthetic-muted mt-1 capitalize">{dateStr} • {timeStr}</p>
+                                                <p className="font-display text-lg italic text-aesthetic-forest truncate">{svc?.name || 'Servicio'}</p>
+                                                <p className="text-xs text-aesthetic-sage mt-1 capitalize">{dateStr} • {timeStr}</p>
                                             </div>
                                             <div className="text-right flex-shrink-0">
-                                                <p className="font-semibold text-aesthetic-taupe">${svc?.estimated_price || 0}</p>
+                                                <p className="font-semibold text-aesthetic-forest">${svc?.estimated_price || 0}</p>
                                                 <span className="text-[9px] tracking-[0.15em] uppercase font-bold" style={{ color: s.color }}>{s.label}</span>
                                             </div>
                                         </div>
@@ -435,19 +435,19 @@ export default function ClientsPage() {
 
                             {getClientHistory(historyClient).length === 0 && (
                                 <div className="text-center py-10">
-                                    <p className="text-aesthetic-muted text-sm italic font-display">Sin historial de citas</p>
+                                    <p className="text-aesthetic-sage text-sm italic font-display">Sin historial de citas</p>
                                 </div>
                             )}
 
                             {/* Summary */}
-                            <div className="mt-4 p-5 bg-aesthetic-soft-pink/20 rounded-2xl border border-aesthetic-accent/20">
+                            <div className="mt-4 p-5 bg-aesthetic-pale-jade/20 rounded-2xl border border-aesthetic-accent/20">
                                 <div className="flex justify-between text-sm">
-                                    <span className="text-aesthetic-muted">Total visitas</span>
-                                    <span className="font-semibold text-aesthetic-taupe">{historyClient.visits}</span>
+                                    <span className="text-aesthetic-sage">Total visitas</span>
+                                    <span className="font-semibold text-aesthetic-forest">{historyClient.visits}</span>
                                 </div>
                                 <div className="flex justify-between text-sm mt-2">
-                                    <span className="text-aesthetic-muted">Total invertido</span>
-                                    <span className="font-semibold text-aesthetic-taupe">${historyClient.totalSpent}</span>
+                                    <span className="text-aesthetic-sage">Total invertido</span>
+                                    <span className="font-semibold text-aesthetic-forest">${historyClient.totalSpent}</span>
                                 </div>
                                 {/* Loyalty status in modal */}
                                 {getLoyaltyStatus(historyClient) && (() => {
@@ -472,3 +472,4 @@ export default function ClientsPage() {
         </div>
     );
 }
+

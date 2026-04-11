@@ -43,7 +43,7 @@ export default function PersonalDataStep({
                 <div className="flex items-center justify-between px-6 pt-6 pb-2">
                     <span className="text-[10px] tracking-[0.2em] text-nf-gray uppercase font-bold">Paso 1: Identificación</span>
                     <div className="flex gap-1.5">
-                        <div className="w-2 h-2 rounded-full bg-pink" />
+                        <div className="w-2 h-2 rounded-full bg-jade" />
                         {[...Array(6)].map((_, i) => (
                             <div key={i} className="w-2 h-2 rounded-full bg-cream-dark opacity-30" />
                         ))}
@@ -68,11 +68,11 @@ export default function PersonalDataStep({
                         <div className="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-white shadow-md flex items-center justify-center z-20">
                             <span className="text-lg">👋</span>
                         </div>
-                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-pink-pale rounded-full blur-2xl opacity-60" />
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-jade-pale rounded-full blur-2xl opacity-60" />
                     </div>
 
                     <h1 className="font-serif text-3xl text-charcoal mb-2 leading-tight">
-                        ¡Hola! Soy <span className="text-pink italic">{staffName}</span>
+                        ¡Hola! Soy <span className="text-jade italic">{staffName}</span>
                     </h1>
                     <p className="text-sm text-nf-gray max-w-[240px]">
                         Encantada de conocerte. Necesito unos pocos datos para organizar tu cita.
@@ -84,11 +84,11 @@ export default function PersonalDataStep({
                     <div className="space-y-8">
                         {/* Name */}
                         <div className="group">
-                            <label className={`block text-[11px] tracking-widest uppercase font-bold mb-1 transition-colors ${errors.name ? 'text-red-400' : 'text-nf-gray group-focus-within:text-pink'}`}>
+                            <label className={`block text-[11px] tracking-widest uppercase font-bold mb-1 transition-colors ${errors.name ? 'text-red-400' : 'text-nf-gray group-focus-within:text-jade'}`}>
                                 Tu Nombre Completo
                             </label>
                             <input
-                                className="w-full bg-transparent border-0 border-b-2 border-cream-dark py-3 text-charcoal placeholder-gray-light focus:outline-none focus:border-pink transition-all text-lg font-medium"
+                                className="w-full bg-transparent border-0 border-b-2 border-cream-dark py-3 text-charcoal placeholder-gray-light focus:outline-none focus:border-jade transition-all text-lg font-medium"
                                 placeholder="Ej. Sofía Martínez"
                                 value={name}
                                 onChange={e => onNameChange(e.target.value)}
@@ -98,12 +98,12 @@ export default function PersonalDataStep({
 
                         {/* WhatsApp */}
                         <div className="group">
-                            <label className={`block text-[11px] tracking-widest uppercase font-bold mb-1 transition-colors ${errors.phone ? 'text-red-400' : 'text-nf-gray group-focus-within:text-pink'}`}>
+                            <label className={`block text-[11px] tracking-widest uppercase font-bold mb-1 transition-colors ${errors.phone ? 'text-red-400' : 'text-nf-gray group-focus-within:text-jade'}`}>
                                 WhatsApp / Teléfono
                             </label>
                             <div className="relative">
                                 <input
-                                    className="w-full bg-transparent border-0 border-b-2 border-cream-dark py-3 text-charcoal placeholder-gray-light focus:outline-none focus:border-pink transition-all text-lg font-medium"
+                                    className="w-full bg-transparent border-0 border-b-2 border-cream-dark py-3 text-charcoal placeholder-gray-light focus:outline-none focus:border-jade transition-all text-lg font-medium"
                                     placeholder="+34 000 000 000"
                                     type="tel"
                                     value={phone}
@@ -116,11 +116,11 @@ export default function PersonalDataStep({
 
                         {/* Email */}
                         <div className="group">
-                            <label className="block text-[11px] tracking-widest uppercase font-bold mb-1 text-nf-gray group-focus-within:text-pink">
+                            <label className="block text-[11px] tracking-widest uppercase font-bold mb-1 text-nf-gray group-focus-within:text-jade">
                                 Correo Electrónico <span className="opacity-40 font-normal normal-case">(Opcional)</span>
                             </label>
                             <input
-                                className="w-full bg-transparent border-0 border-b-2 border-cream-dark py-3 text-charcoal placeholder-gray-light focus:outline-none focus:border-pink transition-all text-lg font-medium"
+                                className="w-full bg-transparent border-0 border-b-2 border-cream-dark py-3 text-charcoal placeholder-gray-light focus:outline-none focus:border-jade transition-all text-lg font-medium"
                                 placeholder="hola@ejemplo.com"
                                 type="email"
                                 value={email}
@@ -129,7 +129,7 @@ export default function PersonalDataStep({
                         </div>
                     </div>
 
-                    <div className="mt-10 p-4 rounded-2xl bg-pink-pale/30 border border-pink-light/20 flex gap-3 items-start">
+                    <div className="mt-10 p-4 rounded-2xl bg-jade-pale/30 border border-jade-light/20 flex gap-3 items-start">
                         <span className="text-lg">🔒</span>
                         <p className="text-[11px] text-nf-gray leading-relaxed">
                             Tus datos están protegidos. Solo los usaremos para confirmar tu cita.
@@ -154,3 +154,4 @@ export default function PersonalDataStep({
         </div>
     );
 }
+

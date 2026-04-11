@@ -72,3 +72,4 @@ export default function Lightbox({ images, initialIndex, onClose }: LightboxProp
         document.body
     );
 }
+

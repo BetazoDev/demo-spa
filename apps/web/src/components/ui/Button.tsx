@@ -17,7 +17,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         const variants = {
             primary: 'btn-gradient text-white shadow-soft hover:shadow-lg',
             secondary: 'bg-white text-charcoal shadow-sm hover:shadow-md border border-cream-dark',
-            outline: 'bg-transparent border-2 border-pink text-pink hover:bg-pink-pale',
+            outline: 'bg-transparent border-2 border-jade text-jade hover:bg-jade-pale',
             ghost: 'bg-transparent text-nf-gray hover:bg-cream-dark/30 hover:text-charcoal',
             danger: 'bg-red-500 text-white shadow-soft hover:bg-red-600',
         };
@@ -54,3 +54,4 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 );
 
 Button.displayName = 'Button';
+

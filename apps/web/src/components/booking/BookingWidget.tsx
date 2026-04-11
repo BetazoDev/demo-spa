@@ -20,7 +20,6 @@ const STEPS: { id: BookingStep; label: string; desc: string }[] = [
     { id: 'personal', label: 'Tus datos', desc: 'Nombre y contacto' },
     { id: 'service', label: 'Servicio', desc: 'Elige tu tratamiento' },
     { id: 'datetime', label: 'Fecha y hora', desc: 'Encuentra tu turno' },
-    { id: 'inspiration', label: 'Inspiración', desc: 'Sube referencias' },
     { id: 'summary', label: 'Resumen', desc: 'Confirma tu reserva' },
     { id: 'payment', label: 'Pago', desc: 'Anticipo seguro' },
     { id: 'confirmation', label: 'Confirmación', desc: '¡Todo listo!' },
@@ -121,7 +120,7 @@ export default function BookingWidget({ tenant, staffId, staffName, staffPhoto, 
                                         {/* Bubble */}
                                         <div
                                             className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 text-[11px] font-bold transition-all duration-300 ${isCompleted
-                                                ? 'bg-pink text-white'
+                                                ? 'bg-jade text-white'
                                                 : isActive
                                                     ? 'bg-white text-charcoal'
                                                     : 'bg-white/10 text-white/30'
@@ -182,3 +181,4 @@ export default function BookingWidget({ tenant, staffId, staffName, staffPhoto, 
         </div>
     );
 }
+

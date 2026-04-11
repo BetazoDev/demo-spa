@@ -31,14 +31,14 @@ export default function ProgressBar({ currentStep }: ProgressBarProps) {
                             <div
                                 className={`
                   w-full h-1.5 rounded-full transition-all duration-300
-                  ${isCompleted ? 'bg-pink' : isActive ? 'bg-gradient-to-r from-pink to-coral' : 'bg-cream-dark'}
+                  ${isCompleted ? 'bg-jade' : isActive ? 'bg-gradient-to-r from-pink to-coral' : 'bg-cream-dark'}
                 `}
                                 style={isActive ? { background: 'linear-gradient(90deg, var(--pink), var(--coral))' } : {}}
                             />
                             <span
                                 className={`
                   text-[10px] mt-1.5 font-medium transition-colors duration-300
-                  ${isActive ? 'text-charcoal' : isCompleted ? 'text-pink' : 'text-gray-light'}
+                  ${isActive ? 'text-charcoal' : isCompleted ? 'text-jade' : 'text-gray-light'}
                 `}
                             >
                                 {STEP_LABELS[step]}
@@ -50,3 +50,4 @@ export default function ProgressBar({ currentStep }: ProgressBarProps) {
         </div>
     );
 }
+

@@ -96,7 +96,6 @@ export interface Appointment {
   service_name?: string;
   service_price?: number;
   image_url?: string;
-  image_urls?: string[];
   notes?: string;
   status: 'pending_payment' | 'confirmed' | 'cancelled' | 'completed';
   advance_paid: boolean;
@@ -145,11 +144,11 @@ export interface BookingData {
   client_phone: string;
   client_email?: string;
   image_url?: string;
-  image_urls?: string[];
   notes?: string;
   payment_method?: string;
 }
 
-export type BookingStep = 'personal' | 'service' | 'datetime' | 'inspiration' | 'summary' | 'payment' | 'confirmation';
+export type BookingStep = 'personal' | 'service' | 'datetime' | 'summary' | 'payment' | 'confirmation';
 
 export type PaymentMethod = 'prueba' | 'card' | 'apple' | 'google' | 'stripe' | 'paypal' | 'mercado';
+

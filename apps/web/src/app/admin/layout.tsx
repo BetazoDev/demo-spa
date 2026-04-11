@@ -124,12 +124,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                         {logoUrl ? (
                             <img src={api.getPublicUrl(logoUrl)} alt="Logo" className="w-full h-full object-cover" />
                         ) : (
-                            <span className="text-aesthetic-taupe font-bold font-display text-lg italic">S</span>
+                            <span className="text-aesthetic-forest font-bold font-display text-lg italic">S</span>
                         )}
                     </div>
                     <div className="flex-1 min-w-0">
-                        <h2 className="font-display text-xl font-light italic tracking-tight text-aesthetic-taupe truncate">{salonName}</h2>
-                        <p className="text-[9px] uppercase tracking-[0.2em] font-bold text-aesthetic-muted/60 leading-none mt-0.5">Dashboard</p>
+                        <h2 className="font-display text-xl font-light italic tracking-tight text-aesthetic-forest truncate">{salonName}</h2>
+                        <p className="text-[9px] uppercase tracking-[0.2em] font-bold text-aesthetic-sage/60 leading-none mt-0.5">Dashboard</p>
                     </div>
                 </div>
             </div>
@@ -144,8 +144,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                             href={item.href}
                             onClick={() => setIsSidebarOpen(false)}
                             className={`flex items-center gap-4 px-5 py-4 rounded-2xl transition-all duration-300 ${isActive
-                                ? 'bg-aesthetic-taupe text-white shadow-soft'
-                                : 'text-aesthetic-muted/60 hover:text-aesthetic-pink hover:bg-aesthetic-soft-pink/20'
+                                ? 'bg-aesthetic-forest text-white shadow-soft'
+                                : 'text-aesthetic-sage/60 hover:text-aesthetic-jade hover:bg-aesthetic-pale-jade/20'
                                 }`}
                         >
                             <MaterialSymbol name={item.icon} active={isActive} />
@@ -178,11 +178,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                     <div className="size-10 rounded-xl bg-aesthetic-accent overflow-hidden border border-white shadow-soft">
                         {logoUrl && <img src={api.getPublicUrl(logoUrl)} alt="Logo" className="w-full h-full object-cover" />}
                     </div>
-                    <h1 className="font-display italic text-2xl text-aesthetic-taupe tracking-tight">{salonName}</h1>
+                    <h1 className="font-display italic text-2xl text-aesthetic-forest tracking-tight">{salonName}</h1>
                 </div>
                 <button 
                     onClick={() => setIsSidebarOpen(true)}
-                    className="size-12 flex items-center justify-center rounded-2xl bg-white border border-aesthetic-accent text-aesthetic-taupe shadow-minimal transition-all active:scale-95 group"
+                    className="size-12 flex items-center justify-center rounded-2xl bg-white border border-aesthetic-accent text-aesthetic-forest shadow-minimal transition-all active:scale-95 group"
                 >
                     <span className="material-symbol text-2xl transition-transform group-hover:scale-110">menu</span>
                 </button>
@@ -194,7 +194,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                     <div className="absolute inset-0 bg-charcoal/30 backdrop-blur-sm" />
                     <div className="relative w-80 h-full bg-white shadow-2xl animate-slide-in-right flex flex-col" onClick={e => e.stopPropagation()}>
                         <div className="absolute top-4 right-4 z-10 font-bold uppercase tracking-widest text-[#811910]">
-                            <button onClick={() => setIsSidebarOpen(false)} className="p-2 text-aesthetic-muted pb-0">
+                            <button onClick={() => setIsSidebarOpen(false)} className="p-2 text-aesthetic-sage pb-0">
                                 <span className="material-symbol">close</span>
                             </button>
                         </div>
@@ -223,3 +223,4 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </div>
     );
 }
+

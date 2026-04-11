@@ -10,11 +10,11 @@
   /* Brand colors — Spa: jade, warm white, gold, deep forest */
   --cream: #F8FBF8;
   --cream-dark: #EAF2EA;
-  --pink: #6BAE8E;
-  --pink-light: #B8D9CA;
-  --pink-pale: #EDF7F2;
-  --coral: #8DB87A;
-  --coral-light: #CCDEC4;
+  --jade: #5F8575;
+  --jade-light: #B8D9CA;
+  --jade-pale: #EDF7F2;
+  --sage: #8DB87A;
+  --sage-light: #CCDEC4;
   --beige: #C4B99A;
   --beige-light: #E8DFD0;
   --charcoal: #1E2D24;
@@ -23,18 +23,18 @@
   --gray-light: #B0C0B4;
   --nf-white: #FFFFFF;
 
-  /* Aesthetic Palette — Spa tones */
-  --aesthetic-pink: #7CB99E;
-  --aesthetic-beige: #D4CDB8;
+  /* Aesthetic Palette — Spa tones (Jade & Sage) */
+  --aesthetic-jade: #5F8575;
+  --aesthetic-beige: #D9E4DD;
   --aesthetic-cream: #F8FBF8;
-  --aesthetic-taupe: #4A6454;
-  --aesthetic-soft-pink: #E8F4EE;
-  --aesthetic-muted: #7A9484;
-  --aesthetic-accent: #C8DFCF;
+  --aesthetic-forest: #3E5A4D;
+  --aesthetic-pale-jade: #F1F6F3;
+  --aesthetic-sage: #7A9484;
+  --aesthetic-accent: #C1D8CD;
 
   /* Gold accent */
-  --gold: #C9A96E;
-  --gold-light: #EDD9A3;
+  --gold: #D4AF37;
+  --gold-light: #F1E5AC;
 
   /* Shadows */
   --shadow-sm: 0 2px 8px rgba(30, 45, 36, 0.06);
@@ -61,25 +61,32 @@
 @theme inline {
   --color-cream: var(--cream);
   --color-cream-dark: var(--cream-dark);
-  --color-pink: var(--pink);
-  --color-pink-light: var(--pink-light);
-  --color-pink-pale: var(--pink-pale);
-  --color-coral: var(--coral);
-  --color-coral-light: var(--coral-light);
+  --color-jade: var(--jade);
+  --color-jade-light: var(--jade-light);
+  --color-jade-pale: var(--jade-pale);
+  --color-sage: var(--sage);
+  --color-sage-light: var(--sage-light);
   --color-beige: var(--beige);
   --color-beige-light: var(--beige-light);
   --color-charcoal: var(--charcoal);
   --color-charcoal-light: var(--charcoal-light);
+  --color-aesthetic-jade: var(--aesthetic-jade);
+  --color-aesthetic-pale-jade: var(--aesthetic-pale-jade);
+  --color-aesthetic-forest: var(--aesthetic-forest);
+  --color-aesthetic-sage: var(--aesthetic-sage);
+  --color-aesthetic-accent: var(--aesthetic-accent);
+  --color-aesthetic-cream: var(--aesthetic-cream);
+  --color-aesthetic-beige: var(--aesthetic-beige);
   --color-nf-gray: var(--nf-gray);
   --color-gray-light: var(--gray-light);
   --color-nf-white: var(--nf-white);
 
-  --color-aesthetic-pink: var(--aesthetic-pink);
+  --color-aesthetic-jade: var(--aesthetic-jade);
   --color-aesthetic-beige: var(--aesthetic-beige);
   --color-aesthetic-cream: var(--aesthetic-cream);
-  --color-aesthetic-taupe: var(--aesthetic-taupe);
-  --color-aesthetic-soft-pink: var(--aesthetic-soft-pink);
-  --color-aesthetic-muted: var(--aesthetic-muted);
+  --color-aesthetic-forest: var(--aesthetic-forest);
+  --color-aesthetic-pale-jade: var(--aesthetic-pale-jade);
+  --color-aesthetic-sage: var(--aesthetic-sage);
   --color-aesthetic-accent: var(--aesthetic-accent);
 
   --font-serif: var(--font-serif);

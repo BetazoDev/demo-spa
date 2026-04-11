@@ -51,7 +51,7 @@ export default function ServicesPage() {
     if (loading) {
         return (
             <div className="flex items-center justify-center h-64">
-                <div className="w-8 h-8 border-2 border-aesthetic-accent border-t-aesthetic-pink rounded-full animate-spin" />
+                <div className="w-8 h-8 border-2 border-aesthetic-accent border-t-aesthetic-jade rounded-full animate-spin" />
             </div>
         );
     }
@@ -60,12 +60,12 @@ export default function ServicesPage() {
         <div className="relative min-h-full pb-24" style={{ background: 'var(--cream)' }}>
             {/* Header */}
             <div className="px-6 pt-8 pb-0">
-                <p className="text-[10px] tracking-[0.3em] text-aesthetic-muted uppercase mb-2 font-display italic font-medium">Gestión del Catálogo</p>
+                <p className="text-[10px] tracking-[0.3em] text-aesthetic-sage uppercase mb-2 font-display italic font-medium">Gestión del Catálogo</p>
                 <div className="flex items-center justify-between">
-                    <h1 className="font-display text-4xl font-light italic tracking-tight text-aesthetic-taupe">Servicios</h1>
+                    <h1 className="font-display text-4xl font-light italic tracking-tight text-aesthetic-forest">Servicios</h1>
                     <Link
                         href="/admin/services/new"
-                        className="text-[10px] tracking-[0.2em] uppercase font-bold px-4 py-2 rounded-full transition-all duration-300 bg-aesthetic-pink text-white shadow-minimal hover:scale-105 active:scale-95 flex items-center gap-1"
+                        className="text-[10px] tracking-[0.2em] uppercase font-bold px-4 py-2 rounded-full transition-all duration-300 bg-aesthetic-jade text-white shadow-minimal hover:scale-105 active:scale-95 flex items-center gap-1"
                     >
                         <span className="material-symbol text-sm">add</span>
                         Nuevo
@@ -77,10 +77,10 @@ export default function ServicesPage() {
             <div className="px-6 mt-6">
                 <div className="relative group">
                     <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                        <span className="material-symbol text-aesthetic-muted/60 text-xl">search</span>
+                        <span className="material-symbol text-aesthetic-sage/60 text-xl">search</span>
                     </div>
                     <input
-                        className="block w-full pl-11 pr-4 py-3.5 bg-aesthetic-soft-pink/40 border-none rounded-full focus:ring-1 focus:ring-aesthetic-pink/30 placeholder:text-aesthetic-muted/50 text-base font-display italic"
+                        className="block w-full pl-11 pr-4 py-3.5 bg-aesthetic-pale-jade/40 border-none rounded-full focus:ring-1 focus:ring-aesthetic-jade/30 placeholder:text-aesthetic-sage/50 text-base font-display italic"
                         placeholder="Buscar servicio..."
                         value={search}
                         onChange={e => setSearch(e.target.value)}
@@ -92,7 +92,7 @@ export default function ServicesPage() {
             <div className="px-6 mt-6 space-y-8">
                 {Object.entries(groupedServices).map(([category, catServices]) => (
                     <div key={category} className="space-y-3">
-                        <h2 className="font-display text-lg font-medium text-aesthetic-taupe italic ml-2">{category}</h2>
+                        <h2 className="font-display text-lg font-medium text-aesthetic-forest italic ml-2">{category}</h2>
                         <div className="space-y-3 stagger-children">
                             {catServices.map(service => (
                                 <div key={service.id} className="bg-white rounded-2xl p-4 shadow-sm flex items-center gap-4 border border-aesthetic-accent/10">
@@ -109,7 +109,7 @@ export default function ServicesPage() {
                                                 }}
                                             />
                                         ) : (
-                                            <div className="w-full h-full flex items-center justify-center text-aesthetic-muted/30">
+                                            <div className="w-full h-full flex items-center justify-center text-aesthetic-sage/30">
                                                 <span className="material-symbol text-2xl font-light">spa</span>
                                             </div>
                                         )}
@@ -117,24 +117,24 @@ export default function ServicesPage() {
                                     {/* Info */}
                                     <div className="flex-1 min-w-0">
                                         <div className="flex items-center gap-2">
-                                            <p className="font-semibold text-aesthetic-taupe text-[15px] truncate">{service.name}</p>
+                                            <p className="font-semibold text-aesthetic-forest text-[15px] truncate">{service.name}</p>
                                             {service.is_package && (
-                                                <span className="text-[7px] tracking-widest uppercase font-bold px-1.5 py-0.5 rounded bg-aesthetic-pink text-white">Paquete</span>
+                                                <span className="text-[7px] tracking-widest uppercase font-bold px-1.5 py-0.5 rounded bg-aesthetic-jade text-white">Paquete</span>
                                             )}
                                         </div>
                                         <div className="flex items-center gap-3 mt-1">
-                                            <span className="text-xs text-aesthetic-muted flex items-center gap-1">
+                                            <span className="text-xs text-aesthetic-sage flex items-center gap-1">
                                                 <span className="material-symbol text-sm font-light">schedule</span>
                                                 {service.duration_minutes === 0 ? 'Varía' : `${service.duration_minutes} min`}
                                             </span>
-                                            <span className="text-xs font-semibold text-aesthetic-taupe">
+                                            <span className="text-xs font-semibold text-aesthetic-forest">
                                                 {service.estimated_price > 0 ? `$${service.estimated_price}` : `Desde $${service.required_advance}`}
                                             </span>
                                         </div>
                                     </div>
                                     {/* Actions */}
                                     <div className="flex items-center gap-2 flex-shrink-0">
-                                        <Link href={`/admin/services/new?id=${service.id}`} className="size-10 flex items-center justify-center rounded-xl bg-aesthetic-soft-pink/30 text-aesthetic-muted hover:bg-aesthetic-pink hover:text-white transition-colors duration-300">
+                                        <Link href={`/admin/services/new?id=${service.id}`} className="size-10 flex items-center justify-center rounded-xl bg-aesthetic-pale-jade/30 text-aesthetic-sage hover:bg-aesthetic-jade hover:text-white transition-colors duration-300">
                                             <span className="material-symbol text-lg font-light">edit</span>
                                         </Link>
                                         <button
@@ -152,19 +152,19 @@ export default function ServicesPage() {
 
                 {filtered.length === 0 && !search && (
                     <div className="text-center py-10">
-                        <p className="text-aesthetic-muted text-sm italic font-display">Sin servicios aún. ¡Agrega el primero!</p>
+                        <p className="text-aesthetic-sage text-sm italic font-display">Sin servicios aún. ¡Agrega el primero!</p>
                     </div>
                 )}
             </div>
 
             {/* FAB */}
-            <Link href="/admin/services/new" className="fixed bottom-32 right-6 size-14 bg-aesthetic-pink text-white rounded-full shadow-lg flex items-center justify-center transition-all hover:scale-105 active:scale-95 z-30">
+            <Link href="/admin/services/new" className="fixed bottom-32 right-6 size-14 bg-aesthetic-jade text-white rounded-full shadow-lg flex items-center justify-center transition-all hover:scale-105 active:scale-95 z-30">
                 <span className="material-symbol text-3xl font-light">add</span>
             </Link>
 
             {/* Delete Confirmation Modal */}
             {deleteTarget && (
-                <div className="fixed inset-0 bg-aesthetic-taupe/40 backdrop-blur-md z-[100] flex items-center justify-center p-6 animate-fade-in" onClick={() => !deleting && setDeleteTarget(null)}>
+                <div className="fixed inset-0 bg-aesthetic-forest/40 backdrop-blur-md z-[100] flex items-center justify-center p-6 animate-fade-in" onClick={() => !deleting && setDeleteTarget(null)}>
                     <div className="bg-aesthetic-cream rounded-[2.5rem] p-10 w-full max-w-sm shadow-2xl relative border border-white/50 text-center" onClick={e => e.stopPropagation()}>
                         {/* Decorative */}
                         <div className="absolute top-0 right-0 size-32 bg-red-100/30 blur-3xl rounded-full -mr-16 -mt-16" />
@@ -173,16 +173,16 @@ export default function ServicesPage() {
                             <div className="size-16 rounded-full bg-red-50 border border-red-100 flex items-center justify-center mx-auto mb-6">
                                 <span className="material-symbol text-red-400 text-3xl">delete_forever</span>
                             </div>
-                            <h3 className="font-display text-2xl italic text-aesthetic-taupe mb-3">¿Eliminar Servicio?</h3>
-                            <p className="text-sm text-aesthetic-muted mb-8 leading-relaxed">
-                                Se eliminará <strong className="text-aesthetic-taupe">&ldquo;{deleteTarget.name}&rdquo;</strong> permanentemente. Esta acción no se puede deshacer.
+                            <h3 className="font-display text-2xl italic text-aesthetic-forest mb-3">¿Eliminar Servicio?</h3>
+                            <p className="text-sm text-aesthetic-sage mb-8 leading-relaxed">
+                                Se eliminará <strong className="text-aesthetic-forest">&ldquo;{deleteTarget.name}&rdquo;</strong> permanentemente. Esta acción no se puede deshacer.
                             </p>
 
                             <div className="flex gap-3">
                                 <button
                                     onClick={() => setDeleteTarget(null)}
                                     disabled={deleting}
-                                    className="flex-1 py-4 rounded-full border border-aesthetic-accent text-aesthetic-muted text-[10px] tracking-[0.2em] uppercase font-bold hover:bg-white transition-colors"
+                                    className="flex-1 py-4 rounded-full border border-aesthetic-accent text-aesthetic-sage text-[10px] tracking-[0.2em] uppercase font-bold hover:bg-white transition-colors"
                                 >
                                     Cancelar
                                 </button>
@@ -205,3 +205,4 @@ export default function ServicesPage() {
         </div>
     );
 }
+

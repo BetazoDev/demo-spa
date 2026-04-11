@@ -10,3 +10,4 @@ interface TenantContextType {
 export const TenantContext = createContext<TenantContextType>({ tenantId: null, domain: null });
 
 export const useTenant = () => useContext(TenantContext);
+

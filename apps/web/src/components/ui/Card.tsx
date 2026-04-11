@@ -13,7 +13,7 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
             white: 'bg-white border-cream-dark',
             glass: 'bg-white/40 backdrop-blur-md border-white/40 shadow-xl',
             cream: 'bg-cream border-cream-dark/50',
-            pink: 'bg-pink-pale border-pink-light/20',
+            pink: 'bg-jade-pale border-jade-light/20',
         };
 
         return (
@@ -34,3 +34,4 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
 );
 
 Card.displayName = 'Card';
+

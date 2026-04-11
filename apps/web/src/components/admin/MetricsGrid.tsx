@@ -75,8 +75,9 @@ export const MetricsGrid = ({ income, completedCitations, pendingCitations, newC
                 label="Nuevas Clientas" 
                 value={newClients} 
                 icon="person_add" 
-                color="var(--aesthetic-taupe)"
+                color="var(--aesthetic-forest)"
             />
         </div>
     );
 };
+

@@ -63,7 +63,7 @@ export default function SignupPage() {
                                 required
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                className="w-full h-14 px-5 rounded-2xl bg-gray-50 border-2 border-transparent focus:border-pink focus:bg-white outline-none"
+                                className="w-full h-14 px-5 rounded-2xl bg-gray-50 border-2 border-transparent focus:border-jade focus:bg-white outline-none"
                                 placeholder="tu@correo.com"
                             />
                         </div>
@@ -74,7 +74,7 @@ export default function SignupPage() {
                                 required
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                className="w-full h-14 px-5 rounded-2xl bg-gray-50 border-2 border-transparent focus:border-pink focus:bg-white outline-none"
+                                className="w-full h-14 px-5 rounded-2xl bg-gray-50 border-2 border-transparent focus:border-jade focus:bg-white outline-none"
                                 placeholder="••••••••"
                             />
                         </div>
@@ -90,7 +90,7 @@ export default function SignupPage() {
 
                     <div className="mt-8 text-center text-sm">
                         <p className="text-nf-gray font-medium">
-                            ¿Ya tienes cuenta? <Link href="/login" className="text-pink font-bold">Inicia Sesión</Link>
+                            ¿Ya tienes cuenta? <Link href="/login" className="text-jade font-bold">Inicia Sesión</Link>
                         </p>
                     </div>
                 </div>
@@ -98,3 +98,4 @@ export default function SignupPage() {
         </div>
     );
 }
+
