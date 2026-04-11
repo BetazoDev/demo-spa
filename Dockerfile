@@ -1,23 +1,58 @@
-FROM node:20-slim AS runner
+# Stage 1: Install dependencies
+FROM node:20-slim AS deps
 WORKDIR /app
 
 # Install system dependencies
-RUN apt-get update && apt-get install -y python3 make g++ curl && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y python3 make g++ && rm -rf /var/lib/apt/lists/*
 
-# Copy package files
+# Copy root lockfile and package.json files for all workspace apps
 COPY package.json package-lock.json* ./
 COPY apps/web/package.json ./apps/web/
 COPY apps/api/package.json ./apps/api/
 
-# Install dependencies
-RUN npm install
+# Install dependencies including optional ones
+RUN npm ci --include=optional
 
-# Copy source
+# Stage 2: Build the application
+FROM node:20-slim AS builder
+WORKDIR /app
+
+# Copy dependencies from deps stage
+COPY --from=deps /app/node_modules ./node_modules
+# Copy all source code
 COPY . .
 
-# Build
-RUN npm run build --workspaces
+# Set build-time environment variables
+ARG NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+ENV NEXT_TELEMETRY_DISABLED=1
+
+# Build only the web application
+RUN npm run build -w @spademo/web
+
+# Stage 3: Production runner
+FROM node:20-slim AS runner
+WORKDIR /app
+
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+
+# Create a non-root user for security
+RUN groupadd --system --gid 1001 nodejs
+RUN useradd --system --uid 1001 nextjs
+
+# Copy essential files from builder
+COPY --from=builder /app/apps/web/public ./apps/web/public
+COPY --from=builder --chown=nextjs:nodejs /app/apps/web/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/apps/web/.next/static ./apps/web/.next/static
+
+# Switch to non-root user
+USER nextjs
 
 EXPOSE 3000
 
-CMD ["npm", "run", "start"]
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
+
+# Start the application using the standalone server
+CMD ["node", "apps/web/server.js"]
