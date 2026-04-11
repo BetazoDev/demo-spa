@@ -16,9 +16,13 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(cors({
-    origin: '*',
+    origin: (origin, callback) => {
+        // Allow all origins for now to avoid blocking, but mirroring is safer for CORS
+        callback(null, true);
+    },
+    credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'x-tenant-domain', 'x-tenant-id']
+    allowedHeaders: ['Content-Type', 'Authorization', 'x-tenant-domain', 'x-tenant-id', 'x-tenant-slug']
 }));
 
 // Image Proxy Handler (Security: API key never exposed to browser)
