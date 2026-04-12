@@ -8,38 +8,28 @@ export const dynamic = 'force-dynamic';
 export default async function RootPage() {
   // Determine domain from headers or use default
   const headersList = headers();
-  // Get domain with multiple fallbacks
-  const hostHeader = headersList.get('host');
+  const hostHeader = headersList.get('host') || 'spa-demo.diabolicalservices.tech';
   const forwardedHost = headersList.get('x-forwarded-host');
-  const host = forwardedHost || hostHeader || 'spa-demo.diabolicalservices.tech';
+  const host = forwardedHost || hostHeader;
+  
   let domain = host.split(':')[0];
 
-  // Map to the canonical demo domain
-  if (domain.includes('localhost') || 
-      domain.includes('127.0.0.1') || 
-      domain.includes('diabolicalservices.tech')) {
+  // Robust mapping for demo environment
+  // If we are on localhost, or in a domain that identifies as spa-demo, 
+  // or if the domain is an internal docker host (no dots), we force the canonical demo domain.
+  if (
+    domain.includes('localhost') || 
+    domain.includes('127.0.0.1') || 
+    domain.includes('spa-demo') ||
+    !domain.includes('.') // Internal Docker host fallback
+  ) {
     domain = 'spa-demo.diabolicalservices.tech';
   }
 
-  console.log(`[RootPage] Resolving for domain: ${domain} (Original host: ${host})`);
-
-  // Fetch tenant and staff in parallel
-  const [tenant, allStaffRaw] = await Promise.all([
+  const [tenant, allStaff] = await Promise.all([
     api.getTenant(domain),
     api.getStaff(domain).catch(() => [])
   ]);
-
-  let allStaff = allStaffRaw;
-
-  // CRITICAL FALLBACK: If no staff found, try once more with the hardcoded primary domain
-  if (allStaff.length === 0 && domain !== 'spa-demo.diabolicalservices.tech') {
-    allStaff = await api.getStaff('spa-demo.diabolicalservices.tech').catch(() => []);
-  }
-
-  // SECOND FALLBACK: If still empty, try "demo.diabolicalservices.tech" (the old one) just in case
-  if (allStaff.length === 0) {
-    allStaff = await api.getStaff('demo.diabolicalservices.tech').catch(() => []);
-  }
 
   if (!tenant) {
     return (
@@ -47,21 +37,17 @@ export default async function RootPage() {
         <h1 className="text-2xl font-bold">Tenant no encontrado</h1>
         <p>Dominio intentado: {domain}</p>
         <p>API URL: {process.env.NEXT_PUBLIC_API_URL || 'https://spa-demo-back.diabolicalservices.tech'}</p>
-        <a href="/login" className="text-jade underline mt-4 block">Ir al Login</a>
       </div>
     );
   }
 
-  // Selection logic for the main landing page
+  // Find director or fallback to any staff
   const director = allStaff.find(s => s.role === 'direccion');
   const owner = director || 
     allStaff.find(s => s.role === 'owner') ||
     allStaff.find(s => s.role === 'staff') ||
     allStaff.find(s => s.active) ||
     allStaff[0];
-
-  // Note: We are NOT redirecting here to ensure the RootPage renders correctly.
-  // The director's info will be passed to the widget.
 
   if (!owner) {
     return (
