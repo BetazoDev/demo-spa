@@ -11,15 +11,15 @@ export default async function RootPage() {
   const hostHeader = headersList.get('host') || 'spa-demo.diabolicalservices.tech';
   const forwardedHost = headersList.get('x-forwarded-host');
   const host = forwardedHost || hostHeader;
-  
+
   let domain = host.split(':')[0];
 
   // Robust mapping for demo environment
   // If we are on localhost, or in a domain that identifies as spa-demo, 
   // or if the domain is an internal docker host (no dots), we force the canonical demo domain.
   if (
-    domain.includes('localhost') || 
-    domain.includes('127.0.0.1') || 
+    domain.includes('localhost') ||
+    domain.includes('127.0.0.1') ||
     domain.includes('spa-demo') ||
     !domain.includes('.') // Internal Docker host fallback
   ) {
@@ -42,8 +42,8 @@ export default async function RootPage() {
   }
 
   // Find director or fallback to any staff
-  const director = allStaff.find(s => s.role === 'direccion');
-  const owner = director || 
+  const director = allStaff.find(s => s.role === 'owner');
+  const owner = director ||
     allStaff.find(s => s.role === 'owner') ||
     allStaff.find(s => s.role === 'staff') ||
     allStaff.find(s => s.active) ||
