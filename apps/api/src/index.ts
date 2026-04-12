@@ -313,7 +313,7 @@ apiRouter.post('/admin/seed-emergency', async (req, res) => {
 
         // 3. Insert Staff
         const staff = [
-            { id: 'staff-1', name: 'Sofía Ramírez', email: 'sofia@spademo.com', role: 'direccion', photo_url: 'https://i.pravatar.cc/150?u=sofia-ramirez', bio: 'Terapeuta certificada con 8 años de experiencia en bienestar holístico.', active: true, color_identifier: '#6BAE8E', services_offered: ['svc-1', 'svc-2', 'svc-4'], slug: 'sofia-ramirez' },
+            { id: 'staff-1', name: 'Sofía Ramírez', email: 'sofia@spademo.com', role: 'owner', photo_url: 'https://i.pravatar.cc/150?u=sofia-ramirez', bio: 'Terapeuta certificada con 8 años de experiencia en bienestar holístico.', active: true, color_identifier: '#6BAE8E', services_offered: ['svc-1', 'svc-2', 'svc-4'], slug: 'sofia-ramirez' },
             { id: 'staff-2', name: 'Valentina Cruz', email: 'valentina@spademo.com', role: 'staff', photo_url: 'https://i.pravatar.cc/150?u=valentina-cruz', bio: 'Especialista en tratamientos faciales y rituales de bienestar.', active: true, color_identifier: '#8DB87A', services_offered: ['svc-3', 'svc-5'], slug: 'valentina-cruz' },
         ];
         for (const s of staff) {
@@ -328,7 +328,7 @@ apiRouter.post('/admin/seed-emergency', async (req, res) => {
             INSERT INTO users (id, tenant_id, email, password, role)
             VALUES ($1, $2, $3, $4, $5)
             ON CONFLICT (email) DO UPDATE SET password = EXCLUDED.password
-        `, ['user-1', tenantId, 'admin@demo.com', 'admin123', 'direccion']);
+        `, ['user-1', tenantId, 'admin@demo.com', 'admin123', 'owner']);
 
         res.json({ success: true, message: 'Database seeded successfully via Emergency Endpoint.' });
     } catch (e: any) {

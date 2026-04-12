@@ -26,10 +26,16 @@ export default async function RootPage() {
     domain = 'spa-demo.diabolicalservices.tech';
   }
 
-  const [tenant, allStaff] = await Promise.all([
+  let [tenant, allStaff] = await Promise.all([
     api.getTenant(domain),
     api.getStaff(domain).catch(() => [])
   ]);
+
+  // ULTIMATE FALLBACK: If staff is still empty (likely due to domain proxy issues),
+  // fetch without the domain header to trigger the API's global demo fallback.
+  if (allStaff.length === 0) {
+    allStaff = await api.getStaff().catch(() => []);
+  }
 
   if (!tenant) {
     return (
@@ -41,10 +47,8 @@ export default async function RootPage() {
     );
   }
 
-  // Find director or fallback to any staff
-  const director = allStaff.find(s => s.role === 'owner');
-  const owner = director ||
-    allStaff.find(s => s.role === 'owner') ||
+  // Find owner or fallback to any active staff
+  const owner = allStaff.find(s => s.role === 'owner') ||
     allStaff.find(s => s.role === 'staff') ||
     allStaff.find(s => s.active) ||
     allStaff[0];
