@@ -8,21 +8,37 @@ export const dynamic = 'force-dynamic';
 export default async function RootPage() {
   // Determine domain from headers or use default
   const headersList = headers();
-  const host = headersList.get('host') || 'spa-demo.diabolicalservices.tech';
+  // Get domain with multiple fallbacks
+  const hostHeader = headersList.get('host');
+  const forwardedHost = headersList.get('x-forwarded-host');
+  const host = forwardedHost || hostHeader || 'spa-demo.diabolicalservices.tech';
   let domain = host.split(':')[0];
 
-  if (domain.includes('localhost') || domain.includes('127.0.0.1') || domain === 'demo.diabolicalservices.tech') {
+  // Map to the canonical demo domain
+  if (domain.includes('localhost') || 
+      domain.includes('127.0.0.1') || 
+      domain.includes('diabolicalservices.tech')) {
     domain = 'spa-demo.diabolicalservices.tech';
   }
 
-  const tenant = await api.getTenant(domain);
+  console.log(`[RootPage] Resolving for domain: ${domain} (Original host: ${host})`);
 
-  // Robust staff fetching
-  let allStaff = await api.getStaff(domain).catch(() => []);
+  // Fetch tenant and staff in parallel
+  const [tenant, allStaffRaw] = await Promise.all([
+    api.getTenant(domain),
+    api.getStaff(domain).catch(() => [])
+  ]);
 
-  // If no staff found for specific domain, try spa-demo fallback
+  let allStaff = allStaffRaw;
+
+  // CRITICAL FALLBACK: If no staff found, try once more with the hardcoded primary domain
   if (allStaff.length === 0 && domain !== 'spa-demo.diabolicalservices.tech') {
     allStaff = await api.getStaff('spa-demo.diabolicalservices.tech').catch(() => []);
+  }
+
+  // SECOND FALLBACK: If still empty, try "demo.diabolicalservices.tech" (the old one) just in case
+  if (allStaff.length === 0) {
+    allStaff = await api.getStaff('demo.diabolicalservices.tech').catch(() => []);
   }
 
   if (!tenant) {
@@ -36,7 +52,7 @@ export default async function RootPage() {
     );
   }
 
-  // Find director or fallback to any staff
+  // Selection logic for the main landing page
   const director = allStaff.find(s => s.role === 'direccion');
   const owner = director || 
     allStaff.find(s => s.role === 'owner') ||
@@ -44,10 +60,8 @@ export default async function RootPage() {
     allStaff.find(s => s.active) ||
     allStaff[0];
 
-  // If a director with a slug is found, redirect to their specific booking page
-  if (director?.slug) {
-    redirect(`/book/${director.slug}`);
-  }
+  // Note: We are NOT redirecting here to ensure the RootPage renders correctly.
+  // The director's info will be passed to the widget.
 
   if (!owner) {
     return (
