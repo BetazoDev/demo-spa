@@ -52,7 +52,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             setUserRole(role);
             
             // For demo purposes, we'll use a hardcoded tenant or try to fetch by domain
-            const hostname = typeof window !== 'undefined' ? window.location.hostname : 'demo.diabolicalservices.tech';
+            const hostname = typeof window !== 'undefined' ? window.location.hostname : 'spa-demo.diabolicalservices.tech';
             const cleanDomain = hostname.split(':')[0];
             
             api.getTenantByDomain(cleanDomain).then(t => {
@@ -64,7 +64,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                     setSalonName(t.name || 'Spa Demo');
                 } else {
                     setTenantId('demo-tenant');
-                    setDomain('demo.diabolicalservices.tech');
+                    setDomain('spa-demo.diabolicalservices.tech');
                 }
             });
         }

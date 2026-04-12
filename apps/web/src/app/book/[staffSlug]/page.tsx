@@ -13,9 +13,9 @@ export const dynamic = 'force-dynamic';
 
 export default async function StaffBookingPage({ params }: Props) {
     const headersList = headers();
-    let domain = headersList.get('host') || 'demo.diabolicalservices.tech';
+    let domain = headersList.get('host') || 'spa-demo.diabolicalservices.tech';
     if (domain.includes('localhost') || domain.includes('127.0.0.1')) {
-        domain = 'demo.diabolicalservices.tech';
+        domain = 'spa-demo.diabolicalservices.tech';
     }
 
     const tenant = await api.getTenant(domain);

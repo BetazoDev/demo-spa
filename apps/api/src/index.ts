@@ -199,7 +199,7 @@ app.use(async (req, res, next) => {
             tenant = res.rows.length > 0 ? res.rows[0] : null;
         } else {
             // Clean domain (remove port if present)
-            const cleanDomain = tenantDomain?.split(':')[0] || 'demo.diabolicalservices.tech';
+            const cleanDomain = tenantDomain?.split(':')[0] || 'spa-demo.diabolicalservices.tech';
             tenant = await getTenantByDomain(cleanDomain);
 
             // Fallback for demo if still not found

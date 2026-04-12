@@ -22,12 +22,12 @@ export default function middleware(req: NextRequest) {
 
     // Clean hostname for local development
     if (hostname.includes('localhost') || hostname.includes('127.0.0.1')) {
-        hostname = 'demo.diabolicalservices.tech';
+        hostname = 'spa-demo.diabolicalservices.tech';
     }
 
     // Define main domains that shouldn't be rewritten
     const mainDomains = [
-        'demo.diabolicalservices.tech',
+        'spa-demo.diabolicalservices.tech',
         'nailflow.com',
         'www.nailflow.com',
         'admin.nailflow.com'
