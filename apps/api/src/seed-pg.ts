@@ -12,8 +12,8 @@ const services = [
 ];
 
 const staffList = [
-    { id: 'staff-1', name: 'Sofía Ramírez', email: 'sofia@spademo.com', role: 'staff', photo_url: 'https://i.pravatar.cc/150?u=sofia-ramirez', bio: 'Terapeuta certificada con 8 años de experiencia en bienestar holístico.', active: true, color_identifier: '#6BAE8E', services_offered: ['svc-1', 'svc-2', 'svc-4'] },
-    { id: 'staff-2', name: 'Valentina Cruz', email: 'valentina@spademo.com', role: 'staff', photo_url: 'https://i.pravatar.cc/150?u=valentina-cruz', bio: 'Especialista en tratamientos faciales y rituales de bienestar.', active: true, color_identifier: '#8DB87A', services_offered: ['svc-3', 'svc-5'] },
+    { id: 'staff-1', name: 'Sofía Ramírez', email: 'sofia@spademo.com', role: 'direccion', photo_url: 'https://i.pravatar.cc/150?u=sofia-ramirez', bio: 'Terapeuta certificada con 8 años de experiencia en bienestar holístico.', active: true, color_identifier: '#6BAE8E', services_offered: ['svc-1', 'svc-2', 'svc-4'], slug: 'sofia-ramirez' },
+    { id: 'staff-2', name: 'Valentina Cruz', email: 'valentina@spademo.com', role: 'staff', photo_url: 'https://i.pravatar.cc/150?u=valentina-cruz', bio: 'Especialista en tratamientos faciales y rituales de bienestar.', active: true, color_identifier: '#8DB87A', services_offered: ['svc-3', 'svc-5'], slug: 'valentina-cruz' },
 ];
 
 export async function seed() {
@@ -56,8 +56,8 @@ export async function seed() {
         console.log('Inserting staff...');
         for (const s of staffList) {
             await query(`
-                INSERT INTO staff (id, tenant_id, name, email, role, photo_url, bio, active, color_identifier, services_offered)
-                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+                INSERT INTO staff (id, tenant_id, name, email, role, photo_url, bio, active, color_identifier, services_offered, slug)
+                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
                 ON CONFLICT (id) DO UPDATE SET
                     name = EXCLUDED.name,
                     email = EXCLUDED.email,
@@ -66,8 +66,9 @@ export async function seed() {
                     bio = EXCLUDED.bio,
                     active = EXCLUDED.active,
                     color_identifier = EXCLUDED.color_identifier,
-                    services_offered = EXCLUDED.services_offered
-            `, [s.id, TENANT_ID, s.name, s.email, s.role, s.photo_url, s.bio, s.active, s.color_identifier, s.services_offered]);
+                    services_offered = EXCLUDED.services_offered,
+                    slug = EXCLUDED.slug
+            `, [s.id, TENANT_ID, s.name, s.email, s.role, s.photo_url, s.bio, s.active, s.color_identifier, s.services_offered, s.slug]);
         }
 
         // 4. Insert Admin User (role: 'direccion')

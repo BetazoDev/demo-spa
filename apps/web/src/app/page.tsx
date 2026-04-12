@@ -1,6 +1,6 @@
 import { api } from '@/lib/api';
 import BookingWidget from '@/components/booking/BookingWidget';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import { headers } from 'next/headers';
 
 export const dynamic = 'force-dynamic';
@@ -36,11 +36,18 @@ export default async function RootPage() {
     );
   }
 
-  // Prefer strictly owner, then admin, then any active staff member
-  const owner = allStaff.find(s => s.role === 'owner') ||
+  // Find director or fallback to any staff
+  const director = allStaff.find(s => s.role === 'direccion');
+  const owner = director || 
+    allStaff.find(s => s.role === 'owner') ||
     allStaff.find(s => s.role === 'staff') ||
     allStaff.find(s => s.active) ||
     allStaff[0];
+
+  // If a director with a slug is found, redirect to their specific booking page
+  if (director?.slug) {
+    redirect(`/book/${director.slug}`);
+  }
 
   if (!owner) {
     return (

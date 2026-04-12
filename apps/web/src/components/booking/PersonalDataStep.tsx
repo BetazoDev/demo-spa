@@ -25,7 +25,19 @@ export default function PersonalDataStep({
     const validate = () => {
         const errs: Record<string, string> = {};
         if (!name.trim()) errs.name = 'Por favor dinos tu nombre';
-        if (!phone.trim()) errs.phone = 'Necesitamos un teléfono para avisarte';
+        
+        // Phone validation: must have digits
+        if (!phone.trim()) {
+            errs.phone = 'Necesitamos un teléfono para avisarte';
+        } else if (phone.replace(/[^0-9]/g, '').length < 8) {
+            errs.phone = 'El teléfono parece demasiado corto';
+        }
+
+        // Email validation if provided
+        if (email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            errs.email = 'El correo no parece válido';
+        }
+
         return errs;
     };
 
@@ -107,7 +119,11 @@ export default function PersonalDataStep({
                                     placeholder="+34 000 000 000"
                                     type="tel"
                                     value={phone}
-                                    onChange={e => onPhoneChange(e.target.value)}
+                                    onChange={e => {
+                                        const val = e.target.value;
+                                        const filtered = val.replace(/[^0-9+\s]/g, '');
+                                        onPhoneChange(filtered);
+                                    }}
                                 />
                                 <div className="absolute right-0 top-1/2 -translate-y-1/2 text-2xl opacity-20">📱</div>
                             </div>
@@ -126,6 +142,7 @@ export default function PersonalDataStep({
                                 value={email}
                                 onChange={e => onEmailChange(e.target.value)}
                             />
+                            {errors.email && <p className="text-[10px] font-bold text-red-400 mt-2 uppercase tracking-wider animate-fade-in">{errors.email}</p>}
                         </div>
                     </div>
 

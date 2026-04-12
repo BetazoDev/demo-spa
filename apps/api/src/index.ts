@@ -311,12 +311,24 @@ apiRouter.post('/admin/seed-emergency', async (req, res) => {
             [s.id, tenantId, s.name, s.description, s.duration_minutes, s.estimated_price, s.required_advance, s.category]);
         }
 
-        // 3. Insert Admin User
+        // 3. Insert Staff
+        const staff = [
+            { id: 'staff-1', name: 'Sofía Ramírez', email: 'sofia@spademo.com', role: 'direccion', photo_url: 'https://i.pravatar.cc/150?u=sofia-ramirez', bio: 'Terapeuta certificada con 8 años de experiencia en bienestar holístico.', active: true, color_identifier: '#6BAE8E', services_offered: ['svc-1', 'svc-2', 'svc-4'], slug: 'sofia-ramirez' },
+            { id: 'staff-2', name: 'Valentina Cruz', email: 'valentina@spademo.com', role: 'staff', photo_url: 'https://i.pravatar.cc/150?u=valentina-cruz', bio: 'Especialista en tratamientos faciales y rituales de bienestar.', active: true, color_identifier: '#8DB87A', services_offered: ['svc-3', 'svc-5'], slug: 'valentina-cruz' },
+        ];
+        for (const s of staff) {
+            await query(`
+                INSERT INTO staff (id, tenant_id, name, email, role, photo_url, bio, active, color_identifier, services_offered, slug)
+                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+            `, [s.id, tenantId, s.name, s.email, s.role, s.photo_url, s.bio, s.active, s.color_identifier, s.services_offered, s.slug]);
+        }
+
+        // 4. Insert Admin User
         await query(`
             INSERT INTO users (id, tenant_id, email, password, role)
             VALUES ($1, $2, $3, $4, $5)
             ON CONFLICT (email) DO UPDATE SET password = EXCLUDED.password
-        `, ['user-1', tenantId, 'admin@demo.com', 'admin123', 'admin']);
+        `, ['user-1', tenantId, 'admin@demo.com', 'admin123', 'direccion']);
 
         res.json({ success: true, message: 'Database seeded successfully via Emergency Endpoint.' });
     } catch (e: any) {
